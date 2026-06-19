@@ -1,0 +1,518 @@
+# Curriculum config — Class 10 (CBSE-style, per CLAUDE.md §6)
+#
+# DIAGNOSTIC DESIGN PHILOSOPHY:
+#   These questions test structural comprehension, logical invariants, and
+#   mathematical reasoning rather than rote memory or formula substitution.
+#
+#   What separates A / B / C here:
+#     A — sees the underlying structure immediately (e.g. p+q+r = f(1),
+#         complementary angles → Pythagorean identity, equal sequences are
+#         equally likely). Justifies reasoning, not just states the answer.
+#     B — has the right general approach but misses the key insight or
+#         makes a conceptual slip under pressure.
+#     C — tries to apply a formula or procedure that doesn't fit the problem.
+#
+#   Difficulty: harder than standard NCERT textbook, but not olympiad-level.
+#   A strong, reasoning-oriented CBSE student should find them challenging
+#   but solvable. A procedure-only student will struggle regardless of marks.
+#
+# Bands: correct-justified | right-idea-gaps | wrong-or-missing
+
+board: "CBSE-style (generic)"
+grade: "Class 10"
+
+subtopics:
+  algebra:
+    label: "Algebra"
+    sub_subtopics:
+      - id: polynomials
+        label: "Polynomials"
+        description: "Zeros of polynomials, the relationship between zeros and coefficients, and what a polynomial's graph actually tells you."
+      - id: linear_equations
+        label: "Linear Equations in Two Variables"
+        description: "Solving two equations simultaneously — graphically, by substitution, and by elimination."
+      - id: quadratic_equations
+        label: "Quadratic Equations"
+        description: "Factorising, completing the square, and using the quadratic formula — and knowing which method to reach for."
+      - id: arithmetic_progressions
+        label: "Arithmetic Progressions"
+        description: "The nth term, the sum of the first n terms, and how APs appear in real-life problems."
+    items:
+      - id: alg_1
+        type: explain-first-step
+        prompt: >-
+          A quadratic polynomial is given by f(x) = ax^2 + bx + c.
+          You are told that a > 0 and that the discriminant D = b^2 - 4ac < 0.
+
+          (a) Describe what these two conditions together tell you about
+              the visual position of the graph relative to the x-axis.
+          (b) Based only on your geometric description — without any further
+              algebraic calculation — determine whether it is possible for
+              f(x) to output a negative value for any real number x.
+              Explain your logical reasoning clearly.
+        rubric:
+          correct-justified: >-
+            (a) a > 0: parabola opens upward. D < 0: no real roots, so the
+            graph never touches or crosses the x-axis. Together: the entire
+            parabola sits strictly above the x-axis.
+            (b) Since the graph is entirely above the x-axis, f(x) > 0 for
+            every real x — it is impossible for f(x) to be negative.
+            The geometric argument is explicitly connected to the sign of f(x).
+          right-idea-gaps: >-
+            Correctly states the parabola is above the x-axis (or that there
+            are no real roots) but doesn't cleanly connect this to f(x) > 0
+            for ALL x, or confuses D < 0 with D = 0.
+          wrong-or-missing: >-
+            Tries to substitute values or use the quadratic formula to check
+            the sign rather than reasoning from the graph description, or
+            concludes f(x) can be negative.
+
+      - id: alg_2
+        type: find-the-error
+        prompt: >-
+          A student solves x^2 - 5x + 6 = 0 as follows:
+          "I rewrite it as x(x - 5) = -6.
+           By the factoring method, either x = -6 or x - 5 = -6,
+           giving solutions x = -6 and x = -1."
+
+          (a) Identify the precise logical flaw in the student's reasoning.
+          (b) State the specific mathematical property that DOES allow us to
+              find roots when a product equals zero, and explain in one
+              clear sentence why this property cannot be applied when the
+              product equals -6.
+        rubric:
+          correct-justified: >-
+            (a) The student wrongly extended the Zero Product Property to
+            a non-zero right-hand side. The factoring shortcut "A = k or
+            B = k" does not follow from AB = k for k ≠ 0.
+            (b) The Zero Product Property states: if P × Q = 0, then P = 0
+            or Q = 0. This works ONLY because zero is the unique number where
+            a product can be zero without either factor being zero. For -6, any
+            combination of factors whose product is -6 (e.g. 2 × -3, -1 × 6)
+            is valid — you can't pin down either factor individually.
+          right-idea-gaps: >-
+            Identifies that the method is wrong (e.g. "you can't split it
+            that way") but cannot clearly state WHAT property is being
+            misapplied or WHY zero is special, giving only a procedural
+            correction ("you must set it to zero first").
+          wrong-or-missing: >-
+            Accepts the student's solutions as correct, or points to an
+            unrelated error (e.g. arithmetic in the factoring step).
+
+      - id: alg_3
+        type: solve-and-show-working
+        prompt: >-
+          Consider the quadratic equation px^2 + qx + r = 0, where p, q, r
+          are real numbers. You are told that p + q + r = 0.
+
+          (a) Without using the quadratic formula, deduce one exact real root
+              of this equation instantly. Explain the reasoning that lets you
+              see this root immediately from the given condition.
+          (b) Use the relationship between roots and coefficients (Vieta's
+              formulas) to express the second root purely in terms of p and r.
+              Show your working.
+        rubric:
+          correct-justified: >-
+            (a) p + q + r = 0 means f(1) = p(1)^2 + q(1) + r = 0, so x = 1
+            is always a root. Explicitly identifies that the sum of the
+            coefficients equals f(1), which is the key structural insight —
+            not just the answer.
+            (b) By Vieta's: product of roots = r/p. Since one root is 1,
+            the other root = r/p. Working shown.
+          right-idea-gaps: >-
+            Correctly identifies x = 1 as a root (possibly by substitution
+            trial) but cannot explain WHY p+q+r=0 forces this — i.e. doesn't
+            connect it to f(1) = 0. OR correctly finds the second root but
+            misidentifies the first.
+          wrong-or-missing: >-
+            Uses the quadratic formula without recognising the structural
+            shortcut, or cannot find either root.
+
+      - id: alg_4
+        type: solve-and-show-working
+        prompt: >-
+          A quadratic equation ax^2 + bx + c = 0 has two distinct positive
+          real roots alpha and beta (with c ≠ 0). A new equation is formed
+          by reversing the order of the coefficients: cx^2 + bx + a = 0.
+
+          (a) Prove what the roots of this new equation are in terms of
+              alpha and beta. Show your reasoning, not just the answer.
+          (b) If the original roots were both greater than 100, what can you
+              conclude about the size and nature of the new roots?
+              Be specific.
+        rubric:
+          correct-justified: >-
+            (a) Since alpha is a root of ax^2 + bx + c = 0:
+            a*alpha^2 + b*alpha + c = 0. Divide through by alpha^2
+            (valid since alpha ≠ 0 as roots are positive):
+            a + b*(1/alpha) + c*(1/alpha)^2 = 0, i.e.
+            c*(1/alpha)^2 + b*(1/alpha) + a = 0.
+            So 1/alpha is a root of cx^2 + bx + a = 0. Same for beta.
+            New roots are 1/alpha and 1/beta.
+            (b) alpha, beta > 100 → 1/alpha, 1/beta < 1/100 = 0.01.
+            The new roots are very small positive numbers (less than 0.01),
+            still positive real, but now much less than 1.
+          right-idea-gaps: >-
+            States (possibly correctly) that the new roots are reciprocals,
+            but cannot derive this — e.g. just uses Vieta's on the new
+            equation to check sum/product of 1/alpha and 1/beta match,
+            without proving they are roots. OR proves correctly for one root
+            only.
+          wrong-or-missing: >-
+            Claims the roots are unchanged, or has no systematic approach
+            to finding the new roots.
+
+    practice_problems:
+      A: >-
+        A quadratic equation ax^2 + bx + c = 0 has two roots alpha and beta.
+        A student forms a new equation whose roots are (alpha + 1/beta) and
+        (beta + 1/alpha). Express the sum and product of the new roots in
+        terms of a, b, and c alone (no alpha or beta in the final answer).
+        Show every step. You may use Vieta's formulas for the original equation.
+      B: >-
+        The product of the present ages of a father and his son equals the
+        product of their ages 3 years ago, plus 111. The father is currently
+        twice the age of the son. Find their present ages. Show every step
+        and verify that your answer makes real-world sense.
+      C: >-
+        Solve: 3x + 2y = 16 and 5x - 3y = 7. Show every step and name
+        the method you used.
+
+  trigonometry:
+    label: "Trigonometry"
+    sub_subtopics:
+      - id: trig_ratios
+        label: "Trigonometric Ratios"
+        description: "sin, cos, tan and their reciprocals — definitions, values at standard angles, and how the ratios change as the angle changes."
+      - id: trig_identities
+        label: "Trigonometric Identities"
+        description: "Proving and applying identities that follow from sin²θ + cos²θ = 1, including the sec/cosec variants."
+      - id: heights_distances
+        label: "Heights and Distances"
+        description: "Using angles of elevation and depression to find heights and distances in real-world problems."
+    items:
+      - id: trig_1
+        type: explain-first-step
+        prompt: >-
+          In right-angled triangle ABC (right angle at B), a student claims:
+          "The value of (sin A)^2 + (sin C)^2 will always equal exactly 1,
+          no matter how the triangle is scaled, as long as it stays
+          right-angled."
+
+          (a) Prove whether this statement is true or false using only the
+              ratio definitions of sine and the geometric relationship between
+              the angles. Do NOT use a specific numerical example as your proof.
+          (b) Explain in one or two sentences WHY the geometric relationship
+              between angles A and C forces this sum to be invariant.
+        rubric:
+          correct-justified: >-
+            (a) In right triangle ABC with right angle at B:
+            A + C = 90° (angles of a triangle sum to 180°, with B = 90°),
+            so C = 90° - A. Therefore sin C = sin(90° - A) = cos A.
+            So (sin A)^2 + (sin C)^2 = sin^2 A + cos^2 A = 1. TRUE. ✓
+            The general argument works for ANY right triangle.
+            (b) A and C are complementary: sin of one = cos of the other.
+            This converts the sum into the Pythagorean identity, which always
+            equals 1 — the invariance is just the identity in disguise.
+          right-idea-gaps: >-
+            Verifies with a specific triangle (e.g. 30-60-90) rather than a
+            general proof, OR correctly uses A + C = 90° but doesn't connect
+            sin C = cos A explicitly, leaving the identity step incomplete.
+          wrong-or-missing: >-
+            Claims the statement is false, or tries to prove it by substituting
+            specific side lengths without a general argument.
+
+      - id: trig_2
+        type: explain-first-step
+        prompt: >-
+          Imagine an acute angle theta starting at 0° and growing steadily
+          toward 90°. Think of it as the angle in a right triangle that
+          gradually opens wider.
+
+          (a) Describe what happens to sin theta and cos theta as theta
+              increases — do they increase, decrease, or something else?
+              Base your answer on what is happening to the sides of the
+              right triangle, not on memorised tables.
+          (b) Using your description from (a), explain precisely why
+              tan theta grows without any upper bound as theta approaches 90°,
+              rather than capping out at 1 or some other finite value.
+        rubric:
+          correct-justified: >-
+            (a) As theta increases: the opposite side grows relative to the
+            hypotenuse → sin theta = opp/hyp increases from 0 toward 1.
+            The adjacent side shrinks relative to the hypotenuse → cos theta
+            = adj/hyp decreases from 1 toward 0. Geometric reasoning explicit.
+            (b) tan theta = sin theta / cos theta. As theta → 90°, the
+            numerator (sin theta) approaches 1 while the denominator
+            (cos theta) approaches 0. Dividing a number close to 1 by a
+            number shrinking to 0 gives a result growing without bound.
+            Equivalent geometric view: the adjacent side shrinks to zero
+            while the opposite side approaches the hypotenuse, so opp/adj
+            explodes. No formula memorisation — geometric reasoning.
+          right-idea-gaps: >-
+            Correctly states that sin increases and cos decreases but gives
+            the table as the justification rather than the geometric reason.
+            OR correctly explains sin/cos behaviour but cannot explain why
+            tan is unbounded (e.g. just says "because cos becomes 0").
+          wrong-or-missing: >-
+            Confuses sin and cos growth/decay, or states tan approaches 1
+            or some finite limit.
+
+      - id: trig_3
+        type: explain-first-step
+        prompt: >-
+          An exam question asks: "Find an acute angle theta such that
+          sin theta + cos theta = 2."
+          Without doing any algebra or squaring both sides:
+
+          (a) Use the geometric definition of sine and cosine in a right
+              triangle to explain why this equation is absolutely impossible
+              to satisfy for any real angle.
+          (b) What is the maximum value that sin theta + cos theta can
+              theoretically achieve, and at what angle? Explain how you
+              arrive at this maximum without any algebraic manipulation.
+        rubric:
+          correct-justified: >-
+            (a) In any right triangle, both the opposite side and the
+            adjacent side are strictly shorter than the hypotenuse.
+            Therefore sin theta = opp/hyp < 1 and cos theta = adj/hyp < 1
+            for every acute angle. Their sum is strictly less than 2 —
+            it can never equal 2 because both ratios cannot simultaneously
+            equal 1 (that would require opp = hyp AND adj = hyp at the
+            same time, which is geometrically impossible).
+            (b) Maximum at theta = 45°: the triangle is isoceles right,
+            sin 45° = cos 45° = 1/sqrt(2), sum = sqrt(2) ≈ 1.414.
+            This is the maximum because any deviation from 45° makes one
+            ratio increase and the other decrease, and the sum is maximised
+            when the two are balanced.
+          right-idea-gaps: >-
+            Correctly argues sin theta ≤ 1 and cos theta ≤ 1, so their
+            sum ≤ 2, but misses the strict inequality (doesn't explain why
+            they can't BOTH equal 1 simultaneously). OR finds the maximum
+            at 45° by substitution without explaining why 45° is the maximum.
+          wrong-or-missing: >-
+            Attempts algebraic manipulation (squaring both sides) instead
+            of a geometric argument, or claims the equation can be solved.
+
+      - id: trig_4
+        type: solve-and-show-working
+        prompt: >-
+          A moving particle's position at any moment is given by:
+              x = k * sec(theta)    and    y = k * tan(theta)
+          where k is a fixed positive constant and theta is a changing angle.
+
+          (a) Eliminate the trigonometric parameter theta to find a single
+              algebraic equation relating x, y, and k only. Show every step.
+          (b) State exactly which trigonometric identity you used to break
+              the link between theta and the coordinates, and write that
+              identity out explicitly.
+        rubric:
+          correct-justified: >-
+            (a) x/k = sec(theta) and y/k = tan(theta).
+            Use: sec^2(theta) - tan^2(theta) = 1.
+            Substituting: (x/k)^2 - (y/k)^2 = 1,
+            so x^2/k^2 - y^2/k^2 = 1, i.e. x^2 - y^2 = k^2. ✓
+            All steps shown.
+            (b) Identity: sec^2(theta) - tan^2(theta) = 1.
+            (Derived from dividing sin^2 + cos^2 = 1 by cos^2(theta).)
+          right-idea-gaps: >-
+            Identifies that a Pythagorean-type identity is needed and
+            attempts to eliminate theta, but uses sin^2 + cos^2 = 1
+            directly (incorrect choice) or makes an error squaring x/k
+            and y/k. OR correctly derives x^2 - y^2 = k^2 but cannot
+            name or write the identity used.
+          wrong-or-missing: >-
+            No attempt to isolate sec and tan first, or substitutes
+            arbitrary values of theta without algebraic elimination.
+
+    practice_problems:
+      A: >-
+        Using ONLY the identity sin^2(theta) + cos^2(theta) = 1 and basic
+        algebra (no other trig identities may be quoted), prove that:
+            tan^2(theta) - sin^2(theta) = tan^2(theta) * sin^2(theta).
+        Then explain in one sentence what this identity reveals about the
+        structural relationship between tan and sin.
+      B: >-
+        The angle of elevation of the top of a building from the foot of a
+        tower is 30 degrees. The angle of elevation of the top of the tower
+        from the foot of the building is 60 degrees. If the tower is 50 m
+        high, find the height of the building and the distance between them.
+        Show every step.
+      C: >-
+        An observer 1.5 m tall is standing 28.5 m away from a chimney. The
+        angle of elevation of the top of the chimney from the observer's eye
+        is 45 degrees. Find the height of the chimney.
+
+  probability:
+    label: "Probability"
+    sub_subtopics:
+      - id: basic_probability
+        label: "Basic Probability"
+        description: "What probability means, the classical definition, and how to calculate it for equally likely outcomes."
+      - id: complementary_events
+        label: "Complementary Events"
+        description: "P(A) + P(not A) = 1 — when and how to use the complement to simplify calculations."
+      - id: independent_events
+        label: "Independent & Dependent Events"
+        description: "How drawing without replacement changes probabilities, and when two events truly have no effect on each other."
+    items:
+      - id: prob_1
+        type: find-the-error
+        prompt: >-
+          Two players roll two six-sided dice simultaneously.
+          Player A wins if the sum is 7.
+          Player B wins if the sum is 12.
+          Player B argues: "There are 11 possible sums: {2, 3, 4, 5, 6, 7,
+          8, 9, 10, 11, 12}. Since 7 is one and 12 is one, we each have a
+          1/11 chance. The game is perfectly fair."
+
+          (a) Explain precisely why Player B's framework violates the
+              foundational rules of classical probability. What assumption
+              has he made that is false?
+          (b) Describe how the sample space must actually be constructed
+              to correctly compare the two players' probabilities.
+              What are the true probabilities for each player?
+        rubric:
+          correct-justified: >-
+            (a) Classical probability requires the elementary outcomes to be
+            EQUALLY LIKELY. The 11 possible sums are NOT equally likely —
+            e.g. sum=7 can arise in 6 ways, sum=12 in only 1 way. Player B
+            conflated "possible outcomes" with "equally likely outcomes."
+            (b) The correct sample space consists of 36 equally likely ordered
+            pairs (die1, die2). Sum=7: (1,6),(2,5),(3,4),(4,3),(5,2),(6,1)
+            = 6 outcomes → P(A wins) = 6/36 = 1/6. Sum=12: (6,6) = 1
+            outcome → P(B wins) = 1/36. The game heavily favours Player A.
+          right-idea-gaps: >-
+            Identifies that Player B is wrong (e.g. "the sums aren't equally
+            likely") but cannot clearly state WHY (doesn't name the equal-
+            likelihood requirement of classical probability), or correctly
+            constructs the sample space but makes a counting error.
+          wrong-or-missing: >-
+            Agrees with Player B's 1/11 argument, or attempts to compute
+            probabilities without listing the ordered pair sample space.
+
+      - id: prob_2
+        type: solve-and-show-working
+        prompt: >-
+          An opaque bag contains red, blue, and green marbles.
+          You know that P(red) = 1/3 and P(blue) = 2/5.
+
+          (a) Explain why "drawing red", "drawing blue", and "drawing green"
+              are mutually exclusive events, and use this to find the exact
+              probability of drawing a green marble. Show your arithmetic.
+          (b) What is the minimum number of total marbles that can be in the
+              bag for these probabilities to correspond to exact whole-number
+              counts? Explain your reasoning using prime factors or multiples.
+        rubric:
+          correct-justified: >-
+            (a) Mutually exclusive: one draw yields exactly one colour —
+            the events cannot occur simultaneously. Since they are also
+            exhaustive (the only colours), their probabilities sum to 1.
+            P(green) = 1 - 1/3 - 2/5 = 1 - 5/15 - 6/15 = 4/15.
+            (b) For P(red)=1/3, P(blue)=2/5, P(green)=4/15 to all be
+            exact ratios, total marbles must be a multiple of lcm(3, 5, 15)
+            = 15. Minimum = 15 marbles: 5 red, 6 blue, 4 green.
+            Verification: 5/15=1/3 ✓, 6/15=2/5 ✓, 4/15 ✓. Sum=15 ✓.
+          right-idea-gaps: >-
+            Correctly computes P(green)=4/15 but cannot determine the minimum
+            number of marbles (e.g. guesses 15 without LCM reasoning), or
+            correctly identifies the LCM as 15 but makes an error assigning
+            the counts to each colour.
+          wrong-or-missing: >-
+            Adds probabilities without verifying mutual exclusivity, or
+            cannot find P(green).
+
+      - id: prob_3
+        type: find-the-error
+        prompt: >-
+          A fair coin is tossed 9 times and lands Heads every single time.
+          Before the 10th toss, an observer says: "The universe must balance
+          out. Because Heads appeared 9 times in a row, the probability of
+          Tails on the 10th toss is now much higher than 0.5."
+
+          (a) Refute or defend this claim using the mathematical definition
+              of independent events. Be precise — don't just say "coins have
+              no memory."
+          (b) Compare P({H,H,H,H,H,H,H,H,H,T}) with P({H,H,H,H,H,H,H,H,H,H})
+              for a fair coin. What do you notice, and what does it reveal
+              about the observer's intuition?
+        rubric:
+          correct-justified: >-
+            (a) Two events are independent if the outcome of one has no
+            effect on the probability of the other. Since the coin has no
+            physical mechanism to "remember" past outcomes, each toss is
+            independent. P(Tails on toss 10) = 0.5 exactly, regardless of
+            the previous 9 results. The observer's claim confuses the
+            improbability of a long streak with the probability of the
+            NEXT individual toss.
+            (b) P({HHHHHHHHHТ}) = (1/2)^10 = P({HHHHHHHHHH}) = (1/2)^10.
+            Both specific sequences are EQUALLY likely. The observer's
+            intuition wrongly assigns lower probability to continuing the
+            streak than to breaking it — but any specific sequence of 10
+            tosses has the same probability (1/2)^10.
+          right-idea-gaps: >-
+            Correctly states independence means P(Tails)=0.5 but cannot
+            explain what independence means formally (only "coins have no
+            memory"), OR correctly computes both probabilities as (1/2)^10
+            but doesn't connect it to the observer's faulty intuition.
+          wrong-or-missing: >-
+            Agrees with the observer (Tails is "due"), or computes the
+            probabilities incorrectly.
+
+      - id: prob_4
+        type: explain-first-step
+        prompt: >-
+          A box contains N white balls and 5 black balls. A ball is drawn
+          at random, its colour is recorded, and it is NOT replaced.
+          Then a second ball is drawn.
+
+          (a) The first ball drawn turns out to be black. Write expressions
+              (in terms of N) for: the new total number of balls in the box,
+              and the remaining number of black balls. What is P(second ball
+              is black | first was black)?
+          (b) Explain conceptually — not just with numbers — how the outcome
+              of the first draw changes the probability structure for the
+              second draw. Contrast this with the scenario where the ball IS
+              replaced before the second draw.
+        rubric:
+          correct-justified: >-
+            (a) After removing 1 black ball:
+            New total = (N + 5) - 1 = N + 4.
+            Remaining black = 5 - 1 = 4.
+            P(2nd black | 1st black) = 4 / (N + 4).
+            (b) Without replacement: the first draw physically changes what
+            is in the box — fewer balls, fewer black ones. The second draw's
+            probability is CONDITIONAL on the first result (the two events
+            are DEPENDENT). With replacement: the box is restored to its
+            original state after every draw, so each draw has identical
+            probabilities — the events are INDEPENDENT. The key distinction
+            is whether the sample space for the second draw is affected by
+            the first event.
+          right-idea-gaps: >-
+            Correctly sets up P(2nd black | 1st black) = 4/(N+4) but gives
+            only a numerical explanation for part (b) rather than the
+            conceptual distinction (dependent vs independent / changed vs
+            unchanged sample space).
+          wrong-or-missing: >-
+            Sets up the probability for the second draw as if the ball was
+            replaced (uses 5/(N+5)), or cannot express the answer in terms
+            of N.
+
+    practice_problems:
+      A: >-
+        4 people each independently choose a number from {1, 2, 3, 4}
+        uniformly at random. Let A = "all 4 numbers chosen are distinct"
+        and B = "the number 3 is chosen at least once."
+        (a) Find P(A) and P(B).
+        (b) Find P(A and B).
+        (c) Are A and B independent? Prove your answer using the definition
+        of independence — do not just say they "seem related."
+      B: >-
+        A bag contains 3 red and 5 black balls. Two balls are drawn one
+        after the other WITHOUT replacement. Find P(both are black). Show the
+        step-by-step conditional probability reasoning and explain why the
+        second draw's probability depends on the first.
+      C: >-
+        A card is drawn at random from a standard deck of 52 cards. Find
+        the probability that it is: (a) a king, (b) a red card,
+        (c) the king of spades. Show your reasoning for each.

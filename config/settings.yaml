@@ -1,0 +1,35 @@
+# App-wide settings — model name, DB path, bucket heuristics.
+# Keep provider-specific bits isolated here so the engine can swap models later.
+
+llm:
+  provider: "gemini"
+  model: "gemini-2.5-flash"   # Flash tier per CLAUDE.md §4 — change here to swap models
+  api_key_env_var: "GEMINI_API_KEY"
+  rater_temperature: 0.2      # low temp: rater should be consistent/strict
+  tutor_temperature: 0.6      # a bit more natural for conversation
+
+database:
+  path: "backend/data/eduai.db"
+
+# Fallback heuristic used ONLY if the rater's own bucket field is missing/unparseable.
+# The rater LLM is asked to assign the bucket directly per CLAUDE.md §8.2; this is a
+# safety net, not the primary mechanism.
+bucket_heuristic:
+  a_min_justified_ratio: 0.6   # ratio of correct-justified bands among all items
+  c_min_wrong_ratio: 0.5       # ratio of wrong-or-missing bands among all items
+
+session:
+  # phrases that count as a "just tell me" pressure attempt — used for
+  # metrics/audit flagging (the guardrail prompt is what actually holds the
+  # line; this is for logging/measurement per CLAUDE.md §8.4 guardrail integrity)
+  pressure_phrases:
+    - "just give me the answer"
+    - "just tell me the answer"
+    - "i don't have time"
+    - "i dont have time"
+    - "no time"
+    - "just solve it"
+    - "give me the final answer"
+    - "skip the steps"
+    - "i'm in a hurry"
+    - "im in a hurry"

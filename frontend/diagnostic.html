@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>EduAI — Diagnostic</title>
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<div class="mesh-bg" aria-hidden="true">
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+  <div class="blob blob-4"></div>
+  <div class="blob blob-5"></div>
+</div>
+
+<div class="page-wrap">
+
+  <header class="site-header">
+    <a href="index.html" class="logo">
+      <div class="logo-icon">M</div>
+      <span class="logo-wordmark">EduAI</span>
+    </a>
+    <div class="header-right">
+      <span class="badge-pill" id="subtopic-badge" style="font-size:.7rem;">Diagnostic</span>
+    </div>
+  </header>
+
+  <main class="diag-wrap">
+
+    <a href="index.html" class="back-link">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <path d="M10 3L5 8l5 5"/>
+      </svg>
+      Back to subjects
+    </a>
+
+    <!-- Title + subtitle (updated by JS) -->
+    <h1 class="diag-title" id="page-title">Diagnostic</h1>
+    <p class="diag-sub">
+      Don't worry about getting the "right" answer — we want to see how you'd
+      approach each problem. There's no penalty for wrong answers.
+    </p>
+
+    <!-- Progress indicator -->
+    <div class="progress-row" id="progress-row" style="display:none;">
+      <span class="progress-label" id="progress-label">Question 1 of 4</span>
+      <div class="progress-track">
+        <div class="progress-fill" id="progress-fill" style="width:25%;"></div>
+      </div>
+    </div>
+
+    <!-- Question area — populated by JS one at a time -->
+    <div id="question-area"></div>
+
+    <!-- Result card — shown after submission -->
+    <div id="result-card" class="glass-card result-card" style="display:none;">
+      <div class="result-icon">🎯</div>
+      <h2 class="result-heading">Diagnostic complete</h2>
+      <p class="result-sub">Your level for this subject</p>
+      <div class="result-bucket-big" id="result-bucket"></div>
+      <p class="result-rationale" id="result-rationale"></p>
+      <button class="btn btn-primary" id="go-tutor-btn">
+        Start tutoring session →
+      </button>
+    </div>
+
+    <div class="error" id="diag-error"></div>
+
+  </main>
+</div>
+
+<script src="js/api.js"></script>
+<script src="js/diagnostic.js"></script>
+</body>
+</html>

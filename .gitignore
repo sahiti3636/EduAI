@@ -1,0 +1,9 @@
+.venv/
+__pycache__/
+*.pyc
+backend/data/
+.env
+.pytest_cache/
+node_modules/
+CLAUDE.node_modules
+.claude

@@ -1,0 +1,11 @@
+student_id,subtopic,item_id,response_text,teacher_bucket
+s1,algebra,alg_1,"I'd let speed be x, write 360/x and 360/(x+5) as the two times, since time = distance/speed, and set time1 minus time2 equal to 1 because that's the 1 hour difference.",
+s1,algebra,alg_2,"a1 = S1 = 3(1)+5 = 8. S2 = 3(4)+10=22, so a2 = 22-8=14, d = 14-8 = 6.",
+s1,algebra,alg_3,"They assumed sum and product stay the same but they don't - new sum is old sum over old product = 3, new product is 1 over old product = 2, so x^2-3x+2=0.",
+s1,algebra,alg_4,"(i) factors into (x-3)(x-4) so factoring is quick. (ii) doesn't have nice integer factors so I'd use the formula.",
+s1,algebra,,,A
+s2,algebra,alg_1,"set up an equation with speed and time",
+s2,algebra,alg_2,"not sure, maybe a=3 d=5 since those are the numbers in the formula",
+s2,algebra,alg_3,"the answer should be the same equation, I don't see an error",
+s2,algebra,alg_4,"use the formula for both because it always works",
+s2,algebra,,,C

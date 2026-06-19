@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>EduAI — Adaptive Math Tutor</title>
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<!-- ── Animated mesh gradient background ──────── -->
+<div class="mesh-bg" aria-hidden="true">
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+  <div class="blob blob-4"></div>
+  <div class="blob blob-5"></div>
+</div>
+
+<div class="page-wrap">
+
+  <!-- ── Header ────────────────────────────────── -->
+  <header class="site-header">
+    <a href="index.html" class="logo">
+      <div class="logo-icon">M</div>
+      <span class="logo-wordmark">EduAI</span>
+    </a>
+
+    <nav class="site-nav" aria-label="Main">
+      <a href="#" class="nav-link">About</a>
+      <a href="#" class="nav-link">How it works</a>
+      <a href="#" class="nav-link">Pilot</a>
+    </nav>
+
+    <!-- Shown after login -->
+    <div class="header-right" id="header-student" style="display:none;">
+      <span id="header-student-label" class="badge-pill" style="font-size:.7rem;"></span>
+      <button class="btn btn-ghost btn-xs" id="switch-student-btn">Switch student</button>
+    </div>
+    <div class="header-right" id="header-guest">
+      <span class="badge-pill">✦ Pilot build</span>
+    </div>
+  </header>
+
+  <!-- ══════════════════════════════════════════
+       STATE 1 — Landing / login
+  ══════════════════════════════════════════ -->
+  <div id="landing-state">
+
+    <!-- Hero text (left column) -->
+    <div class="hero-text">
+      <div class="hero-badge">
+        <span class="badge-pill">✦ Adaptive Socratic Math Tutor</span>
+      </div>
+
+      <h1 class="hero-title">
+        <span class="t-light">Guided</span>
+        <span class="t-heavy">Math</span>
+        <span class="t-italic">Tutoring.</span>
+      </h1>
+
+      <p class="hero-sub">
+        Your AI tutor asks questions, not answers.<br>
+        Calibrated to your understanding so guidance is never
+        too much&nbsp;&mdash;&nbsp;or too little.
+      </p>
+    </div>
+
+    <!-- Login card (right column) -->
+    <div id="setup-card" class="glass-card">
+      <p class="login-eyebrow">Get started</p>
+      <p class="login-heading">Enter your nickname</p>
+      <p class="login-sub">
+        Pilot build — please use a nickname or the code your teacher gave you,
+        not your real name.
+      </p>
+
+      <label class="form-label" for="label-input">Your nickname</label>
+      <input
+        class="form-input"
+        type="text"
+        id="label-input"
+        placeholder="e.g. Student 7 or MathWiz"
+        autocomplete="off"
+      />
+
+      <button class="btn btn-primary" id="start-btn" style="width:100%;margin-top:4px;">
+        Continue →
+      </button>
+      <div class="error" id="setup-error"></div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       STATE 2 — Subject selection (hidden until login)
+  ══════════════════════════════════════════ -->
+  <div id="welcome-state" style="display:none;">
+
+    <!-- Welcome banner -->
+    <div id="welcome-card" class="glass-card">
+      <div>
+        <p class="welcome-greeting">Hello, <span id="welcome-label"></span> 👋</p>
+        <p class="welcome-sub">Pick a subject to start your diagnostic, or jump into tutoring if you've already been assessed.</p>
+      </div>
+    </div>
+
+    <!-- Subject cards — populated by index.js -->
+    <div id="subtopics" class="subtopic-grid"></div>
+
+  </div>
+
+</div><!-- /.page-wrap -->
+
+<script src="js/api.js"></script>
+<script src="js/index.js"></script>
+</body>
+</html>

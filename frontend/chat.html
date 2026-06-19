@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>EduAI — Tutor</title>
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<div class="mesh-bg" aria-hidden="true">
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+  <div class="blob blob-4"></div>
+  <div class="blob blob-5"></div>
+</div>
+
+<div class="page-wrap">
+
+  <header class="site-header">
+    <a href="index.html" class="logo">
+      <div class="logo-icon">M</div>
+      <span class="logo-wordmark">EduAI</span>
+    </a>
+    <div class="header-right">
+      <span class="bucket-badge" id="bucket-badge" style="display:none;"></span>
+    </div>
+  </header>
+
+  <main class="chat-wrap">
+
+    <!-- ── STEP 1: Chapter / question picker (shown first) ── -->
+    <div id="picker-screen">
+      <div class="chat-topbar">
+        <a href="index.html" class="back-link" style="margin-bottom:0;">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M10 3L5 8l5 5"/>
+          </svg>
+          Subjects
+        </a>
+        <span class="chat-topbar-title" id="page-title">Choose a chapter</span>
+      </div>
+
+      <p class="chat-note">
+        Pick a chapter to focus on — the tutor will give you a quick overview before
+        diving in. Or paste your own question below.
+      </p>
+
+      <!-- Chapter cards -->
+      <div id="chapter-grid" class="chapter-grid">
+        <div class="chapter-loading" id="chapter-loading">Loading chapters…</div>
+      </div>
+
+      <!-- Custom question section -->
+      <div class="glass-card custom-q-card">
+        <p class="custom-q-label">
+          <span class="custom-q-icon">✎</span>
+          Bring your own question
+        </p>
+        <p class="custom-q-sub">
+          Paste a problem from your textbook, homework, or exam paper and the tutor
+          will guide you through it.
+        </p>
+        <textarea
+          class="form-textarea"
+          id="custom-problem"
+          placeholder="Type or paste your problem here…"
+          rows="4"
+        ></textarea>
+        <button class="btn btn-primary" id="custom-start-btn" style="margin-top:10px;">
+          Start with this question →
+        </button>
+      </div>
+
+      <div class="error" id="picker-error"></div>
+    </div>
+
+    <!-- ── STEP 2: Active tutoring chat (hidden until session starts) ── -->
+    <div id="chat-screen" style="display:none; flex-direction:column; flex:1;">
+
+      <div class="chat-topbar">
+        <a href="#" class="back-link" id="back-to-picker" style="margin-bottom:0;">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M10 3L5 8l5 5"/>
+          </svg>
+          Change chapter
+        </a>
+        <span class="chat-topbar-title" id="chat-title">Tutor</span>
+      </div>
+
+      <p class="chat-note">
+        The tutor guides you with questions — ask for the answer directly if you want
+        it, otherwise work through it together. ✦
+      </p>
+
+      <!-- Chat panel -->
+      <div class="glass-card chat-panel">
+
+        <!-- Problem card — pinned ABOVE the scroll area, hidden until populated -->
+        <div id="problem-header" class="problem-header" style="display:none;">
+          <div class="problem-label">Problem to solve</div>
+          <div class="problem-text" id="problem-text-content"></div>
+        </div>
+
+        <!-- Scrollable messages -->
+        <div class="chat-messages-wrap" id="chat-window"></div>
+
+        <!-- Input row -->
+        <div class="chat-input-row">
+          <textarea
+            class="form-textarea"
+            id="chat-input"
+            placeholder="Type your reply… (Enter to send, Shift+Enter for new line)"
+            rows="2"
+          ></textarea>
+          <button class="btn btn-primary" id="send-btn" style="height:50px;padding:0 20px;">
+            Send
+          </button>
+        </div>
+      </div>
+
+      <div class="error" id="chat-error" style="margin-bottom:8px;"></div>
+
+      <!-- Feedback -->
+      <div class="glass-card feedback-panel">
+        <span class="feedback-label">How did this session feel?</span>
+        <div class="feedback-btns">
+          <button class="btn btn-ghost btn-xs" data-rating="too_easy">Too easy / over-questioned</button>
+          <button class="btn btn-ghost btn-xs" data-rating="just_right">Just right</button>
+          <button class="btn btn-ghost btn-xs" data-rating="too_hard">Too hard / got lost</button>
+        </div>
+      </div>
+
+    </div><!-- /#chat-screen -->
+
+  </main>
+</div>
+
+<script src="js/api.js?v=4"></script>
+<script src="js/chat.js?v=4"></script>
+</body>
+</html>
