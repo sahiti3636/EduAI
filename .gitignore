@@ -5,5 +5,5 @@ backend/data/
 .env
 .pytest_cache/
 node_modules/
-CLAUDE.node_modules
+CLAUDE.md
 .claude
