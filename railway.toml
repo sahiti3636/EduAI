@@ -4,7 +4,7 @@ dockerfilePath = "Dockerfile"
 
 [deploy]
 # Railway injects $PORT — uvicorn must bind to it, not a hardcoded port.
-startCommand = "/bin/sh -c 'cd /app/backend && uvicorn app.main:app --host 0.0.0.0 --port $PORT'"
+startCommand = "uvicorn app.main:app --host 0.0.0.0 --port $PORT"
 healthcheckPath = "/health"
 healthcheckTimeout = 300
 restartPolicyType = "on_failure"
