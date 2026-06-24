@@ -17,5 +17,7 @@ ENV DB_PATH=/data/eduai.db
 # without needing a cd in the start command (avoids shell quoting issues with $PORT).
 WORKDIR /app/backend
 
-# PORT is injected by Railway at runtime
+# PORT is injected by Railway at runtime.
+# Shell-form CMD (no brackets) runs via /bin/sh -c, so $PORT is expanded.
 EXPOSE 8001
+CMD uvicorn app.main:app --host 0.0.0.0 --port $PORT

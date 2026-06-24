@@ -4,7 +4,8 @@ dockerfilePath = "Dockerfile"
 
 [deploy]
 # Railway injects $PORT — uvicorn must bind to it, not a hardcoded port.
-startCommand = "uvicorn app.main:app --host 0.0.0.0 --port $PORT"
+# startCommand intentionally omitted — CMD in Dockerfile handles this.
+# Shell-form CMD expands $PORT correctly; Railway's exec-form startCommand does not.
 healthcheckPath = "/health"
 healthcheckTimeout = 300
 restartPolicyType = "on_failure"
