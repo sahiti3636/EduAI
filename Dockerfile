@@ -20,4 +20,4 @@ WORKDIR /app/backend
 # PORT is injected by Railway at runtime.
 # Shell-form CMD (no brackets) runs via /bin/sh -c, so $PORT is expanded.
 EXPOSE 8001
-CMD uvicorn app.main:app --host 0.0.0.0 --port $PORT
+CMD ["/bin/sh", "-c", "uvicorn app.main:app --host 0.0.0.0 --port $PORT"]
