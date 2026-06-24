@@ -23,9 +23,31 @@ async function loadPicker() {
   document.getElementById("page-title").textContent = `${subtopicLabel} — Choose a chapter`;
 
   try {
-    const chapters = await Api.getChapters(subtopic);
+    const [chapters, progress] = await Promise.all([
+      Api.getChapters(subtopic),
+      Api.getProgress(Store.studentId).catch(() => null),
+    ]);
 
-    // Clear the loading placeholder
+    // ── Diagnostic gate ────────────────────────────────────
+    const subtopicProgress = (progress?.subtopics || []).find(s => s.id === subtopic);
+    const hasBucket = !!subtopicProgress?.bucket;
+
+    if (!hasBucket) {
+      chapterGrid.innerHTML = "";
+      document.getElementById("diag-gate").style.display = "";
+      document.getElementById("diag-gate-link").href = `diagnostic.html?subtopic=${subtopic}`;
+      // Still allow the custom question card — hide only the chapter grid lock
+      return;
+    }
+
+    document.getElementById("diag-gate").style.display = "none";
+
+    // Build a set of chapter IDs the student has already quizzed
+    const completedChapters = new Set();
+    if (progress) {
+      (subtopicProgress?.chapters || []).forEach(c => { if (c.completed) completedChapters.add(c.id); });
+    }
+
     chapterGrid.innerHTML = "";
 
     if (!chapters || chapters.length === 0) {
@@ -34,11 +56,19 @@ async function loadPicker() {
     }
 
     chapters.forEach(ch => {
+      const prereqMissing = ch.prerequisite_id && !completedChapters.has(ch.prerequisite_id);
+      const prereqHtml = prereqMissing
+        ? `<div class="chapter-prereq">
+             Tip: try <strong>${ch.prerequisite_label}</strong> first for best results
+           </div>`
+        : "";
+
       const card = document.createElement("div");
       card.className = "glass-card chapter-card";
       card.innerHTML = `
         <div class="chapter-name">${ch.label}</div>
         <div class="chapter-desc">${ch.description}</div>
+        ${prereqHtml}
         <button class="btn btn-primary btn-sm chapter-btn" style="margin-top:auto;">
           Start with overview →
         </button>
@@ -100,6 +130,14 @@ async function beginSession({ subSubtopicId = null, problemStatement = null, cha
       problemHeader.style.display = "block";
     }
 
+    // If this is a chapter session, store info and show the quiz action button
+    if (subSubtopicId) {
+      sessionStorage.setItem("eduai_quiz_subtopic", subtopic);
+      sessionStorage.setItem("eduai_quiz_chapter_id", subSubtopicId);
+      sessionStorage.setItem("eduai_quiz_chapter_label", chapterLabel || "");
+      document.getElementById("quiz-action").style.display = "block";
+    }
+
     appendMessage("tutor", turn.reply);
   } catch (e) {
     pickerError.textContent =
@@ -125,6 +163,7 @@ function appendMessage(role, text) {
   div.className   = `msg ${role}`;
   div.textContent = text;
   chatWindow.appendChild(div);
+  renderMath(div);
   chatWindow.scrollTop = chatWindow.scrollHeight;
 }
 
@@ -158,15 +197,190 @@ document.getElementById("chat-input").addEventListener("keydown", e => {
 // ── Feedback ratings ──────────────────────────────────────────
 document.querySelectorAll("[data-rating]").forEach(btn => {
   btn.addEventListener("click", async () => {
+    const textFeedback = document.getElementById("feedback-text").value.trim() || null;
     try {
-      await Api.logMetric(Store.studentId, subtopic, "bucket_felt_right_student", btn.dataset.rating);
+      await Api.logMetric(Store.studentId, subtopic, "bucket_felt_right_student", btn.dataset.rating, textFeedback);
       btn.textContent = "Thanks!";
       btn.disabled = true;
+      if (textFeedback) {
+        document.getElementById("feedback-text").value = "";
+        document.getElementById("feedback-sent").style.display = "inline";
+      }
     } catch (e) {
       chatError.textContent = e.message;
     }
   });
 });
+
+// ── Written feedback (standalone submit) ──────────────────────
+document.getElementById("feedback-submit-btn").addEventListener("click", async () => {
+  const textFeedback = document.getElementById("feedback-text").value.trim();
+  if (!textFeedback) return;
+  try {
+    await Api.logMetric(Store.studentId, subtopic, "session_written_feedback", "submitted", textFeedback);
+    document.getElementById("feedback-text").value = "";
+    document.getElementById("feedback-sent").style.display = "inline";
+    document.getElementById("feedback-submit-btn").disabled = true;
+  } catch (e) {
+    chatError.textContent = e.message;
+  }
+});
+
+// ── Voice input ───────────────────────────────────────────────
+(function () {
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  const micBtn = document.getElementById("mic-btn");
+  if (!SpeechRecognition) { micBtn.style.display = "none"; return; }
+
+  const rec = new SpeechRecognition();
+  rec.lang = "en-IN";
+  rec.continuous = false;
+  rec.interimResults = true;
+
+  let listening = false;
+  const input = document.getElementById("chat-input");
+
+  micBtn.addEventListener("click", () => {
+    if (listening) { rec.stop(); return; }
+    rec.start();
+  });
+
+  rec.onstart = () => {
+    listening = true;
+    micBtn.classList.add("mic-active");
+    micBtn.title = "Listening… click to stop";
+  };
+  rec.onend = () => {
+    listening = false;
+    micBtn.classList.remove("mic-active");
+    micBtn.title = "Speak your answer";
+  };
+  rec.onerror = () => { rec.onend(); };
+
+  rec.onresult = (e) => {
+    const transcript = Array.from(e.results)
+      .map(r => r[0].transcript).join("");
+    input.value = transcript;
+    if (e.results[e.results.length - 1].isFinal) rec.stop();
+  };
+})();
+
+// ── Transcript download ───────────────────────────────────────
+document.getElementById("download-transcript-btn").addEventListener("click", () => {
+  const msgs = chatWindow.querySelectorAll(".msg");
+  if (!msgs.length) return;
+
+  const subtopicLabel = (SUBTOPICS.find(s => s.id === subtopic) || {}).label || subtopic;
+  const chapterLabel  = selectedChapterLabel || "Session";
+  const date          = new Date().toLocaleDateString("en-IN", { dateStyle: "long" });
+
+  let lines = [
+    `EduAI — Tutoring Transcript`,
+    `Subject: ${subtopicLabel}${chapterLabel ? " — " + chapterLabel : ""}`,
+    `Date: ${date}`,
+    `${"─".repeat(50)}`,
+    "",
+  ];
+
+  msgs.forEach(m => {
+    const role = m.classList.contains("tutor") ? "Tutor" : "You";
+    lines.push(`[${role}]`);
+    lines.push(m.textContent.trim());
+    lines.push("");
+  });
+
+  const blob = new Blob([lines.join("\n")], { type: "text/plain" });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement("a");
+  a.href     = url;
+  a.download = `eduai-transcript-${subtopic}-${Date.now()}.txt`;
+  a.click();
+  URL.revokeObjectURL(url);
+});
+
+// ── Math keyboard (chat input) ────────────────────────────────
+document.getElementById("chat-kb-btn").addEventListener("click", () => {
+  mathKb.attach(document.getElementById("chat-input"));
+});
+
+// ── Math keyboard (custom question textarea) ──────────────────
+document.getElementById("custom-kb-btn").addEventListener("click", () => {
+  mathKb.attach(document.getElementById("custom-problem"));
+});
+
+// ── OCR on chat message input ─────────────────────────────────
+(function () {
+  const fileInput = document.getElementById("chat-img-input");
+  const status    = document.getElementById("chat-ocr-status");
+  const chatInput = document.getElementById("chat-input");
+
+  fileInput.addEventListener("change", async () => {
+    const file = fileInput.files[0];
+    if (!file) return;
+    status.textContent   = "Extracting text from image…";
+    status.className     = "ocr-status ocr-loading";
+    status.style.display = "inline";
+    try {
+      const { text } = await Api.extractFromImage(file);
+      const existing = chatInput.value.trim();
+      chatInput.value = existing ? existing + "\n" + text : text;
+      chatInput.dispatchEvent(new Event("input", { bubbles: true }));
+      status.textContent = "Text extracted — edit if needed.";
+      status.className   = "ocr-status ocr-ok";
+    } catch (e) {
+      status.textContent = e.message;
+      status.className   = "ocr-status ocr-err";
+    }
+    fileInput.value = "";
+    setTimeout(() => { status.style.display = "none"; }, 4000);
+  });
+})();
+
+// ── OCR image upload (custom question) ───────────────────────
+(function () {
+  const fileInput = document.getElementById("ocr-file-input");
+  const status    = document.getElementById("ocr-status");
+  const preview   = document.getElementById("ocr-preview");
+  const thumb     = document.getElementById("ocr-thumb");
+  const removeBtn = document.getElementById("ocr-remove");
+  const textarea  = document.getElementById("custom-problem");
+
+  fileInput.addEventListener("change", async () => {
+    const file = fileInput.files[0];
+    if (!file) return;
+
+    // Show thumbnail preview
+    thumb.src = URL.createObjectURL(file);
+    preview.style.display = "flex";
+
+    // Show loading state
+    status.textContent = "Extracting text…";
+    status.className   = "ocr-status ocr-loading";
+    status.style.display = "inline";
+
+    try {
+      const { text } = await Api.extractFromImage(file);
+      textarea.value = text;
+      status.textContent  = "Text extracted — edit if needed.";
+      status.className    = "ocr-status ocr-ok";
+    } catch (e) {
+      status.textContent  = e.message;
+      status.className    = "ocr-status ocr-err";
+      preview.style.display = "none";
+      URL.revokeObjectURL(thumb.src);
+    }
+
+    // Reset input so re-uploading same file fires change again
+    fileInput.value = "";
+  });
+
+  removeBtn.addEventListener("click", () => {
+    URL.revokeObjectURL(thumb.src);
+    thumb.src = "";
+    preview.style.display = "none";
+    status.style.display  = "none";
+  });
+})();
 
 // ── Boot ──────────────────────────────────────────────────────
 loadPicker();

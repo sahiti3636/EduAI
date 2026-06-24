@@ -37,6 +37,7 @@ async function load() {
 
     progressRow.style.display = "";
     renderQuestion(0);
+    startTimer();
   } catch (e) {
     errorEl.textContent = e.message;
   }
@@ -80,6 +81,41 @@ function renderQuestion(idx) {
         placeholder="Write your reasoning here — explain HOW you'd approach this, not just the final answer…"
       >${escHtml(savedVal)}</textarea>
 
+      <!-- Input toolbar -->
+      <div class="q-input-toolbar">
+        <button class="btn btn-ghost btn-xs math-kb-btn math-kb-btn-inline" id="q-kb-btn" title="Math keyboard">
+          <svg viewBox="0 0 22 14" fill="none" stroke="currentColor" stroke-width="1.6" width="15" height="10">
+            <rect x="1" y="1" width="20" height="12" rx="2"/>
+            <circle cx="5" cy="6" r=".9" fill="currentColor" stroke="none"/>
+            <circle cx="8.5" cy="6" r=".9" fill="currentColor" stroke="none"/>
+            <circle cx="12" cy="6" r=".9" fill="currentColor" stroke="none"/>
+            <circle cx="15.5" cy="6" r=".9" fill="currentColor" stroke="none"/>
+            <rect x="7" y="9.5" width="8" height="1.5" rx=".75" fill="currentColor" stroke="none"/>
+          </svg>
+          Math keyboard
+        </button>
+        <button class="mic-btn mic-btn-inline" id="q-mic-btn" title="Speak your answer" aria-label="Voice input">
+          <svg viewBox="0 0 20 20" fill="currentColor" width="14" height="14">
+            <path d="M10 1a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3Z"/>
+            <path d="M5 9a1 1 0 0 0-2 0 7 7 0 0 0 6 6.93V17H7a1 1 0 0 0 0 2h6a1 1 0 0 0 0-2h-2v-1.07A7 7 0 0 0 17 9a1 1 0 0 0-2 0 5 5 0 0 1-10 0Z"/>
+          </svg>
+        </button>
+        <label class="btn btn-ghost btn-xs ocr-upload-label math-kb-btn" for="q-ocr-input" title="Attach image of your question or working">
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="15" height="15">
+            <rect x="2" y="4" width="16" height="12" rx="2"/>
+            <circle cx="7" cy="9" r="1.5"/>
+            <path d="M2 14l4-4 3 3 3-3 4 4" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Attach image
+        </label>
+        <input type="file" id="q-ocr-input" accept="image/*" style="display:none"/>
+        <span class="ocr-status" id="q-ocr-status" style="display:none"></span>
+      </div>
+      <div class="ocr-preview" id="q-ocr-preview" style="display:none">
+        <img id="q-ocr-thumb" class="ocr-thumb" alt="Uploaded question"/>
+        <button class="ocr-remove" id="q-ocr-remove" title="Remove image">✕</button>
+      </div>
+
       <!-- Navigation row -->
       <div class="q-nav">
         <div class="q-nav-left">
@@ -98,7 +134,9 @@ function renderQuestion(idx) {
   `;
 
   // Set prompt text safely (preserves newlines without risking XSS)
-  document.getElementById("q-prompt-text").textContent = item.prompt;
+  const promptEl = document.getElementById("q-prompt-text");
+  promptEl.textContent = item.prompt;
+  renderMath(promptEl);
 
   // Restore scroll + focus
   questionArea.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -114,6 +152,68 @@ function renderQuestion(idx) {
     renderQuestion(idx + 1);
   });
   document.getElementById("submit-btn")?.addEventListener("click", submit);
+
+  // Wire math keyboard (ta already declared above for focus/scroll)
+  document.getElementById("q-kb-btn").addEventListener("click", () => {
+    mathKb.attach(ta);
+  });
+
+  // Wire voice input
+  (() => {
+    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const micBtn = document.getElementById("q-mic-btn");
+    if (!SR) { micBtn.style.display = "none"; return; }
+    const rec = new SR();
+    rec.lang = "en-IN"; rec.continuous = false; rec.interimResults = true;
+    let listening = false;
+    micBtn.addEventListener("click", () => listening ? rec.stop() : rec.start());
+    rec.onstart  = () => { listening = true;  micBtn.classList.add("mic-active"); };
+    rec.onend    = () => { listening = false; micBtn.classList.remove("mic-active"); };
+    rec.onerror  = () => rec.onend();
+    rec.onresult = (e) => {
+      ta.value = Array.from(e.results).map(r => r[0].transcript).join("");
+      if (e.results[e.results.length - 1].isFinal) rec.stop();
+    };
+  })();
+
+  // Wire OCR
+  (() => {
+    const fileInput = document.getElementById("q-ocr-input");
+    const status    = document.getElementById("q-ocr-status");
+    const preview   = document.getElementById("q-ocr-preview");
+    const thumb     = document.getElementById("q-ocr-thumb");
+    const removeBtn = document.getElementById("q-ocr-remove");
+
+    fileInput.addEventListener("change", async () => {
+      const file = fileInput.files[0];
+      if (!file) return;
+      thumb.src = URL.createObjectURL(file);
+      preview.style.display = "flex";
+      status.textContent = "Extracting text…";
+      status.className = "ocr-status ocr-loading";
+      status.style.display = "inline";
+      try {
+        const { text } = await Api.extractFromImage(file);
+        const existing = ta.value.trim();
+        ta.value = existing ? existing + "\n" + text : text;
+        status.textContent = "Text extracted — edit if needed.";
+        status.className = "ocr-status ocr-ok";
+      } catch (e) {
+        status.textContent = e.message;
+        status.className = "ocr-status ocr-err";
+        preview.style.display = "none";
+        URL.revokeObjectURL(thumb.src);
+      }
+      fileInput.value = "";
+    });
+
+    removeBtn.addEventListener("click", () => {
+      URL.revokeObjectURL(thumb.src);
+      thumb.src = "";
+      preview.style.display = "none";
+      status.style.display = "none";
+    });
+  })();
 }
 
 // ── Save the current textarea value into answers{} ───────────
@@ -135,6 +235,7 @@ async function submit() {
   try {
     const result = await Api.submitDiagnostic(subtopic, Store.studentId, answers);
 
+    clearInterval(timerInterval);
     // Hide question area + progress
     questionArea.style.display = "none";
     progressRow.style.display  = "none";
@@ -164,6 +265,26 @@ function escHtml(s) {
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;");
+}
+
+// ── Soft countdown timer (20 min, non-blocking) ───────────────
+const DIAG_SECONDS = 20 * 60;
+let timerEl       = null;
+let timerInterval = null;
+let secondsLeft   = DIAG_SECONDS;
+
+function startTimer() {
+  timerEl = document.getElementById("diag-timer");
+  if (!timerEl) return;
+  timerInterval = setInterval(() => {
+    secondsLeft = Math.max(0, secondsLeft - 1);
+    const m = Math.floor(secondsLeft / 60).toString().padStart(2, "0");
+    const s = (secondsLeft % 60).toString().padStart(2, "0");
+    timerEl.textContent = `${m}:${s}`;
+    if (secondsLeft <= 300) timerEl.classList.add("timer-warn");   // last 5 min
+    if (secondsLeft <= 60)  timerEl.classList.add("timer-urgent"); // last 1 min
+    if (secondsLeft === 0)  clearInterval(timerInterval);
+  }, 1000);
 }
 
 load();

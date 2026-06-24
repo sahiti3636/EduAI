@@ -23,6 +23,9 @@ SCHEMA = """
 CREATE TABLE IF NOT EXISTS students (
     id TEXT PRIMARY KEY,
     label TEXT NOT NULL,
+    username TEXT,
+    password_hash TEXT,
+    salt TEXT,
     created_at TEXT NOT NULL
 );
 
@@ -72,6 +75,48 @@ CREATE TABLE IF NOT EXISTS metrics (
     metric_type TEXT NOT NULL,      -- 'pre_quiz' | 'post_quiz' | 'bucket_felt_right_student' |
                                      -- 'bucket_felt_right_teacher' | 'frustration' | 'completion' | ...
     value TEXT NOT NULL,
+    text_feedback TEXT,             -- optional written qualitative feedback
+    created_at TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS quizzes (
+    id TEXT PRIMARY KEY,
+    student_id TEXT NOT NULL,
+    subtopic TEXT NOT NULL,
+    sub_subtopic_id TEXT,
+    sub_subtopic_label TEXT,
+    bucket TEXT NOT NULL,
+    questions_json TEXT NOT NULL,   -- full questions including correct answers (never sent to client)
+    created_at TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS quiz_attempts (
+    id TEXT PRIMARY KEY,
+    quiz_id TEXT NOT NULL,
+    student_id TEXT NOT NULL,
+    answers_json TEXT NOT NULL,
+    results_json TEXT NOT NULL,
+    score INTEGER NOT NULL,
+    total INTEGER NOT NULL,
+    submitted_at TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS revision_sheets (
+    id TEXT PRIMARY KEY,
+    attempt_id TEXT NOT NULL,
+    student_id TEXT NOT NULL,
+    content_json TEXT NOT NULL,
+    created_at TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS flashcard_decks (
+    id TEXT PRIMARY KEY,
+    student_id TEXT NOT NULL,
+    attempt_id TEXT NOT NULL,
+    sub_subtopic_label TEXT NOT NULL,
+    cards_json TEXT NOT NULL,       -- [{front, back}]
+    next_review TEXT NOT NULL,      -- ISO date YYYY-MM-DD
+    interval_days INTEGER NOT NULL DEFAULT 1,
     created_at TEXT NOT NULL
 );
 """
@@ -91,6 +136,25 @@ def init_db() -> None:
     conn = sqlite3.connect(path)
     try:
         conn.executescript(SCHEMA)
+        # Migrations
+        for _col, _def in [
+            ("text_feedback", "TEXT"),            # metrics
+        ]:
+            try:
+                conn.execute(f"ALTER TABLE metrics ADD COLUMN {_col} {_def}")
+            except sqlite3.OperationalError:
+                pass
+
+        for _col in ("username", "password_hash", "salt"):
+            try:
+                conn.execute(f"ALTER TABLE students ADD COLUMN {_col} TEXT")
+            except sqlite3.OperationalError:
+                pass  # column already exists
+        # Unique index on username — must come AFTER the column exists
+        conn.execute(
+            "CREATE UNIQUE INDEX IF NOT EXISTS idx_students_username ON students(username)"
+        )
+
         conn.commit()
     finally:
         conn.close()

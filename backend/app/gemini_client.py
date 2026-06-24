@@ -40,6 +40,15 @@ class LLMClient(Protocol):
         """
         ...
 
+    def generate_with_image(
+        self,
+        prompt: str,
+        image_bytes: bytes,
+        mime_type: str,
+    ) -> str:
+        """Run a single multimodal call with one image and a text prompt."""
+        ...
+
 
 class MissingAPIKeyError(RuntimeError):
     pass
@@ -97,6 +106,31 @@ class GeminiClient:
             model=self.model,
             contents=contents,
             config=types.GenerateContentConfig(**config_kwargs),
+        )
+        return response.text or ""
+
+    def generate_with_image(
+        self,
+        prompt: str,
+        image_bytes: bytes,
+        mime_type: str,
+    ) -> str:
+        from google.genai import types
+
+        client = self._ensure_client()
+        contents = [
+            types.Content(
+                role="user",
+                parts=[
+                    types.Part.from_bytes(data=image_bytes, mime_type=mime_type),
+                    types.Part.from_text(text=prompt),
+                ],
+            )
+        ]
+        response = client.models.generate_content(
+            model=self.model,
+            contents=contents,
+            config=types.GenerateContentConfig(temperature=0.1),
         )
         return response.text or ""
 

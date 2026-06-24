@@ -13,6 +13,32 @@ class CreateStudentRequest(BaseModel):
     label: str = Field(..., min_length=1, max_length=80)
 
 
+# ── Auth ──────────────────────────────────────────────────────────────────────
+
+class RegisterRequest(BaseModel):
+    username: str = Field(..., min_length=2, max_length=30, pattern=r'^[a-zA-Z0-9_-]+$')
+    password: str = Field(..., min_length=6, max_length=100)
+
+
+class LoginRequest(BaseModel):
+    username: str
+    password: str
+
+
+class AuthResponse(BaseModel):
+    student_id: str
+    username: str
+
+
+class TeacherLoginRequest(BaseModel):
+    username: str
+    password: str
+
+
+class TeacherLoginResponse(BaseModel):
+    token: str
+
+
 class StudentResponse(BaseModel):
     id: str
     label: str
@@ -68,6 +94,8 @@ class SubSubtopicItem(BaseModel):
     id: str
     label: str
     description: str
+    prerequisite_id: str | None = None
+    prerequisite_label: str | None = None
 
 
 class StartSessionRequest(BaseModel):
@@ -94,3 +122,70 @@ class LogMetricRequest(BaseModel):
     subtopic: str | None = None
     metric_type: str
     value: str
+    text_feedback: str | None = None   # optional written qualitative feedback
+
+
+# ── Quiz ─────────────────────────────────────────────────────────────────────
+
+class GenerateQuizRequest(BaseModel):
+    student_id: str
+    subtopic: str
+    sub_subtopic_id: str
+    sub_subtopic_label: str
+
+
+class QuizQuestionPublic(BaseModel):
+    id: str
+    type: str                          # "mcq" | "short"
+    question: str
+    options: list[str] | None = None   # MCQ only; not sent for short-answer
+
+
+class GenerateQuizResponse(BaseModel):
+    quiz_id: str
+    chapter: str
+    bucket: Literal["A", "B", "C"]
+    questions: list[QuizQuestionPublic]
+
+
+class SubmitQuizRequest(BaseModel):
+    quiz_id: str
+    student_id: str
+    answers: dict[str, str]            # {question_id -> student_answer}
+
+
+class QuizResultItem(BaseModel):
+    question_id: str
+    correct: bool
+    partial: bool
+    feedback: str
+    correct_answer: str
+    explanation: str
+
+
+class SubmitQuizResponse(BaseModel):
+    attempt_id: str
+    score: int
+    total: int
+    results: list[QuizResultItem]
+
+
+class RevisionRequest(BaseModel):
+    attempt_id: str
+
+
+class RevisionPoint(BaseModel):
+    title: str
+    explanation: str
+
+
+class Flashcard(BaseModel):
+    front: str
+    back: str
+
+
+class RevisionResponse(BaseModel):
+    summary: str
+    weak_areas: list[str]
+    revision_points: list[RevisionPoint]
+    flashcards: list[Flashcard]

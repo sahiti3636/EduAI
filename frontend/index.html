@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>EduAI — Adaptive Math Tutor</title>
-<link rel="stylesheet" href="css/style.css" />
+<link rel="stylesheet" href="css/style.css?v=1" />
 </head>
 <body>
 
@@ -66,28 +66,51 @@
       </p>
     </div>
 
-    <!-- Login card (right column) -->
-    <div id="setup-card" class="glass-card">
-      <p class="login-eyebrow">Get started</p>
-      <p class="login-heading">Enter your nickname</p>
-      <p class="login-sub">
-        Pilot build — please use a nickname or the code your teacher gave you,
-        not your real name.
-      </p>
+    <!-- Auth card (right column) -->
+    <div id="setup-card" class="glass-card auth-card">
+      <div class="auth-tabs">
+        <button class="auth-tab auth-tab-active" id="tab-login">Sign in</button>
+        <button class="auth-tab" id="tab-register">Register</button>
+      </div>
 
-      <label class="form-label" for="label-input">Your nickname</label>
-      <input
-        class="form-input"
-        type="text"
-        id="label-input"
-        placeholder="e.g. Student 7 or MathWiz"
-        autocomplete="off"
-      />
+      <!-- ── Login panel ── -->
+      <div id="panel-login">
+        <p class="login-sub" style="margin-bottom:18px;">
+          Use the username you registered with.
+        </p>
+        <label class="form-label" for="login-username">Username</label>
+        <input class="form-input" type="text" id="login-username"
+          placeholder="your_username" autocomplete="username" />
+        <label class="form-label" for="login-password" style="margin-top:12px;">Password</label>
+        <input class="form-input" type="password" id="login-password"
+          placeholder="••••••••" autocomplete="current-password" />
+        <button class="btn btn-primary" id="login-btn" style="width:100%;margin-top:16px;">
+          Sign in →
+        </button>
+      </div>
 
-      <button class="btn btn-primary" id="start-btn" style="width:100%;margin-top:4px;">
-        Continue →
-      </button>
-      <div class="error" id="setup-error"></div>
+      <!-- ── Register panel ── -->
+      <div id="panel-register" style="display:none;">
+        <p class="login-sub" style="margin-bottom:18px;">
+          Use a nickname or code — not your real name (pilot privacy rules).
+        </p>
+        <label class="form-label" for="reg-username">Choose a username</label>
+        <input class="form-input" type="text" id="reg-username"
+          placeholder="e.g. student7 or mathwiz" autocomplete="username"
+          minlength="2" maxlength="30" />
+        <p class="auth-hint">Letters, numbers, _ and - only. 2–30 characters.</p>
+        <label class="form-label" for="reg-password" style="margin-top:12px;">Password</label>
+        <input class="form-input" type="password" id="reg-password"
+          placeholder="At least 6 characters" autocomplete="new-password" />
+        <label class="form-label" for="reg-confirm" style="margin-top:12px;">Confirm password</label>
+        <input class="form-input" type="password" id="reg-confirm"
+          placeholder="Repeat your password" autocomplete="new-password" />
+        <button class="btn btn-primary" id="register-btn" style="width:100%;margin-top:16px;">
+          Create account →
+        </button>
+      </div>
+
+      <div class="error" id="setup-error" style="margin-top:12px;"></div>
     </div>
   </div>
 
@@ -104,6 +127,18 @@
       </div>
     </div>
 
+    <!-- Quick-link row -->
+    <div class="welcome-actions">
+      <a href="progress.html" class="welcome-action-link">
+        <span class="wa-icon">📊</span>
+        <span class="wa-label">My progress</span>
+      </a>
+      <a href="teacher.html" class="welcome-action-link">
+        <span class="wa-icon">👩‍🏫</span>
+        <span class="wa-label">Teacher view</span>
+      </a>
+    </div>
+
     <!-- Subject cards — populated by index.js -->
     <div id="subtopics" class="subtopic-grid"></div>
 
@@ -111,7 +146,7 @@
 
 </div><!-- /.page-wrap -->
 
-<script src="js/api.js"></script>
+<script src="js/bundle.js?v=1"></script>
 <script src="js/index.js"></script>
 </body>
 </html>

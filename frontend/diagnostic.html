@@ -4,7 +4,10 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>EduAI — Diagnostic</title>
-<link rel="stylesheet" href="css/style.css" />
+<link rel="stylesheet" href="css/style.css?v=1" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
 </head>
 <body>
 
@@ -50,6 +53,7 @@
       <div class="progress-track">
         <div class="progress-fill" id="progress-fill" style="width:25%;"></div>
       </div>
+      <span class="diag-timer" id="diag-timer" title="Soft time limit — you can still submit after this">20:00</span>
     </div>
 
     <!-- Question area — populated by JS one at a time -->
@@ -72,7 +76,9 @@
   </main>
 </div>
 
-<script src="js/api.js"></script>
-<script src="js/diagnostic.js"></script>
+
+
+<script src="js/bundle.js?v=1"></script>
+<script src="js/diagnostic.js?v=2"></script>
 </body>
 </html>

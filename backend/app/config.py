@@ -7,6 +7,7 @@ CLAUDE.md §6/§13 ("config-driven").
 from __future__ import annotations
 
 import functools
+import os
 from pathlib import Path
 from typing import Any
 
@@ -64,6 +65,12 @@ def get_item(subtopic: str, item_id: str) -> dict[str, Any]:
 
 
 def db_path() -> Path:
+    # DB_PATH env var overrides the YAML setting — used in production (Railway volume).
+    env = os.environ.get("DB_PATH")
+    if env:
+        p = Path(env)
+        p.parent.mkdir(parents=True, exist_ok=True)
+        return p
     rel = get_settings()["database"]["path"]
     return REPO_ROOT / rel
 

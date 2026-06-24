@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>EduAI — My Progress</title>
+<link rel="stylesheet" href="css/style.css?v=1" />
+</head>
+<body>
+
+<div class="mesh-bg" aria-hidden="true">
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+  <div class="blob blob-4"></div>
+  <div class="blob blob-5"></div>
+</div>
+
+<div class="page-wrap">
+
+  <header class="site-header">
+    <a href="index.html" class="logo">
+      <div class="logo-icon">M</div>
+      <span class="logo-wordmark">EduAI</span>
+    </a>
+    <div class="header-right">
+      <span class="badge-pill" id="student-label-badge" style="font-size:.7rem;"></span>
+    </div>
+  </header>
+
+  <main class="diag-wrap">
+
+    <a href="index.html" class="back-link">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <path d="M10 3L5 8l5 5"/>
+      </svg>
+      Back to subjects
+    </a>
+
+    <div id="progress-loading" style="text-align:center; padding:60px 0;">
+      <div class="quiz-spinner"></div>
+      <p style="color:var(--text-mid); margin-top:20px; font-size:.9rem;">Loading your progress…</p>
+    </div>
+
+    <div id="progress-content" style="display:none;">
+
+      <!-- Stats row -->
+      <div class="progress-stats-row" id="progress-stats-row"></div>
+
+      <!-- Per-subject sections -->
+      <div id="progress-subjects"></div>
+
+    </div>
+
+    <div class="error" id="progress-error"></div>
+
+  </main>
+</div>
+
+<script src="js/bundle.js?v=1"></script>
+<script src="js/progress.js"></script>
+</body>
+</html>

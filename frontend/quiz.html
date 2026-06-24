@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>EduAI — Chapter Quiz</title>
+<link rel="stylesheet" href="css/style.css?v=1" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+</head>
+<body>
+
+<div class="mesh-bg" aria-hidden="true">
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+  <div class="blob blob-4"></div>
+  <div class="blob blob-5"></div>
+</div>
+
+<div class="page-wrap">
+
+  <header class="site-header">
+    <a href="index.html" class="logo">
+      <div class="logo-icon">M</div>
+      <span class="logo-wordmark">EduAI</span>
+    </a>
+    <div class="header-right">
+      <span class="bucket-badge" id="bucket-badge" style="display:none;"></span>
+    </div>
+  </header>
+
+  <main class="diag-wrap">
+
+    <!-- ── LOADING ── -->
+    <div id="quiz-loading" style="text-align:center; padding:60px 0;">
+      <div class="quiz-spinner"></div>
+      <p id="quiz-loading-msg" style="color:var(--text-mid); margin-top:20px; font-size:.9rem;">
+        Generating your quiz…
+      </p>
+    </div>
+
+    <!-- ── QUESTIONS (one at a time) ── -->
+    <div id="quiz-questions" style="display:none;">
+      <div class="quiz-topbar">
+        <a href="chat.html" class="back-link" id="back-to-chat">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M10 3L5 8l5 5"/>
+          </svg>
+          Back to tutor
+        </a>
+        <span class="quiz-chapter-label" id="quiz-chapter-label"></span>
+      </div>
+
+      <div class="quiz-progress-wrap">
+        <div class="quiz-progress-bar">
+          <div class="quiz-progress-fill" id="quiz-progress-fill"></div>
+        </div>
+        <span class="quiz-progress-text" id="quiz-progress-text">1 / 5</span>
+      </div>
+
+      <div class="glass-card question-card" id="quiz-question-card">
+        <div class="q-meta">
+          <span class="q-num" id="quiz-q-num">Question 1</span>
+          <span class="q-type-badge" id="quiz-q-type">Multiple choice</span>
+        </div>
+        <p class="q-text" id="quiz-q-text"></p>
+
+        <!-- MCQ options -->
+        <div id="quiz-options" class="quiz-options" style="display:none;"></div>
+
+        <!-- Short answer input -->
+        <div id="quiz-short" style="display:none;">
+          <div style="position:relative;">
+            <textarea
+              class="form-textarea"
+              id="quiz-short-input"
+              placeholder="Write your answer here — show your working…"
+              rows="4"
+              style="padding-right:48px;"
+            ></textarea>
+            <button class="mic-btn mic-btn-inline" id="quiz-mic-btn" title="Speak your answer" aria-label="Voice input">
+              <svg viewBox="0 0 20 20" fill="currentColor" width="16" height="16">
+                <path d="M10 1a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3Z"/>
+                <path d="M5 9a1 1 0 0 0-2 0 7 7 0 0 0 6 6.93V17H7a1 1 0 0 0 0 2h6a1 1 0 0 0 0-2h-2v-1.07A7 7 0 0 0 17 9a1 1 0 0 0-2 0 5 5 0 0 1-10 0Z"/>
+              </svg>
+            </button>
+          </div>
+          <!-- Short-answer toolbar: keyboard + image -->
+          <div class="ocr-row" style="margin-top:8px;">
+            <button class="btn btn-ghost btn-xs math-kb-btn math-kb-btn-inline" id="quiz-kb-btn" title="Math keyboard">
+              <svg viewBox="0 0 22 14" fill="none" stroke="currentColor" stroke-width="1.6" width="16" height="10">
+                <rect x="1" y="1" width="20" height="12" rx="2"/>
+                <circle cx="5" cy="6" r=".9" fill="currentColor" stroke="none"/>
+                <circle cx="8.5" cy="6" r=".9" fill="currentColor" stroke="none"/>
+                <circle cx="12" cy="6" r=".9" fill="currentColor" stroke="none"/>
+                <circle cx="15.5" cy="6" r=".9" fill="currentColor" stroke="none"/>
+                <rect x="7" y="9.5" width="8" height="1.5" rx=".75" fill="currentColor" stroke="none"/>
+              </svg>
+              Math keyboard
+            </button>
+            <label class="btn btn-ghost btn-xs ocr-upload-label math-kb-btn" for="quiz-ocr-input" title="Upload a photo of your working">
+              <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="16" height="16">
+                <rect x="2" y="4" width="16" height="12" rx="2"/>
+                <circle cx="7" cy="9" r="1.5"/>
+                <path d="M2 14l4-4 3 3 3-3 4 4"/>
+              </svg>
+              Attach image
+            </label>
+            <input type="file" id="quiz-ocr-input" accept="image/*" style="display:none;" />
+            <span class="ocr-status" id="quiz-ocr-status" style="display:none;"></span>
+          </div>
+          <div class="ocr-preview" id="quiz-ocr-preview" style="display:none;">
+            <img id="quiz-ocr-thumb" class="ocr-thumb" alt="Uploaded working" />
+            <button class="ocr-remove" id="quiz-ocr-remove" title="Remove image">✕</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="quiz-nav">
+        <button class="btn btn-ghost" id="quiz-prev-btn" disabled>← Previous</button>
+        <button class="btn btn-primary" id="quiz-next-btn">Next →</button>
+        <button class="btn btn-primary quiz-submit-btn" id="quiz-submit-btn" style="display:none;">
+          Submit quiz
+        </button>
+      </div>
+
+      <div class="error" id="quiz-q-error" style="margin-top:8px;"></div>
+    </div>
+
+    <!-- ── RESULTS ── -->
+    <div id="quiz-results" style="display:none;">
+      <div class="quiz-topbar">
+        <a href="chat.html" class="back-link">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M10 3L5 8l5 5"/>
+          </svg>
+          Back to tutor
+        </a>
+      </div>
+
+      <div class="glass-card result-card" style="text-align:center;">
+        <div class="result-score-ring" id="result-score-ring">
+          <span id="result-score-text">3/5</span>
+        </div>
+        <h2 class="result-title" id="result-title">Good effort!</h2>
+        <p class="result-subtitle" id="result-subtitle"></p>
+      </div>
+
+      <div id="results-list" class="results-list"></div>
+
+      <!-- Feedback on the quiz itself -->
+      <div class="glass-card feedback-panel" style="margin-top:16px;">
+        <span class="feedback-label">How was this quiz?</span>
+        <div class="feedback-btns">
+          <button class="btn btn-ghost btn-xs" data-quiz-rating="too_easy">Too easy</button>
+          <button class="btn btn-ghost btn-xs" data-quiz-rating="just_right">Just right</button>
+          <button class="btn btn-ghost btn-xs" data-quiz-rating="too_hard">Too hard</button>
+        </div>
+        <div class="feedback-written" style="margin-top:10px;">
+          <textarea class="form-textarea feedback-textarea" id="quiz-feedback-text"
+            placeholder="Any other thoughts? (optional)" rows="2"></textarea>
+          <button class="btn btn-ghost btn-xs" id="quiz-feedback-btn">Send</button>
+          <span class="feedback-sent" id="quiz-feedback-sent" style="display:none;">Thanks!</span>
+        </div>
+      </div>
+
+      <div style="text-align:center; margin-top:24px;">
+        <button class="btn btn-primary" id="revision-btn">
+          Get my revision sheet + flashcards →
+        </button>
+        <div class="error" id="revision-error" style="margin-top:8px;"></div>
+      </div>
+    </div>
+
+    <!-- ── REVISION SHEET + FLASHCARDS ── -->
+    <div id="quiz-revision" style="display:none;">
+      <div class="quiz-topbar">
+        <button class="btn btn-ghost btn-xs" id="back-to-results-btn">← Back to results</button>
+        <span style="font-size:.85rem; color:var(--text-mid);">Revision Sheet</span>
+      </div>
+
+      <div class="glass-card" style="padding:28px 32px; margin-bottom:16px;">
+        <h3 class="revision-section-title">Summary</h3>
+        <p id="revision-summary" style="color:var(--text-mid); line-height:1.65; font-size:.92rem;"></p>
+
+        <div id="weak-areas-wrap" style="margin-top:18px;">
+          <h4 class="revision-tag-label">Focus areas</h4>
+          <div id="weak-areas-list" class="weak-areas-list"></div>
+        </div>
+      </div>
+
+      <div class="glass-card" style="padding:28px 32px; margin-bottom:16px;">
+        <h3 class="revision-section-title">Key concepts to review</h3>
+        <div id="revision-points-list"></div>
+      </div>
+
+      <div class="glass-card" style="padding:28px 32px; margin-bottom:32px;">
+        <h3 class="revision-section-title">Flashcards</h3>
+        <p style="font-size:.78rem; color:var(--text-lo); margin-bottom:20px;">
+          Click a card to flip it and reveal the answer.
+        </p>
+        <div class="flashcard-nav">
+          <button class="btn btn-ghost btn-xs" id="fc-prev">← Prev</button>
+          <span id="fc-counter" style="font-size:.8rem; color:var(--text-mid);">1 / 6</span>
+          <button class="btn btn-ghost btn-xs" id="fc-next">Next →</button>
+        </div>
+        <div class="flashcard-viewport">
+          <div class="flashcard" id="flashcard">
+            <div class="flashcard-face flashcard-front">
+              <span id="fc-front-text"></span>
+            </div>
+            <div class="flashcard-face flashcard-back">
+              <span id="fc-back-text"></span>
+            </div>
+          </div>
+        </div>
+        <p style="text-align:center; font-size:.72rem; color:var(--text-lo); margin-top:12px;">
+          Tap card to flip
+        </p>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+
+
+<script src="js/bundle.js?v=1"></script>
+<script src="js/quiz.js?v=2"></script>
+</body>
+</html>

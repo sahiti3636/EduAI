@@ -4,7 +4,10 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>EduAI — Tutor</title>
-<link rel="stylesheet" href="css/style.css" />
+<link rel="stylesheet" href="css/style.css?v=1" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
 </head>
 <body>
 
@@ -47,6 +50,21 @@
         diving in. Or paste your own question below.
       </p>
 
+      <!-- Diagnostic gate — shown when diagnostic hasn't been taken yet -->
+      <div id="diag-gate" class="diag-gate-banner glass-card" style="display:none;">
+        <div class="diag-gate-icon">📋</div>
+        <div class="diag-gate-body">
+          <strong class="diag-gate-title">Complete your diagnostic first</strong>
+          <p class="diag-gate-sub">
+            The diagnostic helps us personalise your tutoring level for this subject.
+            It only takes a few minutes and you don't need to get everything right.
+          </p>
+          <a id="diag-gate-link" href="diagnostic.html" class="btn btn-primary btn-sm" style="margin-top:12px;">
+            Take the diagnostic →
+          </a>
+        </div>
+      </div>
+
       <!-- Chapter cards -->
       <div id="chapter-grid" class="chapter-grid">
         <div class="chapter-loading" id="chapter-loading">Loading chapters…</div>
@@ -68,6 +86,37 @@
           placeholder="Type or paste your problem here…"
           rows="4"
         ></textarea>
+
+        <!-- OCR image upload + math keyboard -->
+        <div class="ocr-row">
+          <button class="btn btn-ghost btn-xs math-kb-btn math-kb-btn-inline" id="custom-kb-btn" title="Math keyboard">
+            <svg viewBox="0 0 22 14" fill="none" stroke="currentColor" stroke-width="1.6" width="15" height="10">
+              <rect x="1" y="1" width="20" height="12" rx="2"/>
+              <circle cx="5" cy="6" r=".9" fill="currentColor" stroke="none"/>
+              <circle cx="8.5" cy="6" r=".9" fill="currentColor" stroke="none"/>
+              <circle cx="12" cy="6" r=".9" fill="currentColor" stroke="none"/>
+              <circle cx="15.5" cy="6" r=".9" fill="currentColor" stroke="none"/>
+              <rect x="7" y="9.5" width="8" height="1.5" rx=".75" fill="currentColor" stroke="none"/>
+            </svg>
+            Math keyboard
+          </button>
+          <label class="btn btn-ghost btn-xs ocr-upload-label math-kb-btn" for="ocr-file-input" title="Upload a photo of your problem">
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="16" height="16">
+              <rect x="2" y="4" width="16" height="12" rx="2"/>
+              <circle cx="7" cy="9" r="1.5"/>
+              <path d="M2 14l4-4 3 3 3-3 4 4"/>
+            </svg>
+            Upload image
+          </label>
+          <input type="file" id="ocr-file-input" accept="image/*" style="display:none;" />
+          <span class="ocr-status" id="ocr-status" style="display:none;"></span>
+        </div>
+        <!-- Preview thumbnail -->
+        <div class="ocr-preview" id="ocr-preview" style="display:none;">
+          <img id="ocr-thumb" class="ocr-thumb" alt="Uploaded problem" />
+          <button class="ocr-remove" id="ocr-remove" title="Remove image">✕</button>
+        </div>
+
         <button class="btn btn-primary" id="custom-start-btn" style="margin-top:10px;">
           Start with this question →
         </button>
@@ -108,6 +157,30 @@
 
         <!-- Input row -->
         <div class="chat-input-row">
+          <button class="btn btn-ghost mic-btn" id="mic-btn" title="Speak your answer" aria-label="Voice input">
+            <svg viewBox="0 0 20 20" fill="currentColor" width="18" height="18">
+              <path d="M10 1a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3Z"/>
+              <path d="M5 9a1 1 0 0 0-2 0 7 7 0 0 0 6 6.93V17H7a1 1 0 0 0 0 2h6a1 1 0 0 0 0-2h-2v-1.07A7 7 0 0 0 17 9a1 1 0 0 0-2 0 5 5 0 0 1-10 0Z"/>
+            </svg>
+          </button>
+          <button class="btn btn-ghost mic-btn math-kb-btn" id="chat-kb-btn" title="Math keyboard" aria-label="Math keyboard">
+            <svg viewBox="0 0 22 14" fill="none" stroke="currentColor" stroke-width="1.6" width="18" height="12">
+              <rect x="1" y="1" width="20" height="12" rx="2"/>
+              <circle cx="5" cy="6" r=".9" fill="currentColor" stroke="none"/>
+              <circle cx="8.5" cy="6" r=".9" fill="currentColor" stroke="none"/>
+              <circle cx="12" cy="6" r=".9" fill="currentColor" stroke="none"/>
+              <circle cx="15.5" cy="6" r=".9" fill="currentColor" stroke="none"/>
+              <rect x="7" y="9.5" width="8" height="1.5" rx=".75" fill="currentColor" stroke="none"/>
+            </svg>
+          </button>
+          <label class="btn btn-ghost mic-btn math-kb-btn" for="chat-img-input" title="Attach image (extract text via OCR)" aria-label="Attach image">
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="18" height="18">
+              <rect x="2" y="4" width="16" height="12" rx="2"/>
+              <circle cx="7" cy="9" r="1.5"/>
+              <path d="M2 14l4-4 3 3 3-3 4 4" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </label>
+          <input type="file" id="chat-img-input" accept="image/*" style="display:none"/>
           <textarea
             class="form-textarea"
             id="chat-input"
@@ -117,6 +190,9 @@
           <button class="btn btn-primary" id="send-btn" style="height:50px;padding:0 20px;">
             Send
           </button>
+        </div>
+        <div class="ocr-row" style="padding:0 4px 2px;">
+          <span class="ocr-status" id="chat-ocr-status" style="display:none;"></span>
         </div>
       </div>
 
@@ -130,6 +206,28 @@
           <button class="btn btn-ghost btn-xs" data-rating="just_right">Just right</button>
           <button class="btn btn-ghost btn-xs" data-rating="too_hard">Too hard / got lost</button>
         </div>
+        <div class="feedback-written">
+          <textarea
+            class="form-textarea feedback-textarea"
+            id="feedback-text"
+            placeholder="Anything else to share? (optional)"
+            rows="2"
+          ></textarea>
+          <button class="btn btn-ghost btn-xs" id="feedback-submit-btn">Send feedback</button>
+          <span class="feedback-sent" id="feedback-sent" style="display:none;">Thanks for your feedback!</span>
+        </div>
+        <!-- Take Quiz action — shown after a chapter session starts -->
+        <div id="quiz-action" style="display:none; margin-top:14px; padding-top:14px; border-top:1px solid var(--glass-border);">
+          <span class="feedback-label">Ready to test yourself?</span>
+          <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:8px;">
+            <a href="quiz.html" id="take-quiz-link" class="btn btn-primary btn-xs">
+              Take chapter quiz →
+            </a>
+            <button class="btn btn-ghost btn-xs" id="download-transcript-btn">
+              Download transcript
+            </button>
+          </div>
+        </div>
       </div>
 
     </div><!-- /#chat-screen -->
@@ -137,7 +235,9 @@
   </main>
 </div>
 
-<script src="js/api.js?v=4"></script>
-<script src="js/chat.js?v=4"></script>
+
+
+<script src="js/bundle.js?v=1"></script>
+<script src="js/chat.js?v=6"></script>
 </body>
 </html>

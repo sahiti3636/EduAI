@@ -34,9 +34,13 @@ subtopics:
       - id: quadratic_equations
         label: "Quadratic Equations"
         description: "Factorising, completing the square, and using the quadratic formula — and knowing which method to reach for."
+        prerequisite_id: polynomials
+        prerequisite_label: "Polynomials"
       - id: arithmetic_progressions
         label: "Arithmetic Progressions"
         description: "The nth term, the sum of the first n terms, and how APs appear in real-life problems."
+        prerequisite_id: linear_equations
+        prerequisite_label: "Linear Equations"
     items:
       - id: alg_1
         type: explain-first-step
@@ -187,9 +191,13 @@ subtopics:
       - id: trig_identities
         label: "Trigonometric Identities"
         description: "Proving and applying identities that follow from sin²θ + cos²θ = 1, including the sec/cosec variants."
+        prerequisite_id: trig_ratios
+        prerequisite_label: "Trigonometric Ratios"
       - id: heights_distances
         label: "Heights and Distances"
         description: "Using angles of elevation and depression to find heights and distances in real-world problems."
+        prerequisite_id: trig_identities
+        prerequisite_label: "Trigonometric Identities"
     items:
       - id: trig_1
         type: explain-first-step
@@ -352,9 +360,13 @@ subtopics:
       - id: complementary_events
         label: "Complementary Events"
         description: "P(A) + P(not A) = 1 — when and how to use the complement to simplify calculations."
+        prerequisite_id: basic_probability
+        prerequisite_label: "Basic Probability"
       - id: independent_events
         label: "Independent & Dependent Events"
         description: "How drawing without replacement changes probabilities, and when two events truly have no effect on each other."
+        prerequisite_id: complementary_events
+        prerequisite_label: "Complementary Events"
     items:
       - id: prob_1
         type: find-the-error

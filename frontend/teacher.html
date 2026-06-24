@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>EduAI — Teacher Dashboard</title>
+<link rel="stylesheet" href="css/style.css?v=1" />
+</head>
+<body>
+
+<!-- ── Teacher login gate (shown when not authenticated) ── -->
+<div id="teacher-auth-overlay" class="teacher-auth-overlay" style="display:none;">
+  <div class="glass-card teacher-login-card">
+    <div class="logo" style="margin-bottom:20px;display:flex;align-items:center;gap:10px;">
+      <div class="logo-icon">M</div>
+      <span class="logo-wordmark">EduAI</span>
+    </div>
+    <p class="login-heading" style="margin-bottom:4px;">Teacher Login</p>
+    <p class="login-sub" style="margin-bottom:20px;">
+      Enter your admin credentials to access the pilot dashboard.
+    </p>
+    <label class="form-label" for="teacher-username">Username</label>
+    <input class="form-input" type="text" id="teacher-username"
+      placeholder="admin" autocomplete="username" />
+    <label class="form-label" for="teacher-password" style="margin-top:12px;">Password</label>
+    <input class="form-input" type="password" id="teacher-password"
+      placeholder="••••••••" autocomplete="current-password" />
+    <button class="btn btn-primary" id="teacher-login-btn" style="width:100%;margin-top:16px;">
+      Sign in →
+    </button>
+    <div class="error" id="teacher-auth-error" style="margin-top:10px;"></div>
+  </div>
+</div>
+
+<div class="mesh-bg" aria-hidden="true">
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+  <div class="blob blob-4"></div>
+  <div class="blob blob-5"></div>
+</div>
+
+<div class="page-wrap">
+
+  <header class="site-header">
+    <a href="index.html" class="logo">
+      <div class="logo-icon">M</div>
+      <span class="logo-wordmark">EduAI</span>
+    </a>
+    <div class="header-right">
+      <span class="badge-pill" style="font-size:.7rem;">👩‍🏫 Teacher view</span>
+    </div>
+  </header>
+
+  <main class="diag-wrap">
+
+    <a href="index.html" class="back-link">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <path d="M10 3L5 8l5 5"/>
+      </svg>
+      Back
+    </a>
+
+    <h1 class="diag-title">Pilot Overview</h1>
+    <p class="diag-sub">Aggregate data across all students. Refresh the page to see the latest.</p>
+
+    <div id="teacher-loading" style="text-align:center;padding:40px 0;">
+      <div class="quiz-spinner"></div>
+    </div>
+
+    <div id="teacher-content" style="display:none;">
+
+      <!-- Top stats -->
+      <div class="progress-stats-row" id="teacher-stats" style="grid-template-columns:repeat(5,1fr);"></div>
+
+      <!-- Guardrail health -->
+      <div class="glass-card teacher-section" id="guardrail-card">
+        <h2 class="teacher-section-title">Guardrail Health</h2>
+        <div class="teacher-guardrail-row" id="guardrail-summary"></div>
+        <div id="guardrail-leaks"></div>
+      </div>
+
+      <!-- Bucket distribution -->
+      <div class="glass-card teacher-section">
+        <h2 class="teacher-section-title">Bucket Distribution</h2>
+        <div id="bucket-dist"></div>
+      </div>
+
+      <!-- Student table -->
+      <div class="glass-card teacher-section">
+        <h2 class="teacher-section-title">Students</h2>
+        <div class="teacher-table-wrap">
+          <table class="teacher-table" id="student-table">
+            <thead>
+              <tr>
+                <th>Nickname</th>
+                <th>Joined</th>
+                <th>Buckets</th>
+                <th>Quizzes</th>
+                <th>Avg score</th>
+              </tr>
+            </thead>
+            <tbody id="student-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Written feedback -->
+      <div class="glass-card teacher-section" id="feedback-section" style="display:none;">
+        <h2 class="teacher-section-title">Written Student Feedback</h2>
+        <div id="feedback-list"></div>
+      </div>
+
+    </div>
+
+    <div class="error" id="teacher-error"></div>
+
+  </main>
+</div>
+
+<script src="js/bundle.js?v=1"></script>
+<script src="js/teacher.js?v=1"></script>
+</body>
+</html>

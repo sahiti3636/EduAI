@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>EduAI — Flashcard Review</title>
+<link rel="stylesheet" href="css/style.css?v=1" />
+</head>
+<body>
+
+<div class="mesh-bg" aria-hidden="true">
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+  <div class="blob blob-4"></div>
+  <div class="blob blob-5"></div>
+</div>
+
+<div class="page-wrap">
+
+  <header class="site-header">
+    <a href="index.html" class="logo">
+      <div class="logo-icon">M</div>
+      <span class="logo-wordmark">EduAI</span>
+    </a>
+  </header>
+
+  <main class="diag-wrap">
+
+    <a href="progress.html" class="back-link">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <path d="M10 3L5 8l5 5"/>
+      </svg>
+      Back to progress
+    </a>
+
+    <!-- Loading -->
+    <div id="review-loading" style="text-align:center;padding:60px 0;">
+      <div class="quiz-spinner"></div>
+      <p style="color:var(--text-mid);margin-top:20px;font-size:.9rem;">Loading your due flashcards…</p>
+    </div>
+
+    <!-- All done state -->
+    <div id="review-done" style="display:none;text-align:center;padding:60px 0;">
+      <div style="font-size:3rem;margin-bottom:16px;">🎉</div>
+      <h2 style="font-size:1.4rem;font-weight:700;margin-bottom:8px;">All caught up!</h2>
+      <p style="color:var(--text-mid);font-size:.9rem;margin-bottom:24px;">No flashcards are due for review today.</p>
+      <a href="progress.html" class="btn btn-primary">Back to progress</a>
+    </div>
+
+    <!-- Review session -->
+    <div id="review-session" style="display:none;">
+      <div class="quiz-topbar" style="margin-bottom:12px;">
+        <span class="quiz-chapter-label" id="review-deck-label"></span>
+        <span class="quiz-progress-text" id="review-progress">1 / 6</span>
+      </div>
+
+      <div class="quiz-progress-wrap">
+        <div class="quiz-progress-bar">
+          <div class="quiz-progress-fill" id="review-progress-fill" style="width:0%"></div>
+        </div>
+      </div>
+
+      <p style="font-size:.75rem;color:var(--text-lo);text-align:center;margin-bottom:20px;">
+        Click the card to reveal the answer, then rate how well you knew it.
+      </p>
+
+      <!-- Flashcard -->
+      <div class="flashcard-viewport" style="max-width:540px;margin:0 auto 28px;">
+        <div class="flashcard" id="review-card">
+          <div class="flashcard-face flashcard-front">
+            <span id="review-front"></span>
+          </div>
+          <div class="flashcard-face flashcard-back">
+            <span id="review-back"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Rating buttons — shown after flip -->
+      <div id="review-rating" style="display:none;text-align:center;">
+        <p style="font-size:.8rem;color:var(--text-mid);margin-bottom:14px;">How well did you know this?</p>
+        <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+          <button class="btn btn-ghost" id="btn-still-tricky" style="border-color:rgba(239,68,68,.4);color:#ef4444;">
+            Still tricky — review again tomorrow
+          </button>
+          <button class="btn btn-primary" id="btn-got-it">
+            Got it ✓ — next review in <span id="next-interval">2</span> days
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="error" id="review-error"></div>
+
+  </main>
+</div>
+
+
+<script src="js/bundle.js?v=1"></script>
+<script src="js/review.js?v=1"></script>
+</body>
+</html>

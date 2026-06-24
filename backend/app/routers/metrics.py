@@ -16,9 +16,9 @@ def log_metric(req: LogMetricRequest) -> dict:
     'bucket_felt_right_teacher', 'frustration', 'completion'."""
     with get_conn() as conn:
         conn.execute(
-            "INSERT INTO metrics (student_id, subtopic, metric_type, value, created_at) "
-            "VALUES (?, ?, ?, ?, ?)",
-            (req.student_id, req.subtopic, req.metric_type, req.value, now()),
+            "INSERT INTO metrics (student_id, subtopic, metric_type, value, text_feedback, created_at) "
+            "VALUES (?, ?, ?, ?, ?, ?)",
+            (req.student_id, req.subtopic, req.metric_type, req.value, req.text_feedback, now()),
         )
     return {"ok": True}
 

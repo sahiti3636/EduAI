@@ -1,0 +1,19 @@
+# Netlify proxy rules.
+# Static files (HTML/CSS/JS) are served by Netlify's CDN.
+# Everything else (API routes) is proxied to Railway.
+#
+# BEFORE DEPLOYING: replace YOUR_RAILWAY_URL with your Railway service URL,
+# e.g. https://eduai-production.up.railway.app
+#
+# The trailing /* and :splat forward the full path + query string.
+
+/auth/*        https://YOUR_RAILWAY_URL/auth/:splat        200
+/students/*    https://YOUR_RAILWAY_URL/students/:splat    200
+/diagnostic/*  https://YOUR_RAILWAY_URL/diagnostic/:splat  200
+/tutor/*       https://YOUR_RAILWAY_URL/tutor/:splat       200
+/metrics/*     https://YOUR_RAILWAY_URL/metrics/:splat     200
+/quiz/*        https://YOUR_RAILWAY_URL/quiz/:splat        200
+/teacher/*     https://YOUR_RAILWAY_URL/teacher/:splat     200
+/ocr/*         https://YOUR_RAILWAY_URL/ocr/:splat         200
+/bucket/*      https://YOUR_RAILWAY_URL/bucket/:splat      200
+/health        https://YOUR_RAILWAY_URL/health             200
