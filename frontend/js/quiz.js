@@ -81,6 +81,7 @@ function renderQuestion(idx) {
     optionsEl.style.display = "none";
     shortEl.style.display   = "";
     shortInput.value        = answers[q.id] || "";
+    hideRenderedMath(shortInput);
     // Save on input
     shortInput.oninput = () => { answers[q.id] = shortInput.value; };
   }
@@ -323,12 +324,7 @@ document.getElementById("quiz-kb-btn").addEventListener("click", () => {
   mathKb.attach(shortInput);
 });
 
-// ── Live math preview for short-answer ───────────────────────
-attachMathPreview(
-  shortInput,
-  null,
-  document.getElementById("quiz-math-preview")
-);
+// ── Live math preview removed; handled directly by showRenderedMath after OCR ──
 
 // ── Voice input for short-answer ─────────────────────────────
 (function () {
@@ -379,7 +375,9 @@ attachMathPreview(
       // Append to existing answer so student doesn't lose typed work
       const existing = shortInput.value.trim();
       shortInput.value = existing ? existing + "\n" + text : text;
-      shortInput.dispatchEvent(new Event("input", { bubbles: true }));
+      if (_hasMathDelimiters(shortInput.value)) {
+        showRenderedMath(shortInput);
+      }
       // Sync to answers map
       const qId = questions[currentIdx]?.id;
       if (qId) answers[qId] = shortInput.value;

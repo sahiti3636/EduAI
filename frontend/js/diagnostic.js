@@ -116,12 +116,6 @@ function renderQuestion(idx) {
         <button class="ocr-remove" id="q-ocr-remove" title="Remove image">✕</button>
       </div>
 
-      <!-- Live math preview -->
-      <div class="math-preview" id="q-math-preview">
-        <div class="math-preview-label">Preview</div>
-        <div class="math-preview-body"></div>
-      </div>
-
       <!-- Navigation row -->
       <div class="q-nav">
         <div class="q-nav-left">
@@ -149,9 +143,6 @@ function renderQuestion(idx) {
   const ta = document.getElementById("q-answer");
   ta.focus();
   ta.setSelectionRange(ta.value.length, ta.value.length);
-
-  // Wire live math preview for the answer textarea
-  attachMathPreview(ta, null, document.getElementById("q-math-preview"));
 
   // Wire navigation buttons
   document.getElementById("prev-btn")?.addEventListener("click", () => {
@@ -205,7 +196,9 @@ function renderQuestion(idx) {
         const { text } = await Api.extractFromImage(file);
         const existing = ta.value.trim();
         ta.value = existing ? existing + "\n" + text : text;
-        ta.dispatchEvent(new Event("input", { bubbles: true }));
+        if (_hasMathDelimiters(ta.value)) {
+          showRenderedMath(ta);
+        }
         status.textContent = "Text extracted — edit if needed.";
         status.className = "ocr-status ocr-ok";
       } catch (e) {

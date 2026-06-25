@@ -163,47 +163,42 @@ function _hasMathDelimiters(text) {
   return /\$[^$]+\$|\\[(\[]|\\frac|\\sqrt|\\sum|\\int|\^{|_{/.test(text);
 }
 
-// Update the live math preview panel for a textarea.
-// previewEl must have the structure: <div class="math-preview"><div class="math-preview-label">…</div><div class="math-preview-body"></div></div>
-function updateMathPreview(textarea, previewEl) {
-  if (!previewEl) return;
-  const text = textarea.value.trim();
-  const body = previewEl.querySelector(".math-preview-body");
-  if (!text || !_hasMathDelimiters(text)) {
-    previewEl.classList.remove("visible");
-    return;
+// Show a rendered math display in place of a textarea.
+// Used after OCR extracts LaTeX — hides the textarea and shows textbook-style math.
+// The raw LaTeX stays in textarea.value for the API.
+function showRenderedMath(textarea) {
+  let display = textarea._mathDisplay;
+  if (!display) {
+    display = document.createElement("div");
+    display.className = "math-rendered-display";
+    display.innerHTML =
+      '<div class="math-rendered-body"></div>' +
+      '<button class="math-rendered-edit" type="button" title="Edit raw text">✎ Edit</button>';
+    textarea.insertAdjacentElement("afterend", display);
+    textarea._mathDisplay = display;
+
+    display.querySelector(".math-rendered-edit").addEventListener("click", () => {
+      hideRenderedMath(textarea);
+      textarea.focus();
+    });
   }
-  body.innerHTML = safeMathHTML(text);
+
+  const body = display.querySelector(".math-rendered-body");
+  body.innerHTML = safeMathHTML(textarea.value);
   renderMath(body);
-  previewEl.classList.add("visible");
+
+  textarea.style.display = "none";
+  display.classList.add("visible");
 }
 
-// Convenience: wire up a textarea to auto-update a preview div on input.
-// Creates the preview element if previewEl is not provided.
-// Returns the preview element.
-function attachMathPreview(textarea, containerEl, previewEl) {
-  if (!previewEl) {
-    previewEl = document.createElement("div");
-    previewEl.className = "math-preview";
-    previewEl.innerHTML = '<div class="math-preview-label">Preview</div><div class="math-preview-body"></div>';
-    containerEl.appendChild(previewEl);
+// Hide the rendered display and show the textarea again.
+function hideRenderedMath(textarea) {
+  textarea.style.display = "";
+  if (textarea._mathDisplay) {
+    textarea._mathDisplay.classList.remove("visible");
   }
-
-  let debounceTimer = null;
-  const refresh = () => {
-    clearTimeout(debounceTimer);
-    debounceTimer = setTimeout(() => updateMathPreview(textarea, previewEl), 200);
-  };
-
-  textarea.addEventListener("input", refresh);
-  // Also refresh when value is set programmatically (OCR, voice, etc.)
-  textarea.addEventListener("change", refresh);
-
-  // Initial render if textarea already has content
-  if (textarea.value.trim()) refresh();
-
-  return previewEl;
 }
+
 
 /**
  * MathKeyboard — shared math symbol keyboard for EduAI.
