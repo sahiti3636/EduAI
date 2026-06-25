@@ -323,6 +323,13 @@ document.getElementById("quiz-kb-btn").addEventListener("click", () => {
   mathKb.attach(shortInput);
 });
 
+// ── Live math preview for short-answer ───────────────────────
+attachMathPreview(
+  shortInput,
+  null,
+  document.getElementById("quiz-math-preview")
+);
+
 // ── Voice input for short-answer ─────────────────────────────
 (function () {
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -372,6 +379,7 @@ document.getElementById("quiz-kb-btn").addEventListener("click", () => {
       // Append to existing answer so student doesn't lose typed work
       const existing = shortInput.value.trim();
       shortInput.value = existing ? existing + "\n" + text : text;
+      shortInput.dispatchEvent(new Event("input", { bubbles: true }));
       // Sync to answers map
       const qId = questions[currentIdx]?.id;
       if (qId) answers[qId] = shortInput.value;

@@ -175,6 +175,9 @@ async function send() {
 
   appendMessage("student", text);
   input.value = "";
+  // Clear the chat math preview
+  const chatPreview = document.getElementById("chat-math-preview");
+  if (chatPreview) chatPreview.classList.remove("visible");
   chatError.textContent = "";
 
   try {
@@ -309,6 +312,18 @@ document.getElementById("custom-kb-btn").addEventListener("click", () => {
   mathKb.attach(document.getElementById("custom-problem"));
 });
 
+// ── Live math previews ────────────────────────────────────────
+attachMathPreview(
+  document.getElementById("custom-problem"),
+  null,
+  document.getElementById("custom-math-preview")
+);
+attachMathPreview(
+  document.getElementById("chat-input"),
+  null,
+  document.getElementById("chat-math-preview")
+);
+
 // ── OCR on chat message input ─────────────────────────────────
 (function () {
   const fileInput = document.getElementById("chat-img-input");
@@ -362,6 +377,7 @@ document.getElementById("custom-kb-btn").addEventListener("click", () => {
     try {
       const { text } = await Api.extractFromImage(file);
       textarea.value = text;
+      textarea.dispatchEvent(new Event("input", { bubbles: true }));
       status.textContent  = "Text extracted — edit if needed.";
       status.className    = "ocr-status ocr-ok";
     } catch (e) {
