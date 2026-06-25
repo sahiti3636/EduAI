@@ -374,7 +374,8 @@ document.getElementById("quiz-kb-btn").addEventListener("click", () => {
       const { text } = await Api.extractFromImage(file);
       // Append to existing answer so student doesn't lose typed work
       const existing = shortInput.value.trim();
-      shortInput.value = existing ? existing + "\n" + text : text;
+      const formattedText = ensureMathDelimiters(text);
+      shortInput.value = existing ? existing + "\n" + formattedText : formattedText;
       if (_hasMathDelimiters(shortInput.value)) {
         showRenderedMath(shortInput);
       }

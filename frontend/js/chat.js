@@ -328,7 +328,8 @@ document.getElementById("custom-kb-btn").addEventListener("click", () => {
     try {
       const { text } = await Api.extractFromImage(file);
       const existing = chatInput.value.trim();
-      chatInput.value = existing ? existing + "\n" + text : text;
+      const formattedText = ensureMathDelimiters(text);
+      chatInput.value = existing ? existing + "\n" + formattedText : formattedText;
       if (_hasMathDelimiters(chatInput.value)) {
         showRenderedMath(chatInput);
       }
@@ -367,7 +368,8 @@ document.getElementById("custom-kb-btn").addEventListener("click", () => {
 
     try {
       const { text } = await Api.extractFromImage(file);
-      textarea.value = text;
+      const formattedText = ensureMathDelimiters(text);
+      textarea.value = formattedText;
       if (_hasMathDelimiters(textarea.value)) {
         showRenderedMath(textarea);
       }

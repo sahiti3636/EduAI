@@ -195,7 +195,8 @@ function renderQuestion(idx) {
       try {
         const { text } = await Api.extractFromImage(file);
         const existing = ta.value.trim();
-        ta.value = existing ? existing + "\n" + text : text;
+        const formattedText = ensureMathDelimiters(text);
+        ta.value = existing ? existing + "\n" + formattedText : formattedText;
         if (_hasMathDelimiters(ta.value)) {
           showRenderedMath(ta);
         }

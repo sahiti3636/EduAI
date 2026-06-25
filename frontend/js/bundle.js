@@ -130,10 +130,12 @@ const Store = {
 };
 // Renders LaTeX math inside a given DOM element using KaTeX auto-render.
 // Called after every dynamic content insertion (chat messages, quiz questions, etc.).
-// Safe to call before the deferred KaTeX scripts have loaded — renderMathInElement
-// will be undefined and we no-op gracefully.
 function renderMath(el) {
-  if (typeof renderMathInElement !== "function") return;
+  if (typeof renderMathInElement !== "function") {
+    // KaTeX scripts might still be loading (they are deferred). Wait and retry.
+    setTimeout(() => renderMath(el), 100);
+    return;
+  }
   renderMathInElement(el, {
     delimiters: [
       { left: "$$", right: "$$", display: true  },
@@ -158,9 +160,26 @@ function safeMathHTML(text) {
     .replace(/\n/g, "<br>");
 }
 
-// Detect whether a string contains LaTeX math delimiters or common patterns.
+// Check if text has ANY math indicators (delimiters OR commands)
 function _hasMathDelimiters(text) {
-  return /\$[^$]+\$|\\[(\[]|\\frac|\\sqrt|\\sum|\\int|\^{|_{/.test(text);
+  return /\$|\\[(\[]|\\frac|\\sqrt|\\sum|\\int|\^|\\theta|\\alpha|\\beta|\\pi|_{/.test(text);
+}
+
+// Wraps text in \[ \] if it contains math commands but no delimiters.
+// This ensures KaTeX will actually render OCR output that is raw LaTeX.
+function ensureMathDelimiters(text) {
+  if (!text) return text;
+  // If it already has delimiters, return as is
+  if (/\$|\\[(\[]/.test(text)) return text;
+  // If it has math commands/symbols but no delimiters, wrap it
+  if (/\\frac|\\sqrt|\\sum|\\int|\^|\\theta|\\alpha|\\beta|\\pi|_{/.test(text)) {
+    // If it's short, do inline. If multi-line, do block.
+    if (text.includes("\n")) {
+      return "\\[\n" + text + "\n\\]";
+    }
+    return "\\[ " + text + " \\]";
+  }
+  return text;
 }
 
 // Show a rendered math display in place of a textarea.
