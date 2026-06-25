@@ -166,20 +166,23 @@ function _hasMathDelimiters(text) {
 }
 
 // Wraps text in \[ \] if it contains math commands but no delimiters.
-// This ensures KaTeX will actually render OCR output that is raw LaTeX.
+// Processes line-by-line to ensure multi-line OCR where some lines lack delimiters are handled correctly.
 function ensureMathDelimiters(text) {
   if (!text) return text;
-  // If it already has delimiters, return as is
-  if (/\$|\\[(\[]/.test(text)) return text;
-  // If it has math commands/symbols but no delimiters, wrap it
-  if (/\\frac|\\sqrt|\\sum|\\int|\^|\\theta|\\alpha|\\beta|\\pi|_{/.test(text)) {
-    // If it's short, do inline. If multi-line, do block.
-    if (text.includes("\n")) {
-      return "\\[\n" + text + "\n\\]";
+  
+  const lines = text.split("\n");
+  const processedLines = lines.map(line => {
+    // If the line already has delimiters, leave it alone
+    if (/\$|\\[(\[]/.test(line)) return line;
+    
+    // If it has math commands/symbols but no delimiters, wrap it
+    if (/\\frac|\\sqrt|\\sum|\\int|\^|\\theta|\\alpha|\\beta|\\pi|_{|\\begin/.test(line)) {
+      return "\\[ " + line + " \\]";
     }
-    return "\\[ " + text + " \\]";
-  }
-  return text;
+    return line;
+  });
+  
+  return processedLines.join("\n");
 }
 
 // Show a rendered math display in place of a textarea.
