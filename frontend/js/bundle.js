@@ -152,6 +152,10 @@ function renderMath(el) {
 // Also converts newlines to <br> for readable multi-line content.
 function safeMathHTML(text) {
   if (!text) return "";
+  
+  // Wrap any raw LaTeX with delimiters so KaTeX renders it
+  text = ensureMathDelimiters(text);
+
   return text
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
