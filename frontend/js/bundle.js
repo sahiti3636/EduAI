@@ -149,19 +149,14 @@ function renderMath(el) {
 
 // Escapes HTML special characters but preserves LaTeX delimiters so that
 // KaTeX's renderMathInElement can still detect them when set via innerHTML.
-// Also converts newlines to <br> for readable multi-line content.
 function safeMathHTML(text) {
   if (!text) return "";
   
-  // Wrap any raw LaTeX with delimiters so KaTeX renders it
-  text = ensureMathDelimiters(text);
-
   return text
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/\n/g, "<br>");
+    .replace(/"/g, "&quot;");
 }
 
 // Check if text has ANY math indicators (delimiters OR commands)
@@ -178,6 +173,11 @@ function ensureMathDelimiters(text) {
   const processedLines = lines.map(line => {
     // If the line already has delimiters, leave it alone
     if (/\$|\\[(\[]/.test(line)) return line;
+    
+    // Heuristic: If the line has 2 or more standard English words, it's likely a word problem or sentence.
+    // We shouldn't wrap the entire line in math mode, as KaTeX will strip spaces and italicize everything.
+    const words = line.split(/\s+/).filter(w => /^[a-zA-Z]{2,}[.,;:!?]?$/.test(w));
+    if (words.length >= 2) return line;
     
     // If it has math commands/symbols but no delimiters, wrap it
     if (/\\frac|\\sqrt|\\sum|\\int|\^|\\theta|\\alpha|\\beta|\\pi|_{|\\begin/.test(line)) {
