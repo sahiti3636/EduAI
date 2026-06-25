@@ -126,7 +126,8 @@ async function beginSession({ subSubtopicId = null, problemStatement = null, cha
 
     // Show pinned problem card only when there's a real problem statement
     if (turn.problem_text) {
-      problemText.textContent = turn.problem_text;
+      problemText.innerHTML = safeMathHTML(turn.problem_text);
+      renderMath(problemText);
       problemHeader.style.display = "block";
     }
 
@@ -161,7 +162,7 @@ document.getElementById("back-to-picker").addEventListener("click", (e) => {
 function appendMessage(role, text) {
   const div = document.createElement("div");
   div.className   = `msg ${role}`;
-  div.textContent = text;
+  div.innerHTML   = safeMathHTML(text);
   chatWindow.appendChild(div);
   renderMath(div);
   chatWindow.scrollTop = chatWindow.scrollHeight;

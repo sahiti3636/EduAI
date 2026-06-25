@@ -54,8 +54,8 @@ function renderCard(idx) {
   reviewCard.classList.remove("flipped");
   ratingEl.style.display = "none";
 
-  frontEl.textContent = card.front;
-  backEl.textContent  = card.back;
+  frontEl.innerHTML = safeMathHTML(card.front);
+  backEl.innerHTML  = safeMathHTML(card.back);
   renderMath(reviewCard);
 
   deckLabel.textContent = card.label;

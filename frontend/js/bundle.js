@@ -137,10 +137,25 @@ function renderMath(el) {
   renderMathInElement(el, {
     delimiters: [
       { left: "$$", right: "$$", display: true  },
+      { left: "\\[", right: "\\]", display: true },
       { left: "$",  right: "$",  display: false },
+      { left: "\\(", right: "\\)", display: false },
     ],
     throwOnError: false,
   });
+}
+
+// Escapes HTML special characters but preserves LaTeX delimiters so that
+// KaTeX's renderMathInElement can still detect them when set via innerHTML.
+// Also converts newlines to <br> for readable multi-line content.
+function safeMathHTML(text) {
+  if (!text) return "";
+  return text
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/\n/g, "<br>");
 }
 /**
  * MathKeyboard — shared math symbol keyboard for EduAI.

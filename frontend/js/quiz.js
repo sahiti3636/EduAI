@@ -54,7 +54,7 @@ function renderQuestion(idx) {
 
   qNum.textContent       = `Question ${idx + 1}`;
   qTypeBadge.textContent = q.type === "mcq" ? "Multiple choice" : "Short answer";
-  qText.textContent      = q.question;
+  qText.innerHTML      = safeMathHTML(q.question);
   renderMath(qText);
   qError.textContent    = "";
 
@@ -68,7 +68,7 @@ function renderQuestion(idx) {
       const letter = opt.charAt(0);  // "A", "B", "C"
       const btn = document.createElement("button");
       btn.className = "quiz-option-btn" + (answers[q.id] === letter ? " selected" : "");
-      btn.textContent = opt;
+      btn.innerHTML = safeMathHTML(opt);
       renderMath(btn);
       btn.addEventListener("click", () => {
         answers[q.id] = letter;
@@ -203,9 +203,9 @@ function renderResults(data, qs) {
       <p class="result-item-feedback"></p>
       ${!r.correct ? `<details class="result-explanation"><summary>See full explanation</summary><p class="expl-body"></p></details>` : ""}
     `;
-    card.querySelector(".result-item-question").textContent = questionText;
-    card.querySelector(".result-item-feedback").textContent = feedbackText;
-    if (!r.correct) card.querySelector(".expl-body").textContent = explanText;
+    card.querySelector(".result-item-question").innerHTML = safeMathHTML(questionText);
+    card.querySelector(".result-item-feedback").innerHTML = safeMathHTML(feedbackText);
+    if (!r.correct) card.querySelector(".expl-body").innerHTML = safeMathHTML(explanText);
     renderMath(card);
     list.appendChild(card);
   });
@@ -260,7 +260,9 @@ document.getElementById("back-to-results-btn").addEventListener("click", () => {
 
 // ── Render revision sheet ─────────────────────────────────────
 function renderRevision(data) {
-  document.getElementById("revision-summary").textContent = data.summary;
+  const summaryEl = document.getElementById("revision-summary");
+  summaryEl.innerHTML = safeMathHTML(data.summary);
+  renderMath(summaryEl);
 
   // Weak-area tags
   const weakList = document.getElementById("weak-areas-list");
@@ -278,7 +280,8 @@ function renderRevision(data) {
   (data.revision_points || []).forEach(rp => {
     const item = document.createElement("div");
     item.className = "revision-point";
-    item.innerHTML = `<strong class="rp-title">${rp.title}</strong><p class="rp-body">${rp.explanation}</p>`;
+    item.innerHTML = `<strong class="rp-title">${safeMathHTML(rp.title)}</strong><p class="rp-body">${safeMathHTML(rp.explanation)}</p>`;
+    renderMath(item);
     rpList.appendChild(item);
   });
 
@@ -295,8 +298,9 @@ function renderFlashcard() {
   // Reset to front
   const card = document.getElementById("flashcard");
   card.classList.remove("flipped");
-  document.getElementById("fc-front-text").textContent = fc.front;
-  document.getElementById("fc-back-text").textContent  = fc.back;
+  document.getElementById("fc-front-text").innerHTML = safeMathHTML(fc.front);
+  document.getElementById("fc-back-text").innerHTML  = safeMathHTML(fc.back);
+  renderMath(document.getElementById("flashcard"));
   document.getElementById("fc-counter").textContent    = `${fcIdx + 1} / ${flashcards.length}`;
   document.getElementById("fc-prev").disabled = fcIdx === 0;
   document.getElementById("fc-next").disabled = fcIdx === flashcards.length - 1;

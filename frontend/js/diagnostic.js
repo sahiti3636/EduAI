@@ -135,7 +135,7 @@ function renderQuestion(idx) {
 
   // Set prompt text safely (preserves newlines without risking XSS)
   const promptEl = document.getElementById("q-prompt-text");
-  promptEl.textContent = item.prompt;
+  promptEl.innerHTML = safeMathHTML(item.prompt);
   renderMath(promptEl);
 
   // Restore scroll + focus
