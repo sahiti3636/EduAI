@@ -45,14 +45,14 @@ subtopics:
       - id: alg_1
         type: explain-first-step
         prompt: >-
-          A quadratic polynomial is given by f(x) = ax^2 + bx + c.
-          You are told that a > 0 and that the discriminant D = b^2 - 4ac < 0.
+          A quadratic polynomial is given by $f(x) = ax^2 + bx + c$.
+          You are told that $a > 0$ and that the discriminant $D = b^2 - 4ac < 0$.
 
           (a) Describe what these two conditions together tell you about
-              the visual position of the graph relative to the x-axis.
+              the visual position of the graph relative to the $x$-axis.
           (b) Based only on your geometric description — without any further
               algebraic calculation — determine whether it is possible for
-              f(x) to output a negative value for any real number x.
+              $f(x)$ to output a negative value for any real number $x$.
               Explain your logical reasoning clearly.
         rubric:
           correct-justified: >-
@@ -74,16 +74,16 @@ subtopics:
       - id: alg_2
         type: find-the-error
         prompt: >-
-          A student solves x^2 - 5x + 6 = 0 as follows:
-          "I rewrite it as x(x - 5) = -6.
-           By the factoring method, either x = -6 or x - 5 = -6,
-           giving solutions x = -6 and x = -1."
+          A student solves $x^2 - 5x + 6 = 0$ as follows:
+          "I rewrite it as $x(x - 5) = -6$.
+           By the factoring method, either $x = -6$ or $x - 5 = -6$,
+           giving solutions $x = -6$ and $x = -1$."
 
           (a) Identify the precise logical flaw in the student's reasoning.
           (b) State the specific mathematical property that DOES allow us to
               find roots when a product equals zero, and explain in one
               clear sentence why this property cannot be applied when the
-              product equals -6.
+              product equals $-6$.
         rubric:
           correct-justified: >-
             (a) The student wrongly extended the Zero Product Property to
@@ -106,14 +106,14 @@ subtopics:
       - id: alg_3
         type: solve-and-show-working
         prompt: >-
-          Consider the quadratic equation px^2 + qx + r = 0, where p, q, r
-          are real numbers. You are told that p + q + r = 0.
+          Consider the quadratic equation $px^2 + qx + r = 0$, where $p$, $q$, $r$
+          are real numbers. You are told that $p + q + r = 0$.
 
           (a) Without using the quadratic formula, deduce one exact real root
               of this equation instantly. Explain the reasoning that lets you
               see this root immediately from the given condition.
           (b) Use the relationship between roots and coefficients (Vieta's
-              formulas) to express the second root purely in terms of p and r.
+              formulas) to express the second root purely in terms of $p$ and $r$.
               Show your working.
         rubric:
           correct-justified: >-
@@ -135,12 +135,12 @@ subtopics:
       - id: alg_4
         type: solve-and-show-working
         prompt: >-
-          A quadratic equation ax^2 + bx + c = 0 has two distinct positive
-          real roots alpha and beta (with c ≠ 0). A new equation is formed
-          by reversing the order of the coefficients: cx^2 + bx + a = 0.
+          A quadratic equation $ax^2 + bx + c = 0$ has two distinct positive
+          real roots $\alpha$ and $\beta$ (with $c \neq 0$). A new equation is formed
+          by reversing the order of the coefficients: $cx^2 + bx + a = 0$.
 
           (a) Prove what the roots of this new equation are in terms of
-              alpha and beta. Show your reasoning, not just the answer.
+              $\alpha$ and $\beta$. Show your reasoning, not just the answer.
           (b) If the original roots were both greater than 100, what can you
               conclude about the size and nature of the new roots?
               Be specific.
@@ -168,10 +168,10 @@ subtopics:
 
     practice_problems:
       A: >-
-        A quadratic equation ax^2 + bx + c = 0 has two roots alpha and beta.
-        A student forms a new equation whose roots are (alpha + 1/beta) and
-        (beta + 1/alpha). Express the sum and product of the new roots in
-        terms of a, b, and c alone (no alpha or beta in the final answer).
+        A quadratic equation $ax^2 + bx + c = 0$ has two roots $\alpha$ and $\beta$.
+        A student forms a new equation whose roots are $\left(\alpha + \frac{1}{\beta}\right)$ and
+        $\left(\beta + \frac{1}{\alpha}\right)$. Express the sum and product of the new roots in
+        terms of $a$, $b$, and $c$ alone (no $\alpha$ or $\beta$ in the final answer).
         Show every step. You may use Vieta's formulas for the original equation.
       B: >-
         The product of the present ages of a father and his son equals the
@@ -179,7 +179,7 @@ subtopics:
         twice the age of the son. Find their present ages. Show every step
         and verify that your answer makes real-world sense.
       C: >-
-        Solve: 3x + 2y = 16 and 5x - 3y = 7. Show every step and name
+        Solve: $3x + 2y = 16$ and $5x - 3y = 7$. Show every step and name
         the method you used.
 
   trigonometry:
@@ -202,8 +202,8 @@ subtopics:
       - id: trig_1
         type: explain-first-step
         prompt: >-
-          In right-angled triangle ABC (right angle at B), a student claims:
-          "The value of (sin A)^2 + (sin C)^2 will always equal exactly 1,
+          In right-angled triangle $ABC$ (right angle at $B$), a student claims:
+          "The value of $\sin^2 A + \sin^2 C$ will always equal exactly $1$,
           no matter how the triangle is scaled, as long as it stays
           right-angled."
 
@@ -211,7 +211,7 @@ subtopics:
               ratio definitions of sine and the geometric relationship between
               the angles. Do NOT use a specific numerical example as your proof.
           (b) Explain in one or two sentences WHY the geometric relationship
-              between angles A and C forces this sum to be invariant.
+              between angles $A$ and $C$ forces this sum to be invariant.
         rubric:
           correct-justified: >-
             (a) In right triangle ABC with right angle at B:
@@ -233,17 +233,17 @@ subtopics:
       - id: trig_2
         type: explain-first-step
         prompt: >-
-          Imagine an acute angle theta starting at 0° and growing steadily
-          toward 90°. Think of it as the angle in a right triangle that
+          Imagine an acute angle $\theta$ starting at $0°$ and growing steadily
+          toward $90°$. Think of it as the angle in a right triangle that
           gradually opens wider.
 
-          (a) Describe what happens to sin theta and cos theta as theta
+          (a) Describe what happens to $\sin\theta$ and $\cos\theta$ as $\theta$
               increases — do they increase, decrease, or something else?
               Base your answer on what is happening to the sides of the
               right triangle, not on memorised tables.
           (b) Using your description from (a), explain precisely why
-              tan theta grows without any upper bound as theta approaches 90°,
-              rather than capping out at 1 or some other finite value.
+              $\tan\theta$ grows without any upper bound as $\theta$ approaches $90°$,
+              rather than capping out at $1$ or some other finite value.
         rubric:
           correct-justified: >-
             (a) As theta increases: the opposite side grows relative to the
@@ -269,14 +269,14 @@ subtopics:
       - id: trig_3
         type: explain-first-step
         prompt: >-
-          An exam question asks: "Find an acute angle theta such that
-          sin theta + cos theta = 2."
+          An exam question asks: "Find an acute angle $\theta$ such that
+          $\sin\theta + \cos\theta = 2$."
           Without doing any algebra or squaring both sides:
 
           (a) Use the geometric definition of sine and cosine in a right
               triangle to explain why this equation is absolutely impossible
               to satisfy for any real angle.
-          (b) What is the maximum value that sin theta + cos theta can
+          (b) What is the maximum value that $\sin\theta + \cos\theta$ can
               theoretically achieve, and at what angle? Explain how you
               arrive at this maximum without any algebraic manipulation.
         rubric:
@@ -306,13 +306,13 @@ subtopics:
         type: solve-and-show-working
         prompt: >-
           A moving particle's position at any moment is given by:
-              x = k * sec(theta)    and    y = k * tan(theta)
-          where k is a fixed positive constant and theta is a changing angle.
+          $$x = k\sec\theta \qquad \text{and} \qquad y = k\tan\theta$$
+          where $k$ is a fixed positive constant and $\theta$ is a changing angle.
 
-          (a) Eliminate the trigonometric parameter theta to find a single
-              algebraic equation relating x, y, and k only. Show every step.
+          (a) Eliminate the trigonometric parameter $\theta$ to find a single
+              algebraic equation relating $x$, $y$, and $k$ only. Show every step.
           (b) State exactly which trigonometric identity you used to break
-              the link between theta and the coordinates, and write that
+              the link between $\theta$ and the coordinates, and write that
               identity out explicitly.
         rubric:
           correct-justified: >-
@@ -335,21 +335,21 @@ subtopics:
 
     practice_problems:
       A: >-
-        Using ONLY the identity sin^2(theta) + cos^2(theta) = 1 and basic
+        Using ONLY the identity $\sin^2\theta + \cos^2\theta = 1$ and basic
         algebra (no other trig identities may be quoted), prove that:
-            tan^2(theta) - sin^2(theta) = tan^2(theta) * sin^2(theta).
+        $$\tan^2\theta - \sin^2\theta = \tan^2\theta \cdot \sin^2\theta.$$
         Then explain in one sentence what this identity reveals about the
-        structural relationship between tan and sin.
+        structural relationship between $\tan$ and $\sin$.
       B: >-
         The angle of elevation of the top of a building from the foot of a
-        tower is 30 degrees. The angle of elevation of the top of the tower
-        from the foot of the building is 60 degrees. If the tower is 50 m
+        tower is $30°$. The angle of elevation of the top of the tower
+        from the foot of the building is $60°$. If the tower is $50\,\text{m}$
         high, find the height of the building and the distance between them.
         Show every step.
       C: >-
-        An observer 1.5 m tall is standing 28.5 m away from a chimney. The
+        An observer $1.5\,\text{m}$ tall is standing $28.5\,\text{m}$ away from a chimney. The
         angle of elevation of the top of the chimney from the observer's eye
-        is 45 degrees. Find the height of the chimney.
+        is $45°$. Find the height of the chimney.
 
   probability:
     label: "Probability"
@@ -372,11 +372,11 @@ subtopics:
         type: find-the-error
         prompt: >-
           Two players roll two six-sided dice simultaneously.
-          Player A wins if the sum is 7.
-          Player B wins if the sum is 12.
-          Player B argues: "There are 11 possible sums: {2, 3, 4, 5, 6, 7,
-          8, 9, 10, 11, 12}. Since 7 is one and 12 is one, we each have a
-          1/11 chance. The game is perfectly fair."
+          Player A wins if the sum is $7$.
+          Player B wins if the sum is $12$.
+          Player B argues: "There are 11 possible sums: $\{2, 3, 4, 5, 6, 7,
+          8, 9, 10, 11, 12\}$. Since $7$ is one and $12$ is one, we each have a
+          $\frac{1}{11}$ chance. The game is perfectly fair."
 
           (a) Explain precisely why Player B's framework violates the
               foundational rules of classical probability. What assumption
@@ -407,7 +407,7 @@ subtopics:
         type: solve-and-show-working
         prompt: >-
           An opaque bag contains red, blue, and green marbles.
-          You know that P(red) = 1/3 and P(blue) = 2/5.
+          You know that $P(\text{red}) = \frac{1}{3}$ and $P(\text{blue}) = \frac{2}{5}$.
 
           (a) Explain why "drawing red", "drawing blue", and "drawing green"
               are mutually exclusive events, and use this to find the exact
@@ -440,12 +440,12 @@ subtopics:
           A fair coin is tossed 9 times and lands Heads every single time.
           Before the 10th toss, an observer says: "The universe must balance
           out. Because Heads appeared 9 times in a row, the probability of
-          Tails on the 10th toss is now much higher than 0.5."
+          Tails on the 10th toss is now much higher than $0.5$."
 
           (a) Refute or defend this claim using the mathematical definition
               of independent events. Be precise — don't just say "coins have
               no memory."
-          (b) Compare P({H,H,H,H,H,H,H,H,H,T}) with P({H,H,H,H,H,H,H,H,H,H})
+          (b) Compare $P(H,H,H,H,H,H,H,H,H,T)$ with $P(H,H,H,H,H,H,H,H,H,H)$
               for a fair coin. What do you notice, and what does it reveal
               about the observer's intuition?
         rubric:
@@ -474,14 +474,14 @@ subtopics:
       - id: prob_4
         type: explain-first-step
         prompt: >-
-          A box contains N white balls and 5 black balls. A ball is drawn
+          A box contains $N$ white balls and $5$ black balls. A ball is drawn
           at random, its colour is recorded, and it is NOT replaced.
           Then a second ball is drawn.
 
           (a) The first ball drawn turns out to be black. Write expressions
-              (in terms of N) for: the new total number of balls in the box,
-              and the remaining number of black balls. What is P(second ball
-              is black | first was black)?
+              (in terms of $N$) for: the new total number of balls in the box,
+              and the remaining number of black balls.
+              What is $P(\text{2nd black} \mid \text{1st black})$?
           (b) Explain conceptually — not just with numbers — how the outcome
               of the first draw changes the probability structure for the
               second draw. Contrast this with the scenario where the ball IS
@@ -512,16 +512,16 @@ subtopics:
 
     practice_problems:
       A: >-
-        4 people each independently choose a number from {1, 2, 3, 4}
-        uniformly at random. Let A = "all 4 numbers chosen are distinct"
-        and B = "the number 3 is chosen at least once."
-        (a) Find P(A) and P(B).
-        (b) Find P(A and B).
-        (c) Are A and B independent? Prove your answer using the definition
+        4 people each independently choose a number from $\{1, 2, 3, 4\}$
+        uniformly at random. Let $A$ = "all 4 numbers chosen are distinct"
+        and $B$ = "the number 3 is chosen at least once."
+        (a) Find $P(A)$ and $P(B)$.
+        (b) Find $P(A \cap B)$.
+        (c) Are $A$ and $B$ independent? Prove your answer using the definition
         of independence — do not just say they "seem related."
       B: >-
         A bag contains 3 red and 5 black balls. Two balls are drawn one
-        after the other WITHOUT replacement. Find P(both are black). Show the
+        after the other WITHOUT replacement. Find $P(\text{both black})$. Show the
         step-by-step conditional probability reasoning and explain why the
         second draw's probability depends on the first.
       C: >-
