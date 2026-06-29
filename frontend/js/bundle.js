@@ -54,12 +54,13 @@ const Api = {
   overrideBucket: (studentId, subtopic, bucket, by) =>
     apiRequest("POST", `/students/${studentId}/buckets/${subtopic}/override`, { bucket, by }),
   getChapters: (subtopic) => apiRequest("GET", `/tutor/subtopics/${subtopic}/chapters`),
-  startSession: (studentId, subtopic, { problemStatement = null, subSubtopicId = null } = {}) =>
+  startSession: (studentId, subtopic, { problemStatement = null, subSubtopicId = null, mode = "socratic" } = {}) =>
     apiRequest("POST", "/tutor/sessions", {
       student_id: studentId,
       subtopic,
       problem_statement: problemStatement || null,
       sub_subtopic_id: subSubtopicId || null,
+      mode,
     }),
   sendMessage: (sessionId, content) =>
     apiRequest("POST", `/tutor/sessions/${sessionId}/messages`, { content }),
@@ -130,12 +131,13 @@ const Store = {
 };
 // Renders LaTeX math inside a given DOM element using KaTeX auto-render.
 // Called after every dynamic content insertion (chat messages, quiz questions, etc.).
+// Safe to call before the deferred KaTeX scripts have loaded — renderMathInElement
+// will be undefined and we no-op gracefully.
+//
+// NOTE: The canonical copy of renderMath() + safeMathHTML() lives in bundle.js.
+// This file is kept in sync for pages that load katex-render.js separately.
 function renderMath(el) {
-  if (typeof renderMathInElement !== "function") {
-    // KaTeX scripts might still be loading (they are deferred). Wait and retry.
-    setTimeout(() => renderMath(el), 100);
-    return;
-  }
+  if (typeof renderMathInElement !== "function") return;
   renderMathInElement(el, {
     delimiters: [
       { left: "$$", right: "$$", display: true  },
@@ -147,85 +149,15 @@ function renderMath(el) {
   });
 }
 
-// Escapes HTML special characters but preserves LaTeX delimiters so that
-// KaTeX's renderMathInElement can still detect them when set via innerHTML.
 function safeMathHTML(text) {
   if (!text) return "";
-  
   return text
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
+    .replace(/"/g, "&quot;")
+    .replace(/\n/g, "<br>");
 }
-
-// Check if text has ANY math indicators (delimiters OR commands)
-function _hasMathDelimiters(text) {
-  return /\$|\\[(\[]|\\frac|\\sqrt|\\sum|\\int|\^|\\theta|\\alpha|\\beta|\\pi|_{/.test(text);
-}
-
-// Wraps text in \[ \] if it contains math commands but no delimiters.
-// Processes line-by-line to ensure multi-line OCR where some lines lack delimiters are handled correctly.
-function ensureMathDelimiters(text) {
-  if (!text) return text;
-  
-  const lines = text.split("\n");
-  const processedLines = lines.map(line => {
-    // If the line already has delimiters, leave it alone
-    if (/\$|\\[(\[]/.test(line)) return line;
-    
-    // Heuristic: If the line has 2 or more standard English words, it's likely a word problem or sentence.
-    // We shouldn't wrap the entire line in math mode, as KaTeX will strip spaces and italicize everything.
-    const words = line.split(/\s+/).filter(w => /^[a-zA-Z]{2,}[.,;:!?]?$/.test(w));
-    if (words.length >= 2) return line;
-    
-    // If it has math commands/symbols but no delimiters, wrap it
-    if (/\\frac|\\sqrt|\\sum|\\int|\^|\\theta|\\alpha|\\beta|\\pi|_{|\\begin/.test(line)) {
-      return "\\[ " + line + " \\]";
-    }
-    return line;
-  });
-  
-  return processedLines.join("\n");
-}
-
-// Show a rendered math display in place of a textarea.
-// Used after OCR extracts LaTeX — hides the textarea and shows textbook-style math.
-// The raw LaTeX stays in textarea.value for the API.
-function showRenderedMath(textarea) {
-  let display = textarea._mathDisplay;
-  if (!display) {
-    display = document.createElement("div");
-    display.className = "math-rendered-display";
-    display.innerHTML =
-      '<div class="math-rendered-body"></div>' +
-      '<button class="math-rendered-edit" type="button" title="Edit raw text">✎ Edit</button>';
-    textarea.insertAdjacentElement("afterend", display);
-    textarea._mathDisplay = display;
-
-    display.querySelector(".math-rendered-edit").addEventListener("click", () => {
-      hideRenderedMath(textarea);
-      textarea.focus();
-    });
-  }
-
-  const body = display.querySelector(".math-rendered-body");
-  body.innerHTML = safeMathHTML(textarea.value);
-  renderMath(body);
-
-  textarea.style.display = "none";
-  display.classList.add("visible");
-}
-
-// Hide the rendered display and show the textarea again.
-function hideRenderedMath(textarea) {
-  textarea.style.display = "";
-  if (textarea._mathDisplay) {
-    textarea._mathDisplay.classList.remove("visible");
-  }
-}
-
-
 /**
  * MathKeyboard — shared math symbol keyboard for EduAI.
  *

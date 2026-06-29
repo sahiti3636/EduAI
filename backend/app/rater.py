@@ -17,6 +17,10 @@ from app.gemini_client import LLMClient, get_llm_client
 
 VALID_BANDS = {"correct-justified", "right-idea-gaps", "wrong-or-missing"}
 VALID_BUCKETS = {"A", "B", "C"}
+VALID_ERROR_TYPES = {
+    "sign_error", "distribution_error", "zero_product_misuse",
+    "ratio_confusion", "conceptual_gap", "unit_error", "formula_misremembered",
+}
 
 RATER_INSTRUCTIONS = """\
 You are grading a high-school student's MATH DIAGNOSTIC responses. This is
@@ -63,6 +67,14 @@ subtopic:
   execution or justification.
 - "C": mostly wrong-or-missing; method is absent or fundamentally off track.
 
+Additionally, include an "error_patterns" array of zero to four tags from this
+FIXED taxonomy (use exact tags only — do not invent new ones):
+  "sign_error" | "distribution_error" | "zero_product_misuse" |
+  "ratio_confusion" | "conceptual_gap" | "unit_error" | "formula_misremembered"
+
+Only include a tag if it clearly describes a recurring mistake visible across
+the student's responses. Leave the array empty [] if no pattern is evident.
+
 Respond with ONLY valid JSON, no markdown fences, no commentary, matching
 exactly this schema:
 {
@@ -71,7 +83,8 @@ exactly this schema:
     {"item_id": "<id>", "band": "<one of the three bands>", "note": "<one short sentence>"}
   ],
   "bucket": "<A|B|C>",
-  "rationale": "<one or two sentences justifying the aggregate bucket>"
+  "rationale": "<one or two sentences justifying the aggregate bucket>",
+  "error_patterns": ["<tag>", ...]
 }
 """
 
@@ -82,7 +95,12 @@ class RaterResult:
     per_item: list[dict]
     bucket: str
     rationale: str
+    error_patterns: list[str] = None
     used_fallback_heuristic: bool = False
+
+    def __post_init__(self):
+        if self.error_patterns is None:
+            self.error_patterns = []
 
 
 class RaterOutputError(RuntimeError):
@@ -132,6 +150,9 @@ def _parse_rater_json(raw_text: str, subtopic: str) -> dict:
             raise RaterOutputError(f"Invalid band in rater output: {entry}")
 
     data.setdefault("subtopic", subtopic)
+    # Sanitise error_patterns — keep only known tags
+    raw_patterns = data.get("error_patterns", [])
+    data["error_patterns"] = [t for t in raw_patterns if t in VALID_ERROR_TYPES]
     return data
 
 
@@ -193,5 +214,6 @@ def rate_subtopic(
         per_item=data["per_item"],
         bucket=bucket,
         rationale=data.get("rationale", "(no rationale provided)"),
+        error_patterns=data.get("error_patterns", []),
         used_fallback_heuristic=used_fallback,
     )

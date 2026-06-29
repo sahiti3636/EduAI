@@ -54,12 +54,13 @@ const Api = {
   overrideBucket: (studentId, subtopic, bucket, by) =>
     apiRequest("POST", `/students/${studentId}/buckets/${subtopic}/override`, { bucket, by }),
   getChapters: (subtopic) => apiRequest("GET", `/tutor/subtopics/${subtopic}/chapters`),
-  startSession: (studentId, subtopic, { problemStatement = null, subSubtopicId = null } = {}) =>
+  startSession: (studentId, subtopic, { problemStatement = null, subSubtopicId = null, mode = "socratic" } = {}) =>
     apiRequest("POST", "/tutor/sessions", {
       student_id: studentId,
       subtopic,
       problem_statement: problemStatement || null,
       sub_subtopic_id: subSubtopicId || null,
+      mode,
     }),
   sendMessage: (sessionId, content) =>
     apiRequest("POST", `/tutor/sessions/${sessionId}/messages`, { content }),

@@ -4,6 +4,15 @@ const subtopic = params.get("subtopic");
 let sessionId  = null;
 let selectedChapterId    = null;
 let selectedChapterLabel = null;
+let feynmanMode = false;
+
+// ── Pomodoro config (bucket → minutes) ────────────────────────
+const POMODORO = {
+  A: { work: 45, brk: 10 },
+  B: { work: 30, brk: 7  },
+  C: { work: 20, brk: 5  },
+};
+let pomodoroInterval = null;
 
 if (!Store.studentId) window.location.href = "index.html";
 
@@ -84,6 +93,13 @@ async function loadPicker() {
   }
 }
 
+// ── Feynman toggle ────────────────────────────────────────────
+document.getElementById("feynman-toggle").addEventListener("change", function () {
+  feynmanMode = this.checked;
+  const card = document.getElementById("feynman-toggle-card");
+  card.classList.toggle("feynman-active", feynmanMode);
+});
+
 // ── Step 2a — Start from a chapter ────────────────────────────
 async function startWithChapter(chapterId, chapterLabel) {
   selectedChapterId    = chapterId;
@@ -106,9 +122,10 @@ document.getElementById("custom-start-btn").addEventListener("click", async () =
 async function beginSession({ subSubtopicId = null, problemStatement = null, chapterLabel = "" } = {}) {
   pickerError.textContent = "";
   const subtopicLabel = (SUBTOPICS.find(s => s.id === subtopic) || {}).label || subtopic;
+  const mode = feynmanMode ? "feynman" : "socratic";
 
   try {
-    const turn = await Api.startSession(Store.studentId, subtopic, { subSubtopicId, problemStatement });
+    const turn = await Api.startSession(Store.studentId, subtopic, { subSubtopicId, problemStatement, mode });
     sessionId = turn.session_id;
 
     // Switch screens
@@ -116,12 +133,21 @@ async function beginSession({ subSubtopicId = null, problemStatement = null, cha
     chatScreen.style.display   = "flex";
 
     // Update header labels
+    const modeTag = mode === "feynman" ? " · Explain Mode" : "";
     document.getElementById("chat-title").textContent =
-      `${subtopicLabel}${chapterLabel ? " — " + chapterLabel : ""}`;
+      `${subtopicLabel}${chapterLabel ? " — " + chapterLabel : ""}${modeTag}`;
+
+    // Update mode note
+    const modeNote = document.getElementById("chat-mode-note");
+    if (mode === "feynman") {
+      modeNote.textContent = "Explain Mode: teach the concept to the AI. It will ask questions when confused — the gaps it finds are the gaps in your understanding.";
+    } else {
+      modeNote.textContent = "The tutor guides you with questions — ask for the answer directly if you want it, otherwise work through it together. ✦";
+    }
 
     const badge = document.getElementById("bucket-badge");
     badge.style.display   = "";
-    badge.textContent     = `Level ${turn.bucket_used}`;
+    badge.textContent     = mode === "feynman" ? "Explain Mode" : `Level ${turn.bucket_used}`;
     badge.className       = `bucket-badge bucket-${turn.bucket_used}`;
 
     // Show pinned problem card only when there's a real problem statement
@@ -131,15 +157,21 @@ async function beginSession({ subSubtopicId = null, problemStatement = null, cha
       problemHeader.style.display = "block";
     }
 
-    // If this is a chapter session, store info and show the quiz action button
+    // If this is a chapter session, store info and show the action buttons
     if (subSubtopicId) {
       sessionStorage.setItem("eduai_quiz_subtopic", subtopic);
       sessionStorage.setItem("eduai_quiz_chapter_id", subSubtopicId);
       sessionStorage.setItem("eduai_quiz_chapter_label", chapterLabel || "");
       document.getElementById("quiz-action").style.display = "block";
+      // Hide quiz link in Feynman mode (no quiz from explain sessions)
+      document.getElementById("take-quiz-link").style.display =
+        mode === "feynman" ? "none" : "";
     }
 
     appendMessage("tutor", turn.reply);
+
+    // Start adaptive Pomodoro timer
+    startPomodoro(turn.bucket_used);
   } catch (e) {
     pickerError.textContent =
       e.message + " — make sure you've completed the diagnostic for this subject first.";
@@ -149,14 +181,100 @@ async function beginSession({ subSubtopicId = null, problemStatement = null, cha
 // ── Back to picker ────────────────────────────────────────────
 document.getElementById("back-to-picker").addEventListener("click", (e) => {
   e.preventDefault();
+  stopPomodoro();
   chatScreen.style.display  = "none";
   pickerScreen.style.display = "block";
   chatWindow.innerHTML = "";
   problemHeader.style.display = "none";
   problemText.textContent = "";
   document.getElementById("chat-error").textContent = "";
+  document.getElementById("session-notes-card").style.display = "none";
   sessionId = null;
 });
+
+// ── End session + generate notes ─────────────────────────────
+document.getElementById("end-session-btn").addEventListener("click", async () => {
+  if (!sessionId) return;
+  const btn = document.getElementById("end-session-btn");
+  const generating = document.getElementById("notes-generating");
+  btn.disabled = true;
+  generating.style.display = "flex";
+
+  try {
+    const result = await Api.endSession(sessionId);
+    stopPomodoro();
+    if (result && result.notes && result.notes.student_breakthrough) {
+      showSessionNotes(result.notes);
+    }
+  } catch (_) {
+    // notes generation failure is non-fatal
+  } finally {
+    btn.disabled = false;
+    generating.style.display = "none";
+    btn.textContent = "Session ended";
+    btn.disabled = true;
+  }
+});
+
+function showSessionNotes(notes) {
+  const card = document.getElementById("session-notes-card");
+  document.getElementById("notes-breakthrough").textContent = notes.student_breakthrough;
+
+  const metaEl = document.getElementById("notes-meta");
+  const topicEl = document.getElementById("notes-topic");
+  const struggledEl = document.getElementById("notes-struggled");
+
+  if (notes.topic_covered || notes.struggled_with) {
+    topicEl.textContent = notes.topic_covered ? `Topic: ${notes.topic_covered}` : "";
+    struggledEl.textContent = notes.struggled_with ? `Trickiest part: ${notes.struggled_with}` : "";
+    struggledEl.style.display = notes.struggled_with ? "" : "none";
+    metaEl.style.display = "";
+  }
+
+  card.style.display = "block";
+  card.scrollIntoView({ behavior: "smooth", block: "nearest" });
+}
+
+// ── Adaptive Pomodoro timer ───────────────────────────────────
+function startPomodoro(bucket) {
+  stopPomodoro();
+  const cfg = POMODORO[bucket] || POMODORO["B"];
+  const timerEl = document.getElementById("pomodoro-timer");
+  timerEl.style.display = "";
+
+  let phase = "work";          // "work" | "break"
+  let secsLeft = cfg.work * 60;
+
+  function tick() {
+    if (secsLeft < 0) {
+      if (phase === "work") {
+        phase = "break";
+        secsLeft = cfg.brk * 60;
+        timerEl.classList.add("pomodoro-break");
+        timerEl.title = "Break time!";
+      } else {
+        phase = "work";
+        secsLeft = cfg.work * 60;
+        timerEl.classList.remove("pomodoro-break");
+        timerEl.title = "Work session";
+      }
+    }
+    const m = String(Math.floor(secsLeft / 60)).padStart(2, "0");
+    const s = String(secsLeft % 60).padStart(2, "0");
+    const icon = phase === "work" ? "🍅" : "☕";
+    timerEl.textContent = `${icon} ${m}:${s}`;
+    secsLeft--;
+  }
+
+  tick();
+  pomodoroInterval = setInterval(tick, 1000);
+}
+
+function stopPomodoro() {
+  if (pomodoroInterval) { clearInterval(pomodoroInterval); pomodoroInterval = null; }
+  const timerEl = document.getElementById("pomodoro-timer");
+  if (timerEl) timerEl.style.display = "none";
+}
 
 // ── Chat: send a message ──────────────────────────────────────
 function appendMessage(role, text) {

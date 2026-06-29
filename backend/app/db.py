@@ -119,6 +119,24 @@ CREATE TABLE IF NOT EXISTS flashcard_decks (
     interval_days INTEGER NOT NULL DEFAULT 1,
     created_at TEXT NOT NULL
 );
+
+CREATE TABLE IF NOT EXISTS session_notes (
+    id TEXT PRIMARY KEY,
+    session_id TEXT NOT NULL UNIQUE,
+    student_breakthrough TEXT,
+    struggled_with TEXT,
+    topic_covered TEXT,
+    created_at TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS error_patterns (
+    student_id TEXT NOT NULL,
+    subtopic TEXT NOT NULL,
+    error_type TEXT NOT NULL,
+    count INTEGER NOT NULL DEFAULT 1,
+    last_seen TEXT NOT NULL,
+    PRIMARY KEY (student_id, subtopic, error_type)
+);
 """
 
 
@@ -154,6 +172,15 @@ def init_db() -> None:
         conn.execute(
             "CREATE UNIQUE INDEX IF NOT EXISTS idx_students_username ON students(username)"
         )
+
+        # Phase 1 migrations
+        for _tbl, _col, _def in [
+            ("sessions", "mode", "TEXT NOT NULL DEFAULT 'socratic'"),
+        ]:
+            try:
+                conn.execute(f"ALTER TABLE {_tbl} ADD COLUMN {_col} {_def}")
+            except sqlite3.OperationalError:
+                pass
 
         conn.commit()
     finally:

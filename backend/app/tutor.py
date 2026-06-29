@@ -14,7 +14,7 @@ from dataclasses import dataclass
 from app.config import get_items, get_settings, get_sub_subtopic, get_sub_subtopics, get_subtopic
 from app.db import get_conn, new_id, now
 from app.gemini_client import LLMClient, get_llm_client
-from app.prompts import build_system_prompt
+from app.prompts import build_feynman_prompt, build_system_prompt
 
 REBUCKET_TAG_RE = re.compile(r"\[REBUCKET_SUGGESTION:\s*([ABC])\]\s*$", re.MULTILINE)
 
@@ -111,6 +111,23 @@ def _store_message(session_id: str, role: str, content: str, *, pressure: bool =
         )
 
 
+def _get_error_pattern_hint(student_id: str, subtopic: str) -> str | None:
+    """Return a one-line system prompt addition if the student has recurring errors."""
+    with get_conn() as conn:
+        rows = conn.execute(
+            "SELECT error_type FROM error_patterns "
+            "WHERE student_id=? AND subtopic=? AND count >= 3",
+            (student_id, subtopic),
+        ).fetchall()
+    if not rows:
+        return None
+    tags = [r["error_type"].replace("_", " ") for r in rows]
+    return (
+        f"NOTE — this student has a documented recurring pattern: {', '.join(tags)}. "
+        "Watch for this specifically and address it if it appears."
+    )
+
+
 @dataclass
 class TutorTurn:
     session_id: str
@@ -118,6 +135,7 @@ class TutorTurn:
     bucket_used: str
     rebucket_suggested: str | None = None
     problem_text: str | None = None   # only set when a new session is started
+    mode: str = "socratic"
 
 
 def start_session(
@@ -126,6 +144,7 @@ def start_session(
     *,
     problem_statement: str | None = None,
     sub_subtopic_id: str | None = None,
+    mode: str = "socratic",
     llm: LLMClient | None = None,
 ) -> TutorTurn:
     llm = llm or get_llm_client()
@@ -154,19 +173,28 @@ def start_session(
     session_id = new_id()
     with get_conn() as conn:
         conn.execute(
-            "INSERT INTO sessions (id, student_id, subtopic, bucket_at_start, started_at, ended_at) "
-            "VALUES (?, ?, ?, ?, ?, NULL)",
-            (session_id, student_id, subtopic, bucket, now()),
+            "INSERT INTO sessions (id, student_id, subtopic, bucket_at_start, started_at, ended_at, mode) "
+            "VALUES (?, ?, ?, ?, ?, NULL, ?)",
+            (session_id, student_id, subtopic, bucket, now(), mode),
         )
 
-    system_prompt = build_system_prompt(
-        bucket,
-        subtopic_label,
-        sub_subtopic_label=sub_subtopic_label,
-        has_custom_problem=has_custom_problem,
-    )
-    if problem_for_prompt:
-        system_prompt += f"\n\nPROBLEM FOR THIS SESSION:\n{problem_for_prompt}"
+    # Build system prompt based on mode
+    topic_label = f"{subtopic_label}{' — ' + sub_subtopic_label if sub_subtopic_label else ''}"
+    if mode == "feynman":
+        system_prompt = build_feynman_prompt(topic_label)
+    else:
+        system_prompt = build_system_prompt(
+            bucket,
+            subtopic_label,
+            sub_subtopic_label=sub_subtopic_label,
+            has_custom_problem=has_custom_problem,
+        )
+        # Inject recurring error hint if applicable
+        hint = _get_error_pattern_hint(student_id, subtopic)
+        if hint:
+            system_prompt += f"\n\n{hint}"
+        if problem_for_prompt:
+            system_prompt += f"\n\nPROBLEM FOR THIS SESSION:\n{problem_for_prompt}"
 
     settings = get_settings()["llm"]
     opening_history = [{"role": "user", "text": "(session started)"}]
@@ -183,7 +211,8 @@ def start_session(
         reply_text=display_text,
         bucket_used=bucket,
         rebucket_suggested=rebucket,
-        problem_text=problem_for_prompt,   # None when overview mode; custom/default problem otherwise
+        problem_text=problem_for_prompt,
+        mode=mode,
     )
 
 
@@ -236,6 +265,9 @@ def apply_rebucket(student_id: str, subtopic: str, new_bucket: str) -> None:
         )
 
 
-def end_session(session_id: str) -> None:
+def end_session(session_id: str) -> dict | None:
+    """Mark session ended and generate breakthrough notes. Returns notes dict or None."""
     with get_conn() as conn:
         conn.execute("UPDATE sessions SET ended_at=? WHERE id=?", (now(), session_id))
+    from app.notes import generate_and_store
+    return generate_and_store(session_id)

@@ -102,7 +102,8 @@ class StartSessionRequest(BaseModel):
     student_id: str
     subtopic: str
     problem_statement: str | None = None
-    sub_subtopic_id: str | None = None   # CBSE chapter within the subtopic
+    sub_subtopic_id: str | None = None
+    mode: str = "socratic"             # "socratic" | "feynman"
 
 
 class SendMessageRequest(BaseModel):
@@ -114,7 +115,19 @@ class TutorTurnResponse(BaseModel):
     reply: str
     bucket_used: Literal["A", "B", "C"]
     rebucket_suggested: str | None = None
-    problem_text: str | None = None   # only populated on session start; None on subsequent turns
+    problem_text: str | None = None
+    mode: str = "socratic"
+
+
+class SessionNotesResponse(BaseModel):
+    student_breakthrough: str | None = None
+    struggled_with: str | None = None
+    topic_covered: str | None = None
+
+
+class EndSessionResponse(BaseModel):
+    ok: bool = True
+    notes: SessionNotesResponse | None = None
 
 
 class LogMetricRequest(BaseModel):

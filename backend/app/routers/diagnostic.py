@@ -51,6 +51,7 @@ def submit_diagnostic(subtopic: str, req: SubmitDiagnosticRequest) -> SubmitDiag
     except RaterOutputError as e:
         raise HTTPException(status_code=502, detail=f"Rater failed: {e}") from e
 
+    ts = now()
     with get_conn() as conn:
         conn.execute(
             "INSERT INTO buckets (student_id, subtopic, bucket, rationale, source, per_item_json, updated_at) "
@@ -64,9 +65,17 @@ def submit_diagnostic(subtopic: str, req: SubmitDiagnosticRequest) -> SubmitDiag
                 result.bucket,
                 result.rationale,
                 json.dumps(result.per_item),
-                now(),
+                ts,
             ),
         )
+        for error_type in result.error_patterns:
+            conn.execute(
+                "INSERT INTO error_patterns (student_id, subtopic, error_type, count, last_seen) "
+                "VALUES (?, ?, ?, 1, ?) "
+                "ON CONFLICT(student_id, subtopic, error_type) DO UPDATE SET "
+                "count = count + 1, last_seen = excluded.last_seen",
+                (req.student_id, subtopic, error_type, ts),
+            )
 
     return SubmitDiagnosticResponse(
         subtopic=result.subtopic,

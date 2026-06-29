@@ -50,6 +50,20 @@
         diving in. Or paste your own question below.
       </p>
 
+      <!-- Feynman mode toggle -->
+      <div class="glass-card feynman-toggle-card" id="feynman-toggle-card">
+        <div class="feynman-toggle-row">
+          <div class="feynman-toggle-info">
+            <span class="feynman-toggle-title">Explain Mode</span>
+            <span class="feynman-toggle-sub">You explain the concept to the AI — the best way to find gaps in your understanding.</span>
+          </div>
+          <label class="toggle-switch" title="Switch to Explain Mode">
+            <input type="checkbox" id="feynman-toggle" />
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+
       <!-- Diagnostic gate — shown when diagnostic hasn't been taken yet -->
       <div id="diag-gate" class="diag-gate-banner glass-card" style="display:none;">
         <div class="diag-gate-icon">📋</div>
@@ -136,9 +150,10 @@
           Change chapter
         </a>
         <span class="chat-topbar-title" id="chat-title">Tutor</span>
+        <span class="pomodoro-timer" id="pomodoro-timer" style="display:none;"></span>
       </div>
 
-      <p class="chat-note">
+      <p class="chat-note" id="chat-mode-note">
         The tutor guides you with questions — ask for the answer directly if you want
         it, otherwise work through it together. ✦
       </p>
@@ -198,6 +213,19 @@
 
       <div class="error" id="chat-error" style="margin-bottom:8px;"></div>
 
+      <!-- Session notes card — shown after End Session -->
+      <div class="glass-card session-notes-card" id="session-notes-card" style="display:none;">
+        <div class="notes-header">
+          <span class="notes-icon">✦</span>
+          <span class="notes-title">What you figured out today</span>
+        </div>
+        <p class="notes-breakthrough" id="notes-breakthrough"></p>
+        <div class="notes-meta" id="notes-meta" style="display:none;">
+          <span class="notes-meta-item" id="notes-topic"></span>
+          <span class="notes-meta-item notes-struggled" id="notes-struggled"></span>
+        </div>
+      </div>
+
       <!-- Feedback -->
       <div class="glass-card feedback-panel">
         <span class="feedback-label">How did this session feel?</span>
@@ -216,16 +244,23 @@
           <button class="btn btn-ghost btn-xs" id="feedback-submit-btn">Send feedback</button>
           <span class="feedback-sent" id="feedback-sent" style="display:none;">Thanks for your feedback!</span>
         </div>
-        <!-- Take Quiz action — shown after a chapter session starts -->
+        <!-- End Session + Take Quiz actions -->
         <div id="quiz-action" style="display:none; margin-top:14px; padding-top:14px; border-top:1px solid var(--glass-border);">
-          <span class="feedback-label">Ready to test yourself?</span>
+          <span class="feedback-label">Ready to wrap up?</span>
           <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:8px;">
-            <a href="quiz.html" id="take-quiz-link" class="btn btn-primary btn-xs">
+            <button class="btn btn-primary btn-xs" id="end-session-btn">
+              End session &amp; see notes
+            </button>
+            <a href="quiz.html" id="take-quiz-link" class="btn btn-ghost btn-xs">
               Take chapter quiz →
             </a>
             <button class="btn btn-ghost btn-xs" id="download-transcript-btn">
               Download transcript
             </button>
+          </div>
+          <div class="notes-generating" id="notes-generating" style="display:none;">
+            <span class="quiz-spinner" style="width:14px;height:14px;border-width:2px;"></span>
+            Generating your session notes…
           </div>
         </div>
       </div>
@@ -237,7 +272,7 @@
 
 
 
-<script src="js/bundle.js?v=5"></script>
-<script src="js/chat.js?v=7"></script>
+<script src="js/bundle.js?v=6"></script>
+<script src="js/chat.js?v=8"></script>
 </body>
 </html>

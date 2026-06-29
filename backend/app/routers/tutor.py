@@ -5,7 +5,14 @@ from fastapi import APIRouter, HTTPException
 from app import tutor as tutor_logic
 from app.config import get_sub_subtopics
 from app.gemini_client import MissingAPIKeyError
-from app.schemas import SendMessageRequest, StartSessionRequest, SubSubtopicItem, TutorTurnResponse
+from app.schemas import (
+    EndSessionResponse,
+    SendMessageRequest,
+    SessionNotesResponse,
+    StartSessionRequest,
+    SubSubtopicItem,
+    TutorTurnResponse,
+)
 
 router = APIRouter(prefix="/tutor", tags=["tutor"])
 
@@ -28,6 +35,7 @@ def start_session(req: StartSessionRequest) -> TutorTurnResponse:
             req.subtopic,
             problem_statement=req.problem_statement,
             sub_subtopic_id=req.sub_subtopic_id,
+            mode=req.mode,
         )
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e)) from e
@@ -39,6 +47,7 @@ def start_session(req: StartSessionRequest) -> TutorTurnResponse:
         bucket_used=turn.bucket_used,
         rebucket_suggested=turn.rebucket_suggested,
         problem_text=turn.problem_text,
+        mode=turn.mode,
     )
 
 
@@ -58,7 +67,8 @@ def send_message(session_id: str, req: SendMessageRequest) -> TutorTurnResponse:
     )
 
 
-@router.post("/sessions/{session_id}/end")
-def end_session(session_id: str) -> dict:
-    tutor_logic.end_session(session_id)
-    return {"ok": True}
+@router.post("/sessions/{session_id}/end", response_model=EndSessionResponse)
+def end_session(session_id: str) -> EndSessionResponse:
+    notes_data = tutor_logic.end_session(session_id)
+    notes = SessionNotesResponse(**notes_data) if notes_data else None
+    return EndSessionResponse(ok=True, notes=notes)
