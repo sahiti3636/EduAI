@@ -61,32 +61,37 @@
       Back
     </a>
 
-    <h1 class="diag-title">Pilot Overview</h1>
-    <p class="diag-sub">Aggregate data across all students. Refresh the page to see the latest.</p>
+    <h1 class="diag-title">Pilot Dashboard</h1>
+    <p class="diag-sub">Aggregate data across all students.</p>
+
+    <!-- Tab nav -->
+    <div class="teacher-tabs">
+      <button class="teacher-tab active" data-tab="overview">Overview</button>
+      <button class="teacher-tab" data-tab="audit">Guardrail Audit</button>
+      <button class="teacher-tab" data-tab="validation">Rater Validation</button>
+      <button class="teacher-tab" data-tab="session-feedback">Session Feedback</button>
+    </div>
 
     <div id="teacher-loading" style="text-align:center;padding:40px 0;">
       <div class="quiz-spinner"></div>
     </div>
 
-    <div id="teacher-content" style="display:none;">
+    <!-- ── TAB: Overview ────────────────────────────────────────── -->
+    <div id="tab-overview" class="teacher-tab-panel" style="display:none;">
 
-      <!-- Top stats -->
       <div class="progress-stats-row" id="teacher-stats" style="grid-template-columns:repeat(5,1fr);"></div>
 
-      <!-- Guardrail health -->
       <div class="glass-card teacher-section" id="guardrail-card">
-        <h2 class="teacher-section-title">Guardrail Health</h2>
+        <h2 class="teacher-section-title">Guardrail Health (quick view)</h2>
         <div class="teacher-guardrail-row" id="guardrail-summary"></div>
         <div id="guardrail-leaks"></div>
       </div>
 
-      <!-- Bucket distribution -->
       <div class="glass-card teacher-section">
         <h2 class="teacher-section-title">Bucket Distribution</h2>
         <div id="bucket-dist"></div>
       </div>
 
-      <!-- Student table -->
       <div class="glass-card teacher-section">
         <h2 class="teacher-section-title">Students</h2>
         <div class="teacher-table-wrap">
@@ -105,12 +110,52 @@
         </div>
       </div>
 
-      <!-- Written feedback -->
       <div class="glass-card teacher-section" id="feedback-section" style="display:none;">
         <h2 class="teacher-section-title">Written Student Feedback</h2>
         <div id="feedback-list"></div>
       </div>
 
+    </div><!-- /#tab-overview -->
+
+    <!-- ── TAB: Guardrail Audit ──────────────────────────────────── -->
+    <div id="tab-audit" class="teacher-tab-panel" style="display:none;">
+      <div class="glass-card teacher-section">
+        <h2 class="teacher-section-title">Guardrail Integrity Audit</h2>
+        <p style="color:var(--text-mid);font-size:.82rem;margin-bottom:16px;line-height:1.5;">
+          Scans all tutor messages for patterns that may indicate an answer was given
+          (system flags + regex patterns). This is the headline quality metric — aim for 0.
+        </p>
+        <button class="btn btn-primary btn-sm" id="load-audit-btn">Load audit</button>
+        <div id="audit-loading" style="display:none;margin-top:12px;color:var(--text-mid);font-size:.83rem;">Scanning…</div>
+        <div id="audit-results" style="margin-top:16px;"></div>
+      </div>
+    </div>
+
+    <!-- ── TAB: Rater Validation ─────────────────────────────────── -->
+    <div id="tab-validation" class="teacher-tab-panel" style="display:none;">
+      <div class="glass-card teacher-section">
+        <h2 class="teacher-section-title">Rater Validation</h2>
+        <p style="color:var(--text-mid);font-size:.82rem;margin-bottom:16px;line-height:1.5;">
+          Enter your own bucket assessment for each student. The system will compare
+          your judgement against the AI rater and report agreement %.
+          Target ≥ 80% before trusting the rater in the pilot.
+        </p>
+        <button class="btn btn-primary btn-sm" id="load-validation-btn">Load students</button>
+        <div id="validation-stats" class="teacher-agreement-bar" style="display:none;"></div>
+        <div id="validation-table" style="margin-top:16px;"></div>
+      </div>
+    </div>
+
+    <!-- ── TAB: Session Feedback ─────────────────────────────────── -->
+    <div id="tab-session-feedback" class="teacher-tab-panel" style="display:none;">
+      <div class="glass-card teacher-section">
+        <h2 class="teacher-section-title">Post-Session Feedback</h2>
+        <p style="color:var(--text-mid);font-size:.82rem;margin-bottom:16px;line-height:1.5;">
+          Guidance ratings and frustration scores submitted by students at the end of sessions.
+        </p>
+        <button class="btn btn-primary btn-sm" id="load-sfeedback-btn">Load feedback</button>
+        <div id="sfeedback-results" style="margin-top:16px;"></div>
+      </div>
     </div>
 
     <div class="error" id="teacher-error"></div>
@@ -118,7 +163,7 @@
   </main>
 </div>
 
-<script src="js/bundle.js?v=7"></script>
+<script src="js/bundle.js?v=9"></script>
 <script src="js/teacher.js?v=1"></script>
 </body>
 </html>

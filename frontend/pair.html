@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>EduAI — Study Pair</title>
+<link rel="stylesheet" href="css/style.css?v=1" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+</head>
+<body>
+
+<div class="mesh-bg" aria-hidden="true">
+  <div class="blob blob-1"></div><div class="blob blob-2"></div>
+  <div class="blob blob-3"></div><div class="blob blob-4"></div>
+  <div class="blob blob-5"></div>
+</div>
+
+<div class="page-wrap">
+
+  <header class="site-header">
+    <a href="index.html" class="logo">
+      <div class="logo-icon">M</div>
+      <span class="logo-wordmark">EduAI</span>
+    </a>
+    <div class="header-right" id="pair-status-bar" style="display:none;">
+      <span id="peer-status" class="pair-peer-status"></span>
+    </div>
+  </header>
+
+  <!-- ── LOBBY STATE ───────────────────────────────────────── -->
+  <div id="lobby-screen" style="max-width:600px;margin:0 auto;padding:0 20px 60px;">
+
+    <div class="chat-topbar" style="margin-bottom:24px;">
+      <a href="index.html" class="back-link" style="margin-bottom:0;">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <path d="M10 3L5 8l5 5"/>
+        </svg>
+        Home
+      </a>
+      <span class="chat-topbar-title">Study Pair</span>
+    </div>
+
+    <p style="color:var(--text-mid);font-size:.85rem;line-height:1.55;margin-bottom:24px;">
+      Work through a problem together in real time. One person creates a room and
+      shares the code — their partner enters it to join.
+    </p>
+
+    <div class="pair-lobby-grid">
+
+      <!-- Create room -->
+      <div class="glass-card pair-lobby-card">
+        <div class="pair-lobby-icon">➕</div>
+        <h3 class="pair-lobby-title">Create a room</h3>
+        <p class="pair-lobby-sub">Pick a subject and share the code with your study partner.</p>
+        <div style="margin-top:12px;">
+          <label class="form-label">Subject</label>
+          <select class="form-input" id="create-subtopic" style="margin-bottom:10px;">
+            <option value="">Choose…</option>
+          </select>
+          <button class="btn btn-primary" id="create-room-btn" style="width:100%;">
+            Create room →
+          </button>
+        </div>
+      </div>
+
+      <!-- Join room -->
+      <div class="glass-card pair-lobby-card">
+        <div class="pair-lobby-icon">🔗</div>
+        <h3 class="pair-lobby-title">Join a room</h3>
+        <p class="pair-lobby-sub">Enter the 6-character code your partner shared with you.</p>
+        <div style="margin-top:12px;">
+          <label class="form-label">Room code</label>
+          <input class="form-input pair-code-input" type="text" id="join-code"
+            placeholder="e.g. AB3X7Q" maxlength="6" autocomplete="off"
+            style="text-transform:uppercase;letter-spacing:.12em;font-size:1.1rem;margin-bottom:10px;" />
+          <button class="btn btn-primary" id="join-room-btn" style="width:100%;">
+            Join room →
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="error" id="lobby-error" style="margin-top:12px;"></div>
+  </div>
+
+  <!-- ── WAITING STATE (host only) ────────────────────────── -->
+  <div id="waiting-screen" style="display:none;max-width:600px;margin:0 auto;padding:0 20px 60px;">
+    <div class="glass-card" style="text-align:center;padding:40px 24px;">
+      <div style="font-size:2rem;margin-bottom:10px;">⏳</div>
+      <h2 style="font-size:1rem;font-weight:700;margin-bottom:6px;">Waiting for your partner</h2>
+      <p style="color:var(--text-mid);font-size:.82rem;margin-bottom:20px;">
+        Share this code with your study partner:
+      </p>
+      <div class="pair-room-code" id="display-room-code"></div>
+      <p style="color:var(--text-lo);font-size:.75rem;margin-top:14px;">
+        Once they join, the session will start automatically.
+      </p>
+    </div>
+  </div>
+
+  <!-- ── CHAT STATE ────────────────────────────────────────── -->
+  <div id="chat-screen" style="display:none;flex-direction:column;flex:1;">
+
+    <div class="chat-topbar">
+      <span class="chat-topbar-title" id="pair-chat-title">Study Pair</span>
+      <span id="pair-room-badge" class="badge-pill" style="font-size:.68rem;margin-left:8px;"></span>
+    </div>
+
+    <!-- Problem pinned at top -->
+    <div id="pair-problem-header" class="problem-header" style="margin:0 0 8px;">
+      <div class="problem-label">Today's problem</div>
+      <div class="problem-text" id="pair-problem-text"></div>
+    </div>
+
+    <div class="glass-card chat-panel" style="flex:1;">
+      <div class="chat-messages-wrap" id="pair-chat-window"></div>
+
+      <div class="chat-input-row">
+        <textarea class="form-textarea" id="pair-input"
+          placeholder="Type your reply… (Enter to send)"
+          rows="2"></textarea>
+        <button class="btn btn-primary" id="pair-send-btn" style="height:50px;padding:0 20px;">
+          Send
+        </button>
+      </div>
+    </div>
+
+    <div class="pair-typing" id="pair-typing" style="display:none;">
+      <span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span>
+      Tutor is thinking…
+    </div>
+
+  </div><!-- /#chat-screen -->
+
+</div><!-- /.page-wrap -->
+
+<script src="js/bundle.js?v=9"></script>
+<script src="js/pair.js"></script>
+</body>
+</html>

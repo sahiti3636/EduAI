@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>EduAI — Leaderboard</title>
+<link rel="stylesheet" href="css/style.css?v=1" />
+</head>
+<body>
+
+<div class="mesh-bg" aria-hidden="true">
+  <div class="blob blob-1"></div><div class="blob blob-2"></div>
+  <div class="blob blob-3"></div><div class="blob blob-4"></div>
+  <div class="blob blob-5"></div>
+</div>
+
+<div class="page-wrap">
+
+  <header class="site-header">
+    <a href="index.html" class="logo">
+      <div class="logo-icon">M</div>
+      <span class="logo-wordmark">EduAI</span>
+    </a>
+    <div class="header-right">
+      <span id="header-label" class="badge-pill" style="font-size:.7rem;"></span>
+    </div>
+  </header>
+
+  <main style="max-width:640px;margin:0 auto;padding:0 20px 60px;">
+
+    <div class="chat-topbar" style="margin-bottom:24px;">
+      <a href="index.html" class="back-link" style="margin-bottom:0;">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <path d="M10 3L5 8l5 5"/>
+        </svg>
+        Home
+      </a>
+      <span class="chat-topbar-title">Growth Leaderboard</span>
+    </div>
+
+    <p style="color:var(--text-mid);font-size:.83rem;line-height:1.55;margin-bottom:20px;">
+      Ranked by growth score: your subject levels, daily streak, and challenge completions.
+      Joining is optional — opt in below to appear on the board.
+    </p>
+
+    <!-- Opt-in toggle -->
+    <div class="glass-card lb-opt-card" id="lb-opt-card">
+      <div class="lb-opt-row">
+        <div>
+          <div class="lb-opt-title">Appear on the leaderboard</div>
+          <div class="lb-opt-sub">Your username and score become visible to other students.</div>
+        </div>
+        <label class="toggle-switch" title="Join leaderboard">
+          <input type="checkbox" id="lb-opt-toggle" />
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Own rank card -->
+    <div id="own-rank-card" class="glass-card lb-own-card" style="display:none;">
+      <span class="lb-own-label">Your rank</span>
+      <div class="lb-own-details">
+        <span id="own-rank" class="lb-rank-big"></span>
+        <span id="own-score" class="lb-score-chip"></span>
+      </div>
+    </div>
+
+    <!-- Board -->
+    <div id="lb-loading" style="text-align:center;padding:40px 0;color:var(--text-mid);font-size:.85rem;">
+      Loading leaderboard…
+    </div>
+    <div id="lb-board" style="display:none;"></div>
+    <div id="lb-empty" style="display:none;text-align:center;padding:30px 0;color:var(--text-lo);font-size:.83rem;">
+      No one has joined the leaderboard yet. Be the first!
+    </div>
+
+  </main>
+</div>
+
+<script src="js/bundle.js?v=9"></script>
+<script src="js/leaderboard.js"></script>
+</body>
+</html>

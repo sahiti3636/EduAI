@@ -149,6 +149,22 @@ async function renderSubtopics() {
   });
 }
 
+// ── Daily challenge dot ───────────────────────────────────────
+async function checkDailyChallenge() {
+  if (!Store.studentId) return;
+  try {
+    // Check if any subtopic has an uncompleted challenge today
+    const results = await Promise.allSettled(
+      SUBTOPICS.map(s => Api.getDailyChallenge(s.id, Store.studentId))
+    );
+    const anyNew = results.some(r => r.status === "fulfilled" && !r.value.completed);
+    if (anyNew) {
+      const dot = document.getElementById("daily-dot");
+      if (dot) dot.style.display = "inline-block";
+    }
+  } catch (_) {}
+}
+
 // ── Due reviews banner ────────────────────────────────────────
 async function checkDueReviews() {
   if (!Store.studentId) return;
@@ -181,6 +197,7 @@ function showWelcome() {
   headerStudentLbl.textContent = Store.studentLabel;
   renderSubtopics();
   checkDueReviews();
+  checkDailyChallenge();
 }
 
 // ── Sign out ──────────────────────────────────────────────────

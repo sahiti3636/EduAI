@@ -16,7 +16,7 @@ from fastapi.middleware.gzip import GZipMiddleware
 from fastapi.staticfiles import StaticFiles
 
 from app.db import init_db
-from app.routers import auth, bucket, diagnostic, metrics, ocr, progress, quiz, report, students, teacher, tutor
+from app.routers import achievements, auth, bucket, daily, diagnostic, feedback, leaderboard, metrics, ocr, pair, progress, quiz, report, students, teacher, tutor
 
 _FRONTEND_DIR = pathlib.Path(__file__).parent.parent.parent / "frontend"
 
@@ -72,8 +72,13 @@ app.include_router(metrics.router)
 app.include_router(quiz.router)
 app.include_router(progress.router)
 app.include_router(report.router)
+app.include_router(daily.router)
+app.include_router(leaderboard.router)
+app.include_router(pair.router)
 app.include_router(teacher.router)
 app.include_router(ocr.router)
+app.include_router(feedback.router)
+app.include_router(achievements.router)
 
 # Serve the frontend — must come LAST so API routes above take precedence.
 if _FRONTEND_DIR.is_dir():

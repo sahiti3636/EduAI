@@ -35,6 +35,11 @@ def override_bucket(student_id: str, subtopic: str, req: OverrideBucketRequest) 
     updated_at = now()
     rationale = f"Manually overridden by {req.by}."
     with get_conn() as conn:
+        old_row = conn.execute(
+            "SELECT bucket FROM buckets WHERE student_id=? AND subtopic=?",
+            (student_id, subtopic),
+        ).fetchone()
+        old_bucket = old_row["bucket"] if old_row else None
         conn.execute(
             "INSERT INTO buckets (student_id, subtopic, bucket, rationale, source, per_item_json, updated_at) "
             "VALUES (?, ?, ?, ?, ?, NULL, ?) "
@@ -48,4 +53,11 @@ def override_bucket(student_id: str, subtopic: str, req: OverrideBucketRequest) 
             (student_id, subtopic),
         ).fetchone()
     update_schedule(student_id, subtopic, req.bucket)
+    try:
+        from app.achievements import award_bucket_upgrade, check_and_award
+        if old_bucket:
+            award_bucket_upgrade(student_id, old_bucket, req.bucket)
+        check_and_award(student_id)
+    except Exception:
+        pass
     return BucketResponse(**dict(row))

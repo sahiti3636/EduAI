@@ -101,6 +101,58 @@ const Api = {
   getReport: (studentId) =>
     apiRequest("GET", `/students/${studentId}/report`),
 
+  // Daily challenge
+  getDailyChallenge: (subtopic, studentId) =>
+    apiRequest("GET", `/daily-challenge/${subtopic}${studentId ? `?student_id=${studentId}` : ""}`),
+  completeDailyChallenge: (subtopic, studentId, sessionId = null) =>
+    apiRequest("POST", `/daily-challenge/${subtopic}/complete`, { student_id: studentId, session_id: sessionId }),
+  getDailyStreak: (studentId) =>
+    apiRequest("GET", `/daily-challenge/streak/${studentId}`),
+
+  // Leaderboard
+  getLeaderboard: (studentId) =>
+    apiRequest("GET", `/leaderboard${studentId ? `?student_id=${studentId}` : ""}`),
+  setLeaderboardOpt: (studentId, optedIn) =>
+    apiRequest("POST", `/students/${studentId}/leaderboard/opt`, { opted_in: optedIn }),
+  getLeaderboardStatus: (studentId) =>
+    apiRequest("GET", `/students/${studentId}/leaderboard/status`),
+
+  // Study pair
+  createPairRoom: (hostStudentId, subtopic) =>
+    apiRequest("POST", "/pair/rooms", { host_student_id: hostStudentId, subtopic }),
+  joinPairRoom: (roomId, studentId) =>
+    apiRequest("POST", `/pair/rooms/${roomId}/join`, { student_id: studentId }),
+  getPairRoom: (roomId) =>
+    apiRequest("GET", `/pair/rooms/${roomId}`),
+
+  // ── Phase 4: Feedback ────────────────────────────────────────
+  submitFeedback: (sessionId, studentId, guidanceRating, frustrationScore) =>
+    apiRequest("POST", `/sessions/${sessionId}/feedback`, {
+      student_id: studentId,
+      guidance_rating: guidanceRating,
+      frustration_score: frustrationScore,
+    }),
+  getFeedbackSummary: (studentId) =>
+    apiRequest("GET", `/students/${studentId}/feedback/summary`),
+
+  // ── Phase 4: Achievements ────────────────────────────────────
+  getAchievements: (studentId) =>
+    apiRequest("GET", `/students/${studentId}/achievements`),
+  checkAchievements: (studentId) =>
+    apiRequest("POST", `/students/${studentId}/achievements/check`, {}),
+
+  // ── Phase 4: Teacher — guardrail audit + rater validation ────
+  teacherGuardrailAudit: () =>
+    apiRequest("GET", "/teacher/guardrail-audit", undefined, _teacherHeaders()),
+  teacherSubmitBucketAssessment: (studentId, subtopic, bucket, note) =>
+    apiRequest("POST", "/teacher/bucket-assessments",
+      { student_id: studentId, subtopic, bucket, note: note || null },
+      _teacherHeaders()),
+  teacherRaterValidation: () =>
+    apiRequest("GET", "/teacher/rater-validation", undefined, _teacherHeaders()),
+  teacherStudentsForValidation: () =>
+    apiRequest("GET", "/teacher/students-for-validation", undefined, _teacherHeaders()),
+
   extractFromImage: async (file) => {
     const form = new FormData();
     form.append("file", file);

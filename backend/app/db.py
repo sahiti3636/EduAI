@@ -157,6 +157,77 @@ CREATE TABLE IF NOT EXISTS spaced_repetition (
     last_reviewed TEXT NOT NULL,
     PRIMARY KEY (student_id, subtopic)
 );
+
+CREATE TABLE IF NOT EXISTS daily_challenges (
+    date TEXT NOT NULL,              -- YYYY-MM-DD
+    subtopic TEXT NOT NULL,
+    problem_text TEXT NOT NULL,
+    created_at TEXT NOT NULL,
+    PRIMARY KEY (date, subtopic)
+);
+
+CREATE TABLE IF NOT EXISTS daily_challenge_completions (
+    student_id TEXT NOT NULL,
+    date TEXT NOT NULL,              -- YYYY-MM-DD
+    subtopic TEXT NOT NULL,
+    session_id TEXT,
+    completed_at TEXT NOT NULL,
+    PRIMARY KEY (student_id, date, subtopic)
+);
+
+CREATE TABLE IF NOT EXISTS leaderboard_settings (
+    student_id TEXT PRIMARY KEY,
+    opted_in INTEGER NOT NULL DEFAULT 0,
+    updated_at TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS pair_rooms (
+    id TEXT PRIMARY KEY,             -- 6-char room code
+    host_student_id TEXT NOT NULL,
+    host_label TEXT NOT NULL,
+    guest_student_id TEXT,
+    guest_label TEXT,
+    subtopic TEXT NOT NULL,
+    problem_text TEXT NOT NULL,
+    created_at TEXT NOT NULL,
+    ended_at TEXT
+);
+
+CREATE TABLE IF NOT EXISTS pair_messages (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    room_id TEXT NOT NULL,
+    sender_id TEXT,                  -- NULL for tutor
+    role TEXT NOT NULL,              -- 'host' | 'guest' | 'tutor'
+    label TEXT,                      -- display name shown in chat
+    content TEXT NOT NULL,
+    created_at TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS session_feedback (
+    session_id TEXT PRIMARY KEY,
+    student_id TEXT NOT NULL,
+    guidance_rating TEXT,            -- 'too_much' | 'just_right' | 'too_little'
+    frustration_score INTEGER,       -- 1-5
+    created_at TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS teacher_bucket_assessments (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    teacher_id TEXT NOT NULL,
+    student_id TEXT NOT NULL,
+    subtopic TEXT NOT NULL,
+    bucket TEXT NOT NULL,            -- 'A' | 'B' | 'C'
+    note TEXT,
+    assessed_at TEXT NOT NULL,
+    UNIQUE(teacher_id, student_id, subtopic)
+);
+
+CREATE TABLE IF NOT EXISTS achievements (
+    student_id TEXT NOT NULL,
+    achievement_id TEXT NOT NULL,
+    unlocked_at TEXT NOT NULL,
+    PRIMARY KEY (student_id, achievement_id)
+);
 """
 
 

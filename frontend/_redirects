@@ -15,5 +15,8 @@
 /quiz/*        https://eduai-production-8dcc.up.railway.app/quiz/:splat        200
 /teacher/*     https://eduai-production-8dcc.up.railway.app/teacher/:splat     200
 /ocr/*         https://eduai-production-8dcc.up.railway.app/ocr/:splat         200
-/bucket/*      https://eduai-production-8dcc.up.railway.app/bucket/:splat      200
-/health        https://eduai-production-8dcc.up.railway.app/health             200
+/bucket/*           https://eduai-production-8dcc.up.railway.app/bucket/:splat           200
+/daily-challenge/*  https://eduai-production-8dcc.up.railway.app/daily-challenge/:splat  200
+/leaderboard        https://eduai-production-8dcc.up.railway.app/leaderboard              200
+/pair/*             https://eduai-production-8dcc.up.railway.app/pair/:splat             200
+/health             https://eduai-production-8dcc.up.railway.app/health                  200

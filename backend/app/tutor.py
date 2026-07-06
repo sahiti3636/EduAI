@@ -282,5 +282,10 @@ def end_session(session_id: str) -> dict | None:
             tag_concepts_and_store(session_id, session["student_id"], session["subtopic"])
         except Exception:
             pass  # concept tagging is non-critical
+        try:
+            from app.achievements import check_and_award
+            check_and_award(session["student_id"])
+        except Exception:
+            pass  # achievements are non-critical
 
     return notes

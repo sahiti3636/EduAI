@@ -1758,3 +1758,280 @@ body.math-kb-open {
 .quiz-good { color: #4ade80; background: rgba(34,197,94,0.12); }
 .quiz-ok   { color: #fbbf24; background: rgba(251,191,36,0.12); }
 .quiz-bad  { color: #f87171; background: rgba(248,113,113,0.12); }
+
+/* ═══════════════════════════════════════════════════════════════
+   PHASE 3 — Daily challenge, leaderboard, study pair
+═══════════════════════════════════════════════════════════════ */
+
+/* ── Daily challenge new-dot ────────────────────────────────── */
+.daily-new-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: #f97316;
+  margin-left: 4px;
+  flex-shrink: 0;
+  animation: pulse-dot 1.6s ease-in-out infinite;
+}
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: .35; }
+}
+
+/* ── Daily challenge page ───────────────────────────────────── */
+.daily-subtopic-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 10px;
+  margin-bottom: 24px;
+}
+.daily-subtopic-btn {
+  padding: 14px 16px;
+  font-size: .9rem;
+  font-weight: 600;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,0.12);
+  text-align: center;
+}
+.daily-subtopic-btn:hover { border-color: var(--cyan); color: var(--cyan); }
+
+.daily-challenge-card { padding: 20px 22px; }
+.daily-challenge-header { display: flex; align-items: center; gap: 10px; }
+.daily-status {
+  font-size: .72rem; font-weight: 600; border-radius: 8px; padding: 2px 9px;
+}
+.daily-new  { color: var(--cyan); background: rgba(6,182,212,0.12); }
+.daily-done { color: #4ade80;     background: rgba(34,197,94,0.12); }
+.daily-completed-msg {
+  font-size: .82rem; color: #4ade80;
+  display: flex; align-items: center; gap: 6px;
+}
+
+/* ── Leaderboard page ───────────────────────────────────────── */
+.lb-opt-card { padding: 16px 18px; margin-bottom: 16px; }
+.lb-opt-row  { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.lb-opt-title { font-size: .85rem; font-weight: 600; color: var(--text-hi); }
+.lb-opt-sub   { font-size: .75rem; color: var(--text-lo); margin-top: 2px; }
+
+.lb-own-card {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 18px; margin-bottom: 16px;
+  border-color: rgba(6,182,212,0.3); background: rgba(6,182,212,0.06);
+}
+.lb-own-label { font-size: .72rem; color: var(--cyan); text-transform: uppercase; letter-spacing: .06em; }
+.lb-own-details { display: flex; align-items: center; gap: 10px; }
+.lb-rank-big {
+  font-size: 1.6rem; font-weight: 800;
+  background: linear-gradient(135deg, var(--cyan), #67e8f9);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.lb-score-chip {
+  font-size: .78rem; color: var(--text-mid);
+  background: rgba(255,255,255,0.07); border-radius: 8px; padding: 2px 9px;
+}
+
+.lb-row {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 16px; margin-bottom: 8px;
+}
+.lb-row-me { border-color: rgba(6,182,212,0.3); background: rgba(6,182,212,0.06); }
+.lb-medal { font-size: 1.2rem; min-width: 28px; text-align: center; }
+.lb-rank  { font-size: .85rem; font-weight: 700; color: var(--text-lo); min-width: 28px; text-align: center; }
+.lb-name  { flex: 1; font-size: .85rem; font-weight: 500; color: var(--text-hi); }
+.lb-score { font-size: .78rem; color: var(--text-mid); background: rgba(255,255,255,0.07); border-radius: 8px; padding: 2px 9px; }
+
+/* ── Study pair page ────────────────────────────────────────── */
+.pair-lobby-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 16px;
+  margin-bottom: 20px;
+}
+.pair-lobby-card { padding: 20px 18px; }
+.pair-lobby-icon { font-size: 1.6rem; margin-bottom: 8px; }
+.pair-lobby-title { font-size: .9rem; font-weight: 700; margin-bottom: 4px; }
+.pair-lobby-sub  { font-size: .78rem; color: var(--text-lo); line-height: 1.45; }
+
+.pair-room-code {
+  font-size: 2.4rem; font-weight: 800; letter-spacing: .18em;
+  background: linear-gradient(135deg, var(--cyan), #67e8f9);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  user-select: all;
+}
+
+.pair-peer-status {
+  font-size: .72rem; font-weight: 600; border-radius: 8px; padding: 3px 10px;
+}
+.peer-online  { color: #4ade80; background: rgba(34,197,94,0.12); }
+.peer-offline { color: #f87171; background: rgba(248,113,113,0.10); }
+
+/* Pair chat message variants */
+.msg-peer .chat-bubble { background: rgba(99,102,241,0.14); border-color: rgba(99,102,241,0.25); }
+.pair-msg-label { font-size: .68rem; color: var(--text-lo); margin-bottom: 3px; text-transform: uppercase; letter-spacing: .05em; }
+.chat-system-msg {
+  text-align: center; font-size: .72rem; color: var(--text-lo);
+  padding: 6px 0; margin: 4px 0;
+}
+
+.pair-typing {
+  display: flex; align-items: center; gap: 6px;
+  font-size: .78rem; color: var(--text-lo); padding: 6px 12px;
+}
+.typing-dot {
+  width: 5px; height: 5px; border-radius: 50%; background: var(--text-lo);
+  animation: typing-bounce .9s ease-in-out infinite;
+}
+.typing-dot:nth-child(2) { animation-delay: .15s; }
+.typing-dot:nth-child(3) { animation-delay: .30s; }
+@keyframes typing-bounce {
+  0%, 80%, 100% { transform: translateY(0); }
+  40%           { transform: translateY(-5px); }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   Phase 4 — Post-session feedback, achievements, teacher audit
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── Teacher tabs ─────────────────────────────────────────────── */
+.teacher-tabs {
+  display: flex; gap: 4px; margin-bottom: 20px;
+  border-bottom: 1px solid var(--border); padding-bottom: 0;
+}
+.teacher-tab {
+  background: none; border: none; cursor: pointer;
+  padding: 8px 16px; font-size: .82rem; font-weight: 600;
+  color: var(--text-mid); border-radius: 8px 8px 0 0;
+  border-bottom: 2px solid transparent; transition: color .15s, border-color .15s;
+}
+.teacher-tab:hover { color: var(--text-hi); }
+.teacher-tab.active { color: var(--cyan); border-bottom-color: var(--cyan); }
+
+/* ── Session feedback card ────────────────────────────────────── */
+.session-feedback-card {
+  margin-top: 14px; padding: 18px 20px;
+}
+.feedback-card-title {
+  font-size: .88rem; font-weight: 700; margin-bottom: 14px; color: var(--text-hi);
+}
+.feedback-q-label {
+  font-size: .75rem; color: var(--text-mid); display: block; margin-bottom: 7px;
+}
+.feedback-guidance-row, .feedback-frust-row { margin-bottom: 14px; }
+.feedback-pill-row { display: flex; gap: 7px; flex-wrap: wrap; }
+.feedback-pill {
+  background: var(--glass-bg); border: 1.5px solid var(--border);
+  border-radius: 20px; padding: 5px 14px; font-size: .78rem; font-weight: 500;
+  color: var(--text-mid); cursor: pointer; transition: border-color .15s, color .15s;
+}
+.feedback-pill:hover { border-color: var(--cyan); color: var(--cyan); }
+.feedback-pill.selected { border-color: var(--cyan); color: var(--cyan); background: rgba(0,229,255,.09); }
+.feedback-star-row { display: flex; gap: 6px; }
+.feedback-star {
+  width: 36px; height: 36px; border-radius: 8px; border: 1.5px solid var(--border);
+  background: var(--glass-bg); color: var(--text-mid); font-size: .85rem; font-weight: 700;
+  cursor: pointer; transition: border-color .15s, color .15s;
+}
+.feedback-star:hover { border-color: var(--amber); color: var(--amber); }
+.feedback-star.selected { border-color: var(--amber); color: var(--amber); background: rgba(255,171,0,.09); }
+
+/* ── Achievement toast ────────────────────────────────────────── */
+.achievement-toast {
+  position: fixed; bottom: 24px; right: 24px; z-index: 1000;
+  display: flex; align-items: center; gap: 12px;
+  background: var(--glass-bg); border: 1.5px solid var(--border);
+  backdrop-filter: blur(14px); border-radius: 14px;
+  padding: 12px 18px; max-width: 300px;
+  box-shadow: 0 6px 30px rgba(0,0,0,.35);
+  opacity: 0; transform: translateY(16px);
+  transition: opacity .35s, transform .35s;
+}
+.achievement-toast.show { opacity: 1; transform: translateY(0); }
+.ach-toast-icon { font-size: 1.6rem; flex-shrink: 0; }
+.achievement-toast strong { font-size: .88rem; color: var(--text-hi); display: block; }
+.ach-toast-desc { font-size: .75rem; color: var(--text-mid); margin-top: 2px; }
+
+/* ── Achievements grid (report.html) ──────────────────────────── */
+.rpt-achievements-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px;
+}
+.rpt-achievement-card {
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 12px 14px; border-radius: 12px;
+  border: 1.5px solid var(--border); background: var(--glass-bg);
+  transition: border-color .15s;
+}
+.rpt-achievement-card.earned { border-color: rgba(0,229,255,.3); }
+.rpt-achievement-card.locked { opacity: .45; }
+.rpt-ach-icon { font-size: 1.5rem; flex-shrink: 0; }
+.rpt-ach-info { flex: 1; min-width: 0; }
+.rpt-ach-title { font-size: .82rem; font-weight: 700; color: var(--text-hi); }
+.rpt-ach-desc  { font-size: .73rem; color: var(--text-mid); margin-top: 2px; line-height: 1.4; }
+.rpt-ach-date  { font-size: .68rem; color: var(--text-lo); margin-top: 4px; }
+.rpt-ach-lock  { font-size: .85rem; color: var(--text-lo); }
+.rpt-ach-check { font-size: .85rem; color: var(--cyan); }
+
+/* ── Guardrail audit (teacher) ────────────────────────────────── */
+.audit-leak-row {
+  padding: 12px 16px; margin-bottom: 10px; border-left: 3px solid var(--amber);
+}
+.audit-leak-header {
+  display: flex; align-items: center; gap: 8px; margin-bottom: 6px; flex-wrap: wrap;
+}
+.audit-student { font-size: .8rem; font-weight: 700; color: var(--text-hi); }
+.audit-date    { font-size: .72rem; color: var(--text-lo); margin-left: auto; }
+.audit-msg     { font-size: .8rem; color: var(--text-mid); margin: 4px 0 8px; line-height: 1.5;
+                 background: var(--glass-bg); padding: 8px 10px; border-radius: 8px; }
+.audit-reasons { display: flex; gap: 5px; flex-wrap: wrap; }
+.audit-reason-tag {
+  font-size: .68rem; background: rgba(255,171,0,.12); color: var(--amber);
+  border: 1px solid rgba(255,171,0,.3); border-radius: 6px; padding: 2px 7px;
+}
+
+/* ── Rater validation (teacher) ───────────────────────────────── */
+.teacher-agreement-bar { margin-bottom: 16px; }
+.agreement-summary {
+  display: flex; align-items: center; gap: 10px; margin-bottom: 6px;
+}
+.agreement-label { font-size: .8rem; color: var(--text-mid); }
+.agreement-pct   { font-size: 1.1rem; font-weight: 800; }
+.agreement-of    { font-size: .75rem; color: var(--text-lo); }
+.agreement-progress {
+  height: 6px; border-radius: 3px; background: var(--glass-bg); overflow: hidden;
+}
+.agreement-fill {
+  height: 100%; border-radius: 3px; transition: width .4s;
+}
+.agreement-fill.pct-hi { background: var(--green); }
+.agreement-fill.pct-mid { background: var(--amber); }
+.agreement-fill.pct-lo { background: var(--crimson); }
+
+.validation-table { width: 100%; }
+.val-bucket-select { display: flex; align-items: center; gap: 5px; }
+.val-bucket-btn {
+  width: 28px; height: 28px; border-radius: 6px; border: 1.5px solid var(--border);
+  background: var(--glass-bg); font-size: .78rem; font-weight: 700; cursor: pointer;
+  color: var(--text-mid); transition: border-color .15s;
+}
+.val-bucket-btn:hover         { border-color: var(--cyan); color: var(--cyan); }
+.val-bucket-btn.selected      { border-color: var(--cyan); color: var(--cyan); background: rgba(0,229,255,.1); }
+
+/* ── Session feedback summary (teacher) ───────────────────────── */
+.sfeedback-summary {
+  display: flex; gap: 20px; flex-wrap: wrap; padding: 14px 18px;
+}
+.sfb-stat { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.sfb-val  { font-size: 1.4rem; font-weight: 800; color: var(--text-hi); }
+.sfb-lbl  { font-size: .72rem; color: var(--text-mid); text-align: center; }
+.sfb-dist-row {
+  display: flex; align-items: center; gap: 10px; padding: 4px 0;
+}
+.sfb-dist-lbl  { width: 80px; font-size: .78rem; color: var(--text-mid); flex-shrink: 0; }
+.sfb-dist-bar-wrap { flex: 1; height: 8px; background: var(--glass-bg); border-radius: 4px; overflow: hidden; }
+.sfb-dist-bar  { height: 100%; border-radius: 4px; transition: width .4s; }
+.sfb-dist-n    { width: 28px; text-align: right; font-size: .75rem; color: var(--text-lo); }
+
+/* ── Colour vars used above (ensure they're defined) ──────────── */
+:root {
+  --amber:   #ffab00;
+  --green:   #00e676;
+  --crimson: #ff5252;
+}

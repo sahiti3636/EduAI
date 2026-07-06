@@ -121,6 +121,26 @@ function renderDueReviews(due) {
   section.style.display = "flex";
 }
 
+function renderAchievements(achievements) {
+  const section = el("rpt-achievements-section");
+  const container = el("rpt-achievements");
+  if (!achievements || achievements.length === 0) {
+    section.style.display = "none";
+    return;
+  }
+  container.innerHTML = achievements.map(a => `
+    <div class="rpt-achievement-card ${a.earned ? 'earned' : 'locked'}">
+      <div class="rpt-ach-icon">${a.icon}</div>
+      <div class="rpt-ach-info">
+        <div class="rpt-ach-title">${a.title}</div>
+        <div class="rpt-ach-desc">${a.desc}</div>
+        ${a.earned && a.unlocked_at ? `<div class="rpt-ach-date">${a.unlocked_at.slice(0,10)}</div>` : ""}
+      </div>
+      ${!a.earned ? '<div class="rpt-ach-lock">🔒</div>' : '<div class="rpt-ach-check">✓</div>'}
+    </div>
+  `).join("");
+}
+
 async function loadReport() {
   if (!Store.studentId) {
     el("report-loading").innerHTML =
@@ -132,7 +152,10 @@ async function loadReport() {
   if (headerLbl) headerLbl.textContent = Store.studentLabel || "";
 
   try {
-    const data = await Api.getReport(Store.studentId);
+    const [data, achievements] = await Promise.all([
+      Api.getReport(Store.studentId),
+      Api.getAchievements(Store.studentId).catch(() => []),
+    ]);
 
     el("report-loading").style.display = "none";
     el("report-content").style.display = "block";
@@ -148,6 +171,7 @@ async function loadReport() {
     renderMastery(data.mastery_summary);
     renderErrors(data.error_patterns);
     renderQuizzes(data.recent_quizzes);
+    renderAchievements(achievements);
   } catch (e) {
     el("report-loading").textContent = "Could not load report.";
     console.error(e);

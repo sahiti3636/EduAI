@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>EduAI — Daily Challenge</title>
+<link rel="stylesheet" href="css/style.css?v=1" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+</head>
+<body>
+
+<div class="mesh-bg" aria-hidden="true">
+  <div class="blob blob-1"></div><div class="blob blob-2"></div>
+  <div class="blob blob-3"></div><div class="blob blob-4"></div>
+  <div class="blob blob-5"></div>
+</div>
+
+<div class="page-wrap">
+
+  <header class="site-header">
+    <a href="index.html" class="logo">
+      <div class="logo-icon">M</div>
+      <span class="logo-wordmark">EduAI</span>
+    </a>
+    <div class="header-right">
+      <span id="streak-badge" class="badge-pill" style="display:none;"></span>
+    </div>
+  </header>
+
+  <main style="max-width:680px;margin:0 auto;padding:0 20px 60px;">
+
+    <div class="chat-topbar" style="margin-bottom:24px;">
+      <a href="index.html" class="back-link" style="margin-bottom:0;">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <path d="M10 3L5 8l5 5"/>
+        </svg>
+        Home
+      </a>
+      <span class="chat-topbar-title">Daily Challenge</span>
+      <span id="today-date" style="font-size:.72rem;color:var(--text-lo);margin-left:auto;"></span>
+    </div>
+
+    <!-- Subtopic picker -->
+    <div id="subtopic-picker" class="daily-subtopic-grid">
+      <p style="color:var(--text-mid);font-size:.85rem;margin-bottom:16px;grid-column:1/-1;">
+        Pick a subject for today's challenge:
+      </p>
+    </div>
+
+    <!-- Challenge card (hidden until subtopic chosen) -->
+    <div id="challenge-card" class="glass-card daily-challenge-card" style="display:none;">
+      <div class="daily-challenge-header">
+        <span id="challenge-subtopic-badge" class="badge-pill"></span>
+        <span id="challenge-status" class="daily-status"></span>
+      </div>
+      <div class="problem-text" id="challenge-problem" style="margin:14px 0;"></div>
+      <div id="challenge-actions" style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap;">
+        <button class="btn btn-primary" id="start-challenge-btn">Tackle this challenge →</button>
+        <button class="btn btn-ghost btn-xs" id="pick-another-btn">Pick another subject</button>
+      </div>
+      <div id="completed-msg" style="display:none;margin-top:12px;" class="daily-completed-msg">
+        ✓ You've completed today's challenge for this subject!
+        <a href="index.html" class="btn btn-ghost btn-xs" style="margin-left:10px;">Back to subjects</a>
+      </div>
+    </div>
+
+    <div class="error" id="daily-error"></div>
+
+  </main>
+</div>
+
+<script src="js/bundle.js?v=9"></script>
+<script src="js/daily.js"></script>
+</body>
+</html>

@@ -200,11 +200,22 @@ document.getElementById("end-session-btn").addEventListener("click", async () =>
   btn.disabled = true;
   generating.style.display = "flex";
 
+  const endedSessionId = sessionId; // capture before reset
+
   try {
-    const result = await Api.endSession(sessionId);
+    const result = await Api.endSession(endedSessionId);
     stopPomodoro();
     if (result && result.notes && result.notes.student_breakthrough) {
       showSessionNotes(result.notes);
+    }
+    showFeedbackCard(endedSessionId);
+    // Check achievements after session ends
+    if (Store.studentId) {
+      Api.checkAchievements(Store.studentId).then(r => {
+        if (r.newly_awarded && r.newly_awarded.length > 0) {
+          showAchievementToast(r.details);
+        }
+      }).catch(() => {});
     }
   } catch (_) {
     // notes generation failure is non-fatal
@@ -215,6 +226,90 @@ document.getElementById("end-session-btn").addEventListener("click", async () =>
     btn.disabled = true;
   }
 });
+
+function showFeedbackCard(endedId) {
+  const existing = document.getElementById("session-feedback-card");
+  if (existing) existing.remove();
+
+  const card = document.createElement("div");
+  card.id = "session-feedback-card";
+  card.className = "glass-card session-feedback-card";
+  card.innerHTML = `
+    <p class="feedback-card-title">How did this session feel?</p>
+    <div class="feedback-guidance-row">
+      <span class="feedback-q-label">Guidance level</span>
+      <div class="feedback-pill-row">
+        <button class="feedback-pill" data-val="too_little">Too little</button>
+        <button class="feedback-pill" data-val="just_right">Just right</button>
+        <button class="feedback-pill" data-val="too_much">Too much</button>
+      </div>
+    </div>
+    <div class="feedback-frust-row">
+      <span class="feedback-q-label">Frustration (1 = calm, 5 = very frustrated)</span>
+      <div class="feedback-star-row">
+        ${[1,2,3,4,5].map(n => `<button class="feedback-star" data-n="${n}">${n}</button>`).join("")}
+      </div>
+    </div>
+    <button class="btn btn-primary btn-sm feedback-submit" id="feedback-submit-btn" style="margin-top:14px;" disabled>
+      Submit
+    </button>
+    <span class="feedback-done" id="feedback-done" style="display:none;color:var(--green);font-size:.8rem;margin-left:10px;">✓ Thanks!</span>
+  `;
+
+  let guidance = null, frust = null;
+
+  card.querySelectorAll(".feedback-pill").forEach(btn => {
+    btn.addEventListener("click", () => {
+      card.querySelectorAll(".feedback-pill").forEach(b => b.classList.remove("selected"));
+      btn.classList.add("selected");
+      guidance = btn.dataset.val;
+      maybeEnable();
+    });
+  });
+  card.querySelectorAll(".feedback-star").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const n = parseInt(btn.dataset.n);
+      frust = n;
+      card.querySelectorAll(".feedback-star").forEach((b, i) => {
+        b.classList.toggle("selected", i < n);
+      });
+      maybeEnable();
+    });
+  });
+
+  function maybeEnable() {
+    card.querySelector("#feedback-submit-btn").disabled = !(guidance || frust);
+  }
+
+  card.querySelector("#feedback-submit-btn").addEventListener("click", async () => {
+    card.querySelector("#feedback-submit-btn").disabled = true;
+    try {
+      await Api.submitFeedback(endedId, Store.studentId, guidance, frust);
+      card.querySelector("#feedback-done").style.display = "";
+    } catch (_) {}
+  });
+
+  const notesCard = document.getElementById("session-notes-card");
+  if (notesCard && notesCard.parentNode) {
+    notesCard.parentNode.insertBefore(card, notesCard.nextSibling);
+  } else {
+    document.getElementById("chat-window").after(card);
+  }
+  card.scrollIntoView({ behavior: "smooth", block: "nearest" });
+}
+
+function showAchievementToast(details) {
+  details.forEach((a, i) => {
+    setTimeout(() => {
+      const toast = document.createElement("div");
+      toast.className = "achievement-toast";
+      toast.innerHTML = `<span class="ach-toast-icon">${a.icon}</span><div><strong>${a.title}</strong><div class="ach-toast-desc">${a.desc}</div></div>`;
+      document.body.appendChild(toast);
+      setTimeout(() => toast.classList.add("show"), 50);
+      setTimeout(() => { toast.classList.remove("show"); setTimeout(() => toast.remove(), 400); }, 4000);
+    }, i * 700);
+  });
+}
 
 function showSessionNotes(notes) {
   const card = document.getElementById("session-notes-card");
@@ -513,4 +608,16 @@ document.getElementById("custom-kb-btn").addEventListener("click", () => {
 })();
 
 // ── Boot ──────────────────────────────────────────────────────
-loadPicker();
+loadPicker().then(() => {
+  // Auto-start when arriving from daily.html with a pre-set problem
+  const urlProblem = params.get("problem");
+  const isDaily    = params.get("daily") === "1";
+  if (urlProblem && isDaily) {
+    beginSession({ problemStatement: urlProblem, chapterLabel: "Daily Challenge" }).then(() => {
+      // Mark challenge as completed once the session starts
+      if (Store.studentId && subtopic) {
+        Api.completeDailyChallenge(subtopic, Store.studentId, sessionId).catch(() => {});
+      }
+    });
+  }
+});
