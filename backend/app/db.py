@@ -137,6 +137,26 @@ CREATE TABLE IF NOT EXISTS error_patterns (
     last_seen TEXT NOT NULL,
     PRIMARY KEY (student_id, subtopic, error_type)
 );
+
+CREATE TABLE IF NOT EXISTS concept_mastery (
+    student_id TEXT NOT NULL,
+    concept_id TEXT NOT NULL,
+    subtopic TEXT NOT NULL,
+    mastery TEXT NOT NULL DEFAULT 'not_tested',  -- 'solid' | 'shaky' | 'not_tested'
+    last_updated TEXT NOT NULL,
+    PRIMARY KEY (student_id, concept_id)
+);
+
+CREATE TABLE IF NOT EXISTS spaced_repetition (
+    student_id TEXT NOT NULL,
+    subtopic TEXT NOT NULL,
+    next_review TEXT NOT NULL,       -- ISO date YYYY-MM-DD
+    interval_days INTEGER NOT NULL DEFAULT 1,
+    ease_factor REAL NOT NULL DEFAULT 2.5,
+    repetitions INTEGER NOT NULL DEFAULT 0,
+    last_reviewed TEXT NOT NULL,
+    PRIMARY KEY (student_id, subtopic)
+);
 """
 
 

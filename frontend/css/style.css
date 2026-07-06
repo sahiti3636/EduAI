@@ -1558,3 +1558,203 @@ body.math-kb-open {
   color: var(--text-mid);
   margin-top: 8px;
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   PHASE 2 — Due reviews banner, concept map, report page
+═══════════════════════════════════════════════════════════════ */
+
+/* ── Due reviews banner ─────────────────────────────────────── */
+.due-reviews-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 16px;
+  margin-bottom: 16px;
+  border-color: rgba(249,115,22,0.35);
+  background: rgba(249,115,22,0.07);
+}
+.due-icon { font-size: 1.2rem; line-height: 1; margin-top: 2px; }
+.due-title { font-size: .82rem; font-weight: 700; color: #fb923c; }
+.due-list { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+.due-chip {
+  display: inline-block;
+  font-size: .75rem;
+  color: #fdba74;
+  background: rgba(249,115,22,0.15);
+  border: 1px solid rgba(249,115,22,0.3);
+  border-radius: 999px;
+  padding: 2px 10px;
+  text-decoration: none;
+  transition: background .2s;
+}
+.due-chip:hover { background: rgba(249,115,22,0.28); }
+
+/* ── Concept map page ───────────────────────────────────────── */
+.concept-legend {
+  display: flex;
+  gap: 18px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: .78rem;
+  color: var(--text-mid);
+}
+.legend-dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  border: 1.5px solid;
+  flex-shrink: 0;
+}
+.legend-dot.solid      { background: rgba(34,197,94,0.25); border-color: #22c55e; }
+.legend-dot.shaky      { background: rgba(251,146,60,0.25); border-color: #fb923c; }
+.legend-dot.not_tested { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.2); }
+
+.concept-loading { padding: 60px 0; text-align: center; color: var(--text-mid); font-size: .85rem; }
+
+.concept-section {
+  padding: 20px 18px 24px;
+  margin-bottom: 20px;
+}
+.concept-section-title {
+  font-size: .85rem;
+  font-weight: 700;
+  color: var(--text-mid);
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  margin-bottom: 16px;
+}
+.concept-tooltip {
+  position: fixed;
+  display: none;
+  max-width: 240px;
+  font-size: .75rem;
+  line-height: 1.45;
+  color: var(--text-hi);
+  background: rgba(15,15,20,0.92);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 8px;
+  padding: 6px 10px;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* ── Report page ────────────────────────────────────────────── */
+.rpt-stat-row {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+.rpt-stat {
+  flex: 1;
+  min-width: 100px;
+  padding: 16px;
+  text-align: center;
+}
+.rpt-stat-val {
+  font-size: 2rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--cyan), #67e8f9);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.rpt-stat-lbl { font-size: .72rem; color: var(--text-lo); text-transform: uppercase; letter-spacing: .06em; }
+
+.rpt-due-alert {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 16px;
+  margin-bottom: 20px;
+  border-color: rgba(249,115,22,0.35);
+  background: rgba(249,115,22,0.07);
+  font-size: .82rem;
+  font-weight: 600;
+  color: #fb923c;
+}
+
+.rpt-section { margin-bottom: 28px; }
+.rpt-section-title {
+  font-size: .78rem;
+  font-weight: 700;
+  color: var(--text-lo);
+  text-transform: uppercase;
+  letter-spacing: .07em;
+  margin-bottom: 12px;
+}
+
+.rpt-bucket-row { display: flex; flex-wrap: wrap; gap: 10px; }
+.rpt-bucket-card {
+  flex: 1;
+  min-width: 140px;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.rpt-bucket-name { font-size: .82rem; font-weight: 600; color: var(--text-mid); }
+.rpt-bucket-date { font-size: .7rem; color: var(--text-lo); }
+
+.rpt-note-card { padding: 14px 16px; margin-bottom: 10px; }
+.rpt-note-meta { display: flex; justify-content: space-between; margin-bottom: 6px; }
+.rpt-note-sub  { font-size: .72rem; color: var(--cyan); font-weight: 600; text-transform: uppercase; letter-spacing: .05em; }
+.rpt-note-date { font-size: .72rem; color: var(--text-lo); }
+.rpt-note-text { font-size: .85rem; line-height: 1.55; color: var(--text-hi); }
+.rpt-note-struggled { font-size: .78rem; color: #f59e0b; margin-top: 6px; }
+
+.rpt-mastery-row { display: flex; align-items: center; gap: 14px; margin-bottom: 12px; }
+.rpt-mastery-label { font-size: .8rem; color: var(--text-mid); min-width: 90px; }
+.rpt-mastery-bar-wrap { flex: 1; display: flex; flex-direction: column; gap: 4px; }
+.rpt-mastery-bar {
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.08);
+  overflow: hidden;
+  display: flex;
+}
+.rpt-bar-solid { height: 100%; background: #22c55e; transition: width .4s; }
+.rpt-bar-shaky { height: 100%; background: #fb923c; transition: width .4s; }
+.rpt-mastery-counts { display: flex; gap: 10px; }
+.rpt-count-solid { font-size: .7rem; color: #4ade80; }
+.rpt-count-shaky { font-size: .7rem; color: #fdba74; }
+.rpt-count-nt    { font-size: .7rem; color: var(--text-lo); }
+
+.rpt-error-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 10px;
+  padding: 10px 14px;
+  background: rgba(255,255,255,0.04);
+  border-radius: 10px;
+}
+.rpt-error-info { min-width: 160px; }
+.rpt-error-type { display: block; font-size: .8rem; color: var(--text-hi); font-weight: 500; }
+.rpt-error-sub  { font-size: .7rem; color: var(--text-lo); }
+.rpt-error-bar-wrap { flex: 1; display: flex; align-items: center; gap: 8px; }
+.rpt-error-bar { height: 6px; border-radius: 999px; background: rgba(249,115,22,0.55); transition: width .4s; }
+.rpt-error-count { font-size: .72rem; color: #fb923c; min-width: 24px; }
+
+.rpt-quiz-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 9px 14px;
+  background: rgba(255,255,255,0.04);
+  border-radius: 10px;
+  margin-bottom: 8px;
+}
+.rpt-quiz-info { display: flex; flex-direction: column; gap: 2px; }
+.rpt-quiz-chapter { font-size: .82rem; color: var(--text-hi); font-weight: 500; }
+.rpt-quiz-date    { font-size: .7rem; color: var(--text-lo); }
+.rpt-quiz-score   { font-size: .82rem; font-weight: 700; border-radius: 8px; padding: 2px 10px; }
+.quiz-good { color: #4ade80; background: rgba(34,197,94,0.12); }
+.quiz-ok   { color: #fbbf24; background: rgba(251,191,36,0.12); }
+.quiz-bad  { color: #f87171; background: rgba(248,113,113,0.12); }

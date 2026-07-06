@@ -94,6 +94,12 @@ const Api = {
     apiRequest("GET", `/quiz/flashcards/due?student_id=${studentId}`),
   markDeckReviewed: (deckId, rating) =>
     apiRequest("POST", `/quiz/flashcards/${deckId}/reviewed?rating=${rating}`),
+  getDueReviews: (studentId) =>
+    apiRequest("GET", `/students/${studentId}/due-reviews`),
+  getConceptMap: (studentId) =>
+    apiRequest("GET", `/students/${studentId}/concept-map`),
+  getReport: (studentId) =>
+    apiRequest("GET", `/students/${studentId}/report`),
 
   extractFromImage: async (file) => {
     const form = new FormData();

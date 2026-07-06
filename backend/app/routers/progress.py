@@ -1,9 +1,9 @@
-"""Student progress and error-pattern endpoints."""
+"""Student progress, error-pattern, due-reviews, and concept-map endpoints."""
 from __future__ import annotations
 
 import json
 from collections import Counter
-from datetime import datetime, timezone
+from datetime import date, datetime, timezone
 
 from fastapi import APIRouter, HTTPException
 
@@ -161,3 +161,67 @@ def get_error_patterns(student_id: str) -> dict:
         ),
         "patterns": patterns,
     }
+
+
+@router.get("/{student_id}/due-reviews")
+def get_due_reviews(student_id: str) -> dict:
+    """Return subtopics whose spaced-repetition review date has arrived."""
+    with get_conn() as conn:
+        if not conn.execute("SELECT 1 FROM students WHERE id=?", (student_id,)).fetchone():
+            raise HTTPException(status_code=404, detail="Student not found.")
+        rows = conn.execute(
+            "SELECT subtopic, next_review, interval_days FROM spaced_repetition "
+            "WHERE student_id=? AND next_review <= ?",
+            (student_id, date.today().isoformat()),
+        ).fetchall()
+
+    curriculum = get_curriculum()
+    labels = {k: v.get("label", k) for k, v in curriculum.get("subtopics", {}).items()}
+
+    return {
+        "due": [
+            {
+                "subtopic": r["subtopic"],
+                "label": labels.get(r["subtopic"], r["subtopic"]),
+                "next_review": r["next_review"],
+                "interval_days": r["interval_days"],
+            }
+            for r in rows
+        ]
+    }
+
+
+@router.get("/{student_id}/concept-map")
+def get_concept_map(student_id: str) -> dict:
+    """Return concept nodes for all subtopics with the student's mastery data."""
+    with get_conn() as conn:
+        if not conn.execute("SELECT 1 FROM students WHERE id=?", (student_id,)).fetchone():
+            raise HTTPException(status_code=404, detail="Student not found.")
+        mastery_rows = conn.execute(
+            "SELECT concept_id, mastery, last_updated FROM concept_mastery WHERE student_id=?",
+            (student_id,),
+        ).fetchall()
+
+    mastery_map = {r["concept_id"]: r["mastery"] for r in mastery_rows}
+    curriculum = get_curriculum()
+
+    result: dict = {}
+    for st_id, st_cfg in curriculum.get("subtopics", {}).items():
+        nodes = st_cfg.get("concept_nodes", [])
+        if not nodes:
+            continue
+        result[st_id] = {
+            "label": st_cfg.get("label", st_id),
+            "nodes": [
+                {
+                    "id": n["id"],
+                    "label": n["label"],
+                    "description": n.get("description", ""),
+                    "depends_on": n.get("depends_on", []),
+                    "mastery": mastery_map.get(n["id"], "not_tested"),
+                }
+                for n in nodes
+            ],
+        }
+
+    return result

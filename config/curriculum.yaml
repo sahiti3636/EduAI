@@ -166,6 +166,28 @@ subtopics:
             Claims the roots are unchanged, or has no systematic approach
             to finding the new roots.
 
+    concept_nodes:
+      - id: poly_graph
+        label: "Graph Shape from Discriminant"
+        description: "How the sign of a and D together determine whether/where the parabola crosses the x-axis"
+        depends_on: []
+      - id: zero_product
+        label: "Zero Product Property"
+        description: "Why AB=0 implies A=0 or B=0, and why this fails for non-zero right-hand sides"
+        depends_on: []
+      - id: vieta_formulas
+        label: "Vieta's Formulas"
+        description: "Sum and product of roots expressed in terms of coefficients a, b, c"
+        depends_on: [poly_graph]
+      - id: coeff_structure
+        label: "Coefficient Structure & Root Encoding"
+        description: "How f(1)=p+q+r=0 reveals x=1 as a root; reversed coefficients give reciprocal roots"
+        depends_on: [vieta_formulas]
+      - id: quadratic_formula
+        label: "Quadratic Formula & When to Use It"
+        description: "The formula x=(-b±√D)/2a and choosing between factoring, completing the square, or formula"
+        depends_on: [poly_graph]
+
     practice_problems:
       A: >-
         A quadratic equation $ax^2 + bx + c = 0$ has two roots $\alpha$ and $\beta$.
@@ -332,6 +354,28 @@ subtopics:
           wrong-or-missing: >-
             No attempt to isolate sec and tan first, or substitutes
             arbitrary values of theta without algebraic elimination.
+
+    concept_nodes:
+      - id: ratio_definitions
+        label: "Ratio Definitions"
+        description: "sin/cos/tan as opposite, adjacent, hypotenuse ratios in a right triangle"
+        depends_on: []
+      - id: complementary_angles
+        label: "Complementary Angles"
+        description: "sin(90°-θ)=cosθ — A+C=90° in a right triangle forces this identity"
+        depends_on: [ratio_definitions]
+      - id: monotonicity
+        label: "Growth & Decay (0° to 90°)"
+        description: "Why sin increases and cos decreases as θ grows; why tan is unbounded near 90°"
+        depends_on: [ratio_definitions]
+      - id: pythagorean_identity
+        label: "Pythagorean Identity"
+        description: "sin²θ + cos²θ = 1 — derived from the right triangle, not memorised"
+        depends_on: [ratio_definitions]
+      - id: sec_tan_identity
+        label: "sec² − tan² Identity"
+        description: "sec²θ − tan²θ = 1 — how to derive it by dividing sin²+cos²=1 by cos²θ"
+        depends_on: [pythagorean_identity]
 
     practice_problems:
       A: >-
@@ -509,6 +553,28 @@ subtopics:
             Sets up the probability for the second draw as if the ball was
             replaced (uses 5/(N+5)), or cannot express the answer in terms
             of N.
+
+    concept_nodes:
+      - id: sample_space
+        label: "Sample Space & Equal Likelihood"
+        description: "Why the elementary outcomes must be equally likely; ordered pairs vs. sums"
+        depends_on: []
+      - id: classical_probability
+        label: "Classical Probability"
+        description: "P = favorable / total — only valid for equally likely outcomes"
+        depends_on: [sample_space]
+      - id: mutual_exclusivity
+        label: "Mutual Exclusivity"
+        description: "Events that cannot occur simultaneously; probabilities of mutually exclusive events add"
+        depends_on: [classical_probability]
+      - id: independence
+        label: "Independence"
+        description: "P(B|A)=P(B) — formal definition; distinguishing independence from mutual exclusivity"
+        depends_on: [classical_probability]
+      - id: conditional_probability
+        label: "Conditional Probability"
+        description: "How without-replacement changes the sample space for the second draw"
+        depends_on: [independence]
 
     practice_problems:
       A: >-

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>EduAI — Concept Map</title>
+<link rel="stylesheet" href="css/style.css?v=1" />
+</head>
+<body>
+
+<div class="mesh-bg" aria-hidden="true">
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+  <div class="blob blob-4"></div>
+  <div class="blob blob-5"></div>
+</div>
+
+<div class="page-wrap">
+
+  <header class="site-header">
+    <a href="index.html" class="logo">
+      <div class="logo-icon">M</div>
+      <span class="logo-wordmark">EduAI</span>
+    </a>
+    <div class="header-right">
+      <span id="header-label" class="badge-pill" style="font-size:.7rem;"></span>
+    </div>
+  </header>
+
+  <main style="max-width:860px;margin:0 auto;padding:0 20px 40px;">
+
+    <div class="chat-topbar" style="margin-bottom:24px;">
+      <a href="index.html" class="back-link" style="margin-bottom:0;">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <path d="M10 3L5 8l5 5"/>
+        </svg>
+        Home
+      </a>
+      <span class="chat-topbar-title">Concept Map</span>
+    </div>
+
+    <p style="color:var(--text-mid);font-size:.85rem;margin-bottom:24px;line-height:1.55;">
+      Your understanding of each concept, based on your tutoring sessions.
+      Concepts build on each other — arrows show which concepts depend on which.
+    </p>
+
+    <!-- Legend -->
+    <div class="concept-legend">
+      <span class="legend-item"><span class="legend-dot solid"></span>Solid</span>
+      <span class="legend-item"><span class="legend-dot shaky"></span>Needs work</span>
+      <span class="legend-item"><span class="legend-dot not_tested"></span>Not yet explored</span>
+    </div>
+
+    <div id="concept-map-container">
+      <div class="concept-loading" id="concept-loading">Loading your concept map…</div>
+    </div>
+
+  </main>
+</div>
+
+<script src="js/bundle.js?v=7"></script>
+<script src="js/profile.js"></script>
+</body>
+</html>

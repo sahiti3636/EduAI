@@ -16,7 +16,7 @@ from fastapi.middleware.gzip import GZipMiddleware
 from fastapi.staticfiles import StaticFiles
 
 from app.db import init_db
-from app.routers import auth, bucket, diagnostic, metrics, ocr, progress, quiz, students, teacher, tutor
+from app.routers import auth, bucket, diagnostic, metrics, ocr, progress, quiz, report, students, teacher, tutor
 
 _FRONTEND_DIR = pathlib.Path(__file__).parent.parent.parent / "frontend"
 
@@ -71,6 +71,7 @@ app.include_router(tutor.router)
 app.include_router(metrics.router)
 app.include_router(quiz.router)
 app.include_router(progress.router)
+app.include_router(report.router)
 app.include_router(teacher.router)
 app.include_router(ocr.router)
 

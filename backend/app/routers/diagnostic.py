@@ -7,6 +7,7 @@ from fastapi import APIRouter, HTTPException
 from app.config import get_subtopic
 from app.db import get_conn, now
 from app.rater import RaterOutputError, rate_subtopic
+from app.spaced_repetition import update_schedule
 from app.schemas import (
     DiagnosticItemPublic,
     DiagnosticSubtopicResponse,
@@ -76,6 +77,8 @@ def submit_diagnostic(subtopic: str, req: SubmitDiagnosticRequest) -> SubmitDiag
                 "count = count + 1, last_seen = excluded.last_seen",
                 (req.student_id, subtopic, error_type, ts),
             )
+
+    update_schedule(req.student_id, subtopic, result.bucket)
 
     return SubmitDiagnosticResponse(
         subtopic=result.subtopic,

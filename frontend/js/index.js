@@ -149,6 +149,21 @@ async function renderSubtopics() {
   });
 }
 
+// ── Due reviews banner ────────────────────────────────────────
+async function checkDueReviews() {
+  if (!Store.studentId) return;
+  try {
+    const { due } = await Api.getDueReviews(Store.studentId);
+    if (!due || due.length === 0) return;
+    const banner = document.getElementById("due-reviews-banner");
+    const list   = document.getElementById("due-reviews-list");
+    list.innerHTML = due.map(r =>
+      `<a href="chat.html?subtopic=${r.subtopic}" class="due-chip">${r.label} →</a>`
+    ).join("");
+    banner.style.display = "flex";
+  } catch (_) { /* non-critical */ }
+}
+
 // ── Page state ────────────────────────────────────────────────
 function showLanding() {
   landingState.style.display  = "";
@@ -165,6 +180,7 @@ function showWelcome() {
   document.getElementById("welcome-label").textContent = Store.studentLabel;
   headerStudentLbl.textContent = Store.studentLabel;
   renderSubtopics();
+  checkDueReviews();
 }
 
 // ── Sign out ──────────────────────────────────────────────────

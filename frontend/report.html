@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>EduAI — Progress Report</title>
+<link rel="stylesheet" href="css/style.css?v=1" />
+</head>
+<body>
+
+<div class="mesh-bg" aria-hidden="true">
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+  <div class="blob blob-4"></div>
+  <div class="blob blob-5"></div>
+</div>
+
+<div class="page-wrap">
+
+  <header class="site-header">
+    <a href="index.html" class="logo">
+      <div class="logo-icon">M</div>
+      <span class="logo-wordmark">EduAI</span>
+    </a>
+    <div class="header-right">
+      <span id="header-label" class="badge-pill" style="font-size:.7rem;"></span>
+    </div>
+  </header>
+
+  <main id="report-main" style="max-width:760px;margin:0 auto;padding:0 20px 60px;">
+
+    <div class="chat-topbar" style="margin-bottom:24px;">
+      <a href="index.html" class="back-link" style="margin-bottom:0;">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <path d="M10 3L5 8l5 5"/>
+        </svg>
+        Home
+      </a>
+      <span class="chat-topbar-title">Progress Report</span>
+      <span id="report-date" style="font-size:.72rem;color:var(--text-lo);margin-left:auto;"></span>
+    </div>
+
+    <div id="report-loading" style="text-align:center;padding:60px 0;color:var(--text-mid);">
+      Loading your report…
+    </div>
+
+    <!-- Filled by report.js -->
+    <div id="report-content" style="display:none;">
+
+      <!-- Stat bar -->
+      <div class="rpt-stat-row">
+        <div class="rpt-stat glass-card">
+          <div class="rpt-stat-val" id="stat-streak">—</div>
+          <div class="rpt-stat-lbl">Day streak</div>
+        </div>
+        <div class="rpt-stat glass-card">
+          <div class="rpt-stat-val" id="stat-sessions">—</div>
+          <div class="rpt-stat-lbl">Sessions</div>
+        </div>
+        <div class="rpt-stat glass-card">
+          <div class="rpt-stat-val" id="stat-quizzes">—</div>
+          <div class="rpt-stat-lbl">Quizzes</div>
+        </div>
+      </div>
+
+      <!-- Due reviews alert -->
+      <div id="rpt-due-section" style="display:none;" class="glass-card rpt-due-alert">
+        <span style="font-size:1.1rem;">🔔</span>
+        <div>
+          <strong>Review time</strong>
+          <div id="rpt-due-list" style="margin-top:4px;font-size:.8rem;color:var(--text-mid);"></div>
+        </div>
+      </div>
+
+      <!-- Buckets -->
+      <section class="rpt-section">
+        <h2 class="rpt-section-title">Your level by subject</h2>
+        <div id="rpt-buckets" class="rpt-bucket-row"></div>
+      </section>
+
+      <!-- Recent breakthroughs -->
+      <section class="rpt-section" id="rpt-notes-section">
+        <h2 class="rpt-section-title">Recent breakthroughs</h2>
+        <div id="rpt-notes"></div>
+      </section>
+
+      <!-- Concept mastery summary -->
+      <section class="rpt-section" id="rpt-mastery-section">
+        <h2 class="rpt-section-title">Concept mastery</h2>
+        <div id="rpt-mastery"></div>
+      </section>
+
+      <!-- Error patterns -->
+      <section class="rpt-section" id="rpt-errors-section">
+        <h2 class="rpt-section-title">Recurring error patterns</h2>
+        <div id="rpt-errors"></div>
+      </section>
+
+      <!-- Quiz history -->
+      <section class="rpt-section" id="rpt-quiz-section">
+        <h2 class="rpt-section-title">Recent quiz scores</h2>
+        <div id="rpt-quizzes"></div>
+      </section>
+
+    </div><!-- /#report-content -->
+
+  </main>
+</div>
+
+<script src="js/bundle.js?v=7"></script>
+<script src="js/report.js"></script>
+</body>
+</html>

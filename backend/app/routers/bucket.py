@@ -5,6 +5,7 @@ from fastapi import APIRouter, HTTPException
 from app.config import get_subtopic
 from app.db import get_conn, now
 from app.schemas import BucketResponse, OverrideBucketRequest
+from app.spaced_repetition import update_schedule
 
 router = APIRouter(prefix="/students/{student_id}/buckets", tags=["buckets"])
 
@@ -46,4 +47,5 @@ def override_bucket(student_id: str, subtopic: str, req: OverrideBucketRequest) 
             "SELECT * FROM buckets WHERE student_id=? AND subtopic=?",
             (student_id, subtopic),
         ).fetchone()
+    update_schedule(student_id, subtopic, req.bucket)
     return BucketResponse(**dict(row))

@@ -266,8 +266,21 @@ def apply_rebucket(student_id: str, subtopic: str, new_bucket: str) -> None:
 
 
 def end_session(session_id: str) -> dict | None:
-    """Mark session ended and generate breakthrough notes. Returns notes dict or None."""
+    """Mark session ended, generate notes + tag concepts. Returns notes dict or None."""
     with get_conn() as conn:
+        session = conn.execute(
+            "SELECT student_id, subtopic FROM sessions WHERE id=?", (session_id,)
+        ).fetchone()
         conn.execute("UPDATE sessions SET ended_at=? WHERE id=?", (now(), session_id))
+
     from app.notes import generate_and_store
-    return generate_and_store(session_id)
+    notes = generate_and_store(session_id)
+
+    if session:
+        try:
+            from app.concept_tagger import tag_concepts_and_store
+            tag_concepts_and_store(session_id, session["student_id"], session["subtopic"])
+        except Exception:
+            pass  # concept tagging is non-critical
+
+    return notes
