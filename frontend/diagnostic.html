@@ -1,10 +1,13 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
+<script>(function(){try{var t=localStorage.getItem('eduai_theme');if(!t)t=matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';document.documentElement.setAttribute('data-theme',t);}catch(e){document.documentElement.setAttribute('data-theme','dark');}})();</script>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>EduAI — Diagnostic</title>
-<link rel="stylesheet" href="css/style.css?v=1" />
+<link rel="stylesheet" href="css/style.css?v=2" />
+<link rel="stylesheet" href="css/premium.css?v=2" />
+<link rel="stylesheet" href="css/theme.css?v=1" />
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
@@ -61,7 +64,7 @@
 
     <!-- Result card — shown after submission -->
     <div id="result-card" class="glass-card result-card" style="display:none;">
-      <div class="result-icon">🎯</div>
+      <div class="result-icon" style="color:var(--pv-cyan,#22d3ee);"><svg viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></div>
       <h2 class="result-heading">Diagnostic complete</h2>
       <p class="result-sub">Your level for this subject</p>
       <div class="result-bucket-big" id="result-bucket"></div>
@@ -78,7 +81,9 @@
 
 
 
-<script src="js/bundle.js?v=9"></script>
+<script src="js/bundle.js?v=10"></script>
 <script src="js/diagnostic.js?v=3"></script>
+<script src="js/premium.js?v=2"></script>
+<script src="js/shell.js?v=1"></script>
 </body>
 </html>

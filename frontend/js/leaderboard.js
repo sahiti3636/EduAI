@@ -2,7 +2,7 @@
 
 function el(id) { return document.getElementById(id); }
 
-const MEDAL = ["🥇", "🥈", "🥉"];
+const MEDAL_CLASS = ["lb-medal-gold", "lb-medal-silver", "lb-medal-bronze"];
 
 async function loadLeaderboard() {
   if (!Store.studentId) {
@@ -56,7 +56,9 @@ async function renderBoard() {
 
     el("lb-board").style.display = "block";
     el("lb-board").innerHTML = data.board.map((entry, i) => {
-      const medal = i < 3 ? `<span class="lb-medal">${MEDAL[i]}</span>` : `<span class="lb-rank">#${entry.rank}</span>`;
+      const medal = i < 3
+        ? `<span class="lb-medal ${MEDAL_CLASS[i]}">${entry.rank}</span>`
+        : `<span class="lb-rank">#${entry.rank}</span>`;
       const isMe = data.own && entry.rank === data.own.rank && data.own.opted_in !== false;
       return `
         <div class="lb-row glass-card ${isMe ? "lb-row-me" : ""}">

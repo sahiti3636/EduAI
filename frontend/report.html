@@ -1,10 +1,13 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
+<script>(function(){try{var t=localStorage.getItem('eduai_theme');if(!t)t=matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';document.documentElement.setAttribute('data-theme',t);}catch(e){document.documentElement.setAttribute('data-theme','dark');}})();</script>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>EduAI — Progress Report</title>
-<link rel="stylesheet" href="css/style.css?v=1" />
+<link rel="stylesheet" href="css/style.css?v=2" />
+<link rel="stylesheet" href="css/premium.css?v=2" />
+<link rel="stylesheet" href="css/theme.css?v=1" />
 </head>
 <body>
 
@@ -66,7 +69,7 @@
 
       <!-- Due reviews alert -->
       <div id="rpt-due-section" style="display:none;" class="glass-card rpt-due-alert">
-        <span style="font-size:1.1rem;">🔔</span>
+        <span style="color:var(--pv-peach,#fb923c);"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg></span>
         <div>
           <strong>Review time</strong>
           <div id="rpt-due-list" style="margin-top:4px;font-size:.8rem;color:var(--text-mid);"></div>
@@ -114,7 +117,9 @@
   </main>
 </div>
 
-<script src="js/bundle.js?v=9"></script>
+<script src="js/bundle.js?v=10"></script>
 <script src="js/report.js"></script>
+<script src="js/premium.js?v=2"></script>
+<script src="js/shell.js?v=1"></script>
 </body>
 </html>

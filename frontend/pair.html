@@ -1,10 +1,13 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
+<script>(function(){try{var t=localStorage.getItem('eduai_theme');if(!t)t=matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';document.documentElement.setAttribute('data-theme',t);}catch(e){document.documentElement.setAttribute('data-theme','dark');}})();</script>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>EduAI — Study Pair</title>
-<link rel="stylesheet" href="css/style.css?v=1" />
+<link rel="stylesheet" href="css/style.css?v=2" />
+<link rel="stylesheet" href="css/premium.css?v=2" />
+<link rel="stylesheet" href="css/theme.css?v=1" />
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
@@ -51,7 +54,7 @@
 
       <!-- Create room -->
       <div class="glass-card pair-lobby-card">
-        <div class="pair-lobby-icon">➕</div>
+        <div class="pair-lobby-icon"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v8"/><path d="M8 12h8"/></svg></div>
         <h3 class="pair-lobby-title">Create a room</h3>
         <p class="pair-lobby-sub">Pick a subject and share the code with your study partner.</p>
         <div style="margin-top:12px;">
@@ -67,7 +70,7 @@
 
       <!-- Join room -->
       <div class="glass-card pair-lobby-card">
-        <div class="pair-lobby-icon">🔗</div>
+        <div class="pair-lobby-icon"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></div>
         <h3 class="pair-lobby-title">Join a room</h3>
         <p class="pair-lobby-sub">Enter the 6-character code your partner shared with you.</p>
         <div style="margin-top:12px;">
@@ -89,7 +92,7 @@
   <!-- ── WAITING STATE (host only) ────────────────────────── -->
   <div id="waiting-screen" style="display:none;max-width:600px;margin:0 auto;padding:0 20px 60px;">
     <div class="glass-card" style="text-align:center;padding:40px 24px;">
-      <div style="font-size:2rem;margin-bottom:10px;">⏳</div>
+      <div style="margin-bottom:12px;color:var(--pv-violet,#818cf8);"><svg viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 22h14"/><path d="M5 2h14"/><path d="M17 22v-4.17a2 2 0 0 0-.59-1.42L12 12l-4.41 4.41A2 2 0 0 0 7 17.83V22"/><path d="M7 2v4.17a2 2 0 0 0 .59 1.42L12 12l4.41-4.41A2 2 0 0 0 17 6.17V2"/></svg></div>
       <h2 style="font-size:1rem;font-weight:700;margin-bottom:6px;">Waiting for your partner</h2>
       <p style="color:var(--text-mid);font-size:.82rem;margin-bottom:20px;">
         Share this code with your study partner:
@@ -137,7 +140,9 @@
 
 </div><!-- /.page-wrap -->
 
-<script src="js/bundle.js?v=9"></script>
+<script src="js/bundle.js?v=10"></script>
 <script src="js/pair.js"></script>
+<script src="js/premium.js?v=2"></script>
+<script src="js/shell.js?v=1"></script>
 </body>
 </html>

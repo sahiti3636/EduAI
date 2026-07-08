@@ -74,11 +74,11 @@ function render(data, feedback) {
   // ── Top stats ──────────────────────────────────────────────
   const statsEl = document.getElementById("teacher-stats");
   const stats = [
-    { icon: "👤", value: t.total_students,  label: "students"  },
-    { icon: "📚", value: t.total_sessions,  label: "sessions"  },
-    { icon: "✅", value: t.total_quizzes,   label: "quizzes"   },
-    { icon: "🛡️", value: t.pressure_count,  label: "pressure attempts" },
-    { icon: "⚠️", value: t.leak_count,      label: "possible leaks"    },
+    { icon: PVIcons.get("user", 20),   value: t.total_students,  label: "students"  },
+    { icon: PVIcons.get("book", 20),   value: t.total_sessions,  label: "sessions"  },
+    { icon: PVIcons.get("checkCircle", 20), value: t.total_quizzes, label: "quizzes" },
+    { icon: PVIcons.get("shield", 20), value: t.pressure_count,  label: "pressure attempts" },
+    { icon: PVIcons.get("alert", 20),  value: t.leak_count,      label: "possible leaks"    },
   ];
   statsEl.innerHTML = stats.map(s => `
     <div class="glass-card progress-stat-card">

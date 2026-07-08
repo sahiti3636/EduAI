@@ -6,18 +6,19 @@ from typing import Any
 
 from app.db import get_conn, now
 
+# Icons are semantic keys resolved to SVG line icons by the frontend (PVIcons).
 ACHIEVEMENTS: dict[str, dict[str, Any]] = {
-    "first_session":  {"icon": "🎓", "title": "First Steps",       "desc": "Completed your first tutoring session."},
-    "first_daily":    {"icon": "⚡", "title": "Daily Starter",     "desc": "Completed your first daily challenge."},
-    "daily_5":        {"icon": "🔥", "title": "5-Day Challenger",  "desc": "Completed 5 daily challenges."},
-    "daily_10":       {"icon": "💪", "title": "10-Day Challenger", "desc": "Completed 10 daily challenges."},
-    "streak_3":       {"icon": "📅", "title": "3-Day Streak",      "desc": "Kept a 3-day daily challenge streak."},
-    "streak_7":       {"icon": "🏅", "title": "Week Warrior",      "desc": "Kept a 7-day daily challenge streak."},
-    "streak_14":      {"icon": "🌟", "title": "Fortnight Focus",   "desc": "Kept a 14-day daily challenge streak."},
-    "bucket_upgrade": {"icon": "📈", "title": "Level Up!",        "desc": "Improved your level in any subject."},
-    "first_a":        {"icon": "🏆", "title": "Top Tier",         "desc": "Reached Level A in a subject."},
-    "first_pair":     {"icon": "🤝", "title": "Study Buddy",      "desc": "Completed a study pair session."},
-    "all_subtopics":  {"icon": "🗺", "title": "Explorer",         "desc": "Studied all three subjects."},
+    "first_session":  {"icon": "cap",      "title": "First Steps",       "desc": "Completed your first tutoring session."},
+    "first_daily":    {"icon": "bolt",     "title": "Daily Starter",     "desc": "Completed your first daily challenge."},
+    "daily_5":        {"icon": "flame",    "title": "5-Day Challenger",  "desc": "Completed 5 daily challenges."},
+    "daily_10":       {"icon": "medal",    "title": "10-Day Challenger", "desc": "Completed 10 daily challenges."},
+    "streak_3":       {"icon": "calendar", "title": "3-Day Streak",      "desc": "Kept a 3-day daily challenge streak."},
+    "streak_7":       {"icon": "award",    "title": "Week Warrior",      "desc": "Kept a 7-day daily challenge streak."},
+    "streak_14":      {"icon": "star",     "title": "Fortnight Focus",   "desc": "Kept a 14-day daily challenge streak."},
+    "bucket_upgrade": {"icon": "trend",    "title": "Level Up",          "desc": "Improved your level in any subject."},
+    "first_a":        {"icon": "trophy",   "title": "Top Tier",          "desc": "Reached Level A in a subject."},
+    "first_pair":     {"icon": "users",    "title": "Study Buddy",       "desc": "Completed a study pair session."},
+    "all_subtopics":  {"icon": "compass",  "title": "Explorer",          "desc": "Studied all three subjects."},
 }
 
 

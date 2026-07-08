@@ -1,10 +1,13 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
+<script>(function(){try{var t=localStorage.getItem('eduai_theme');if(!t)t=matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';document.documentElement.setAttribute('data-theme',t);}catch(e){document.documentElement.setAttribute('data-theme','dark');}})();</script>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>EduAI — Leaderboard</title>
-<link rel="stylesheet" href="css/style.css?v=1" />
+<link rel="stylesheet" href="css/style.css?v=2" />
+<link rel="stylesheet" href="css/premium.css?v=2" />
+<link rel="stylesheet" href="css/theme.css?v=1" />
 </head>
 <body>
 
@@ -78,7 +81,9 @@
   </main>
 </div>
 
-<script src="js/bundle.js?v=9"></script>
+<script src="js/bundle.js?v=10"></script>
 <script src="js/leaderboard.js"></script>
+<script src="js/premium.js?v=2"></script>
+<script src="js/shell.js?v=1"></script>
 </body>
 </html>

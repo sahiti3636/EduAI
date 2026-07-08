@@ -130,13 +130,13 @@ function renderAchievements(achievements) {
   }
   container.innerHTML = achievements.map(a => `
     <div class="rpt-achievement-card ${a.earned ? 'earned' : 'locked'}">
-      <div class="rpt-ach-icon">${a.icon}</div>
+      <div class="rpt-ach-icon">${PVIcons.get(a.icon, 22)}</div>
       <div class="rpt-ach-info">
         <div class="rpt-ach-title">${a.title}</div>
         <div class="rpt-ach-desc">${a.desc}</div>
         ${a.earned && a.unlocked_at ? `<div class="rpt-ach-date">${a.unlocked_at.slice(0,10)}</div>` : ""}
       </div>
-      ${!a.earned ? '<div class="rpt-ach-lock">🔒</div>' : '<div class="rpt-ach-check">✓</div>'}
+      ${!a.earned ? `<div class="rpt-ach-lock">${PVIcons.get("lock", 14)}</div>` : '<div class="rpt-ach-check">✓</div>'}
     </div>
   `).join("");
 }

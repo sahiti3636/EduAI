@@ -1,10 +1,13 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
+<script>(function(){try{var t=localStorage.getItem('eduai_theme');if(!t)t=matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';document.documentElement.setAttribute('data-theme',t);}catch(e){document.documentElement.setAttribute('data-theme','dark');}})();</script>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>EduAI — Adaptive Math Tutor</title>
-<link rel="stylesheet" href="css/style.css?v=1" />
+<link rel="stylesheet" href="css/style.css?v=2" />
+<link rel="stylesheet" href="css/premium.css?v=2" />
+<link rel="stylesheet" href="css/theme.css?v=1" />
 </head>
 <body>
 
@@ -46,6 +49,11 @@
        STATE 1 — Landing / login
   ══════════════════════════════════════════ -->
   <div id="landing-state">
+
+    <!-- WebGL 3-D hero object (fixed behind, pointer-transparent) -->
+    <div id="hero-3d" aria-hidden="true"></div>
+
+    <div class="landing-hero">
 
     <!-- Hero text (left column) -->
     <div class="hero-text">
@@ -112,6 +120,31 @@
 
       <div class="error" id="setup-error" style="margin-top:12px;"></div>
     </div>
+    </div><!-- /.landing-hero -->
+
+    <!-- Scroll band — drives the 3-D scene as you scroll -->
+    <section class="landing-scroll">
+      <p class="ls-eyebrow">Scroll to explore</p>
+      <h2 class="ls-title">Learn to think,<br>not just to remember.</h2>
+      <div class="ls-cards">
+        <div class="glass-card ls-card">
+          <div class="ls-card-icon"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M7.9 20A9 9 0 1 0 4 16.1L3 21l4.9-1z"/><path d="M8 10h8"/><path d="M8 14h5"/></svg></div>
+          <h3>Socratic guidance</h3>
+          <p>The tutor asks the right questions instead of handing over answers — even under pressure.</p>
+        </div>
+        <div class="glass-card ls-card">
+          <div class="ls-card-icon"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v16a2 2 0 0 0 2 2h16"/><path d="M7 13l3-3 4 4 5-5"/></svg></div>
+          <h3>Adaptive to you</h3>
+          <p>A quick diagnostic calibrates guidance to your level, per subject — never too much or too little.</p>
+        </div>
+        <div class="glass-card ls-card">
+          <div class="ls-card-icon"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
+          <h3>Built for momentum</h3>
+          <p>Daily challenges, streaks, spaced review and mastery maps keep you moving forward.</p>
+        </div>
+      </div>
+    </section>
+
   </div>
 
   <!-- ══════════════════════════════════════════
@@ -122,14 +155,14 @@
     <!-- Welcome banner -->
     <div id="welcome-card" class="glass-card">
       <div>
-        <p class="welcome-greeting">Hello, <span id="welcome-label"></span> 👋</p>
+        <p class="welcome-greeting">Hello, <span id="welcome-label"></span></p>
         <p class="welcome-sub">Pick a subject to start your diagnostic, or jump into tutoring if you've already been assessed.</p>
       </div>
     </div>
 
     <!-- Due reviews banner (hidden until reviews are due) -->
     <div id="due-reviews-banner" class="glass-card due-reviews-banner" style="display:none;">
-      <span class="due-icon">🔔</span>
+      <span class="due-icon"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg></span>
       <div class="due-content">
         <strong class="due-title">Time to review</strong>
         <div id="due-reviews-list" class="due-list"></div>
@@ -139,32 +172,32 @@
     <!-- Quick-link row -->
     <div class="welcome-actions">
       <a href="daily.html" class="welcome-action-link" id="daily-link">
-        <span class="wa-icon">⚡</span>
+        <span class="wa-icon"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></svg></span>
         <span class="wa-label">Daily challenge</span>
         <span id="daily-dot" class="daily-new-dot" style="display:none;"></span>
       </a>
       <a href="leaderboard.html" class="welcome-action-link">
-        <span class="wa-icon">🏆</span>
+        <span class="wa-icon"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg></span>
         <span class="wa-label">Leaderboard</span>
       </a>
       <a href="pair.html" class="welcome-action-link">
-        <span class="wa-icon">👥</span>
+        <span class="wa-icon"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
         <span class="wa-label">Study pair</span>
       </a>
       <a href="progress.html" class="welcome-action-link">
-        <span class="wa-icon">📊</span>
+        <span class="wa-icon"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v16a2 2 0 0 0 2 2h16"/><path d="M7 13l3-3 4 4 5-5"/></svg></span>
         <span class="wa-label">My progress</span>
       </a>
       <a href="report.html" class="welcome-action-link">
-        <span class="wa-icon">📋</span>
+        <span class="wa-icon"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M8 13h8"/><path d="M8 17h8"/></svg></span>
         <span class="wa-label">Full report</span>
       </a>
       <a href="profile.html" class="welcome-action-link">
-        <span class="wa-icon">🗺</span>
+        <span class="wa-icon"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="2.5"/><circle cx="5" cy="19" r="2.5"/><circle cx="19" cy="19" r="2.5"/><path d="M12 7.5 6 16.5"/><path d="m12 7.5 6 9"/><path d="M7.5 19h9"/></svg></span>
         <span class="wa-label">Concept map</span>
       </a>
       <a href="teacher.html" class="welcome-action-link">
-        <span class="wa-icon">👩‍🏫</span>
+        <span class="wa-icon"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h20"/><path d="M21 3v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V3"/><path d="m7 21 5-5 5 5"/></svg></span>
         <span class="wa-label">Teacher view</span>
       </a>
     </div>
@@ -176,7 +209,11 @@
 
 </div><!-- /.page-wrap -->
 
-<script src="js/bundle.js?v=9"></script>
+<script src="js/bundle.js?v=10"></script>
 <script src="js/index.js"></script>
+<script src="js/premium.js?v=2"></script>
+<script src="js/shell.js?v=1"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js" defer></script>
+<script src="js/hero3d.js?v=2" defer></script>
 </body>
 </html>

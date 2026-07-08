@@ -28,7 +28,7 @@ function render(data, dueDecks, errorData) {
     banner.href = "review.html";
     banner.className = "review-banner";
     banner.innerHTML = `
-      <span class="review-banner-icon">🃏</span>
+      <span class="review-banner-icon">${PVIcons.get("cards", 20)}</span>
       <span class="review-banner-text">
         <strong>${totalDueCards} flashcard${totalDueCards !== 1 ? "s" : ""}</strong> due for review today
       </span>
@@ -42,7 +42,7 @@ function render(data, dueDecks, errorData) {
     const card = document.createElement("div");
     card.className = "glass-card error-pattern-card";
     card.innerHTML = `
-      <h3 class="error-pattern-title">📉 Recurring patterns to work on</h3>
+      <h3 class="error-pattern-title">Recurring patterns to work on</h3>
       <p class="error-pattern-sub">Based on ${errorData.total_questions_attempted} questions answered · Overall accuracy: ${errorData.overall_accuracy}%</p>
       <div class="error-pattern-list">
         ${errorData.patterns.map(p => `
@@ -62,9 +62,9 @@ function render(data, dueDecks, errorData) {
   // ── Stats row ─────────────────────────────────────────────
   const statsRow = document.getElementById("progress-stats-row");
   const stats = [
-    { icon: "🔥", value: data.streak_days, label: "day streak" },
-    { icon: "📚", value: data.total_sessions, label: "sessions" },
-    { icon: "✅", value: data.total_quizzes, label: "quizzes taken" },
+    { icon: PVIcons.get("flame", 20), value: data.streak_days, label: "day streak" },
+    { icon: PVIcons.get("book", 20),  value: data.total_sessions, label: "sessions" },
+    { icon: PVIcons.get("checkCircle", 20), value: data.total_quizzes, label: "quizzes taken" },
   ];
   statsRow.innerHTML = stats.map(s => `
     <div class="glass-card progress-stat-card">

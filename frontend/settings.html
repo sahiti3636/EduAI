@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>EduAI — Settings</title>
+<script>(function(){try{var t=localStorage.getItem('eduai_theme');if(!t)t=matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';document.documentElement.setAttribute('data-theme',t);}catch(e){document.documentElement.setAttribute('data-theme','dark');}})();</script>
+<link rel="stylesheet" href="css/style.css?v=2" />
+<link rel="stylesheet" href="css/premium.css?v=2" />
+<link rel="stylesheet" href="css/theme.css?v=1" />
+</head>
+<body>
+
+<div class="mesh-bg" aria-hidden="true">
+  <div class="blob blob-1"></div><div class="blob blob-2"></div>
+  <div class="blob blob-3"></div><div class="blob blob-4"></div>
+  <div class="blob blob-5"></div>
+</div>
+
+<div class="page-wrap">
+
+  <header class="site-header">
+    <a href="index.html" class="logo">
+      <div class="logo-icon">M</div>
+      <span class="logo-wordmark">EduAI</span>
+    </a>
+    <div class="header-right">
+      <span id="header-label" class="badge-pill" style="font-size:.7rem;"></span>
+    </div>
+  </header>
+
+  <main style="max-width:720px;margin:0 auto;padding:0 20px 60px;">
+
+    <div class="chat-topbar" style="margin-bottom:24px;">
+      <span class="chat-topbar-title">Settings</span>
+    </div>
+
+    <!-- Appearance -->
+    <section class="glass-card" style="padding:24px;margin-bottom:18px;">
+      <h2 class="rpt-section-title" style="margin-bottom:6px;">Appearance</h2>
+      <p style="color:var(--text-mid);font-size:.85rem;margin-bottom:18px;">Choose how EduAI looks. "System" follows your device setting.</p>
+      <div class="set-theme-row" id="set-theme-row">
+        <button class="set-theme-card" data-choice="light">
+          <span class="set-theme-swatch swatch-light"></span>
+          <span class="set-theme-name">Light</span>
+        </button>
+        <button class="set-theme-card" data-choice="dark">
+          <span class="set-theme-swatch swatch-dark"></span>
+          <span class="set-theme-name">Dark</span>
+        </button>
+        <button class="set-theme-card" data-choice="system">
+          <span class="set-theme-swatch swatch-system"></span>
+          <span class="set-theme-name">System</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- Account -->
+    <section class="glass-card" style="padding:24px;margin-bottom:18px;">
+      <h2 class="rpt-section-title" style="margin-bottom:6px;">Account</h2>
+      <p style="color:var(--text-mid);font-size:.85rem;margin-bottom:18px;">Signed in as <b id="acct-label" style="color:var(--text-hi);"></b></p>
+      <button class="btn btn-ghost" id="signout-btn">Sign out</button>
+    </section>
+
+    <!-- Help -->
+    <section class="glass-card" id="help" style="padding:24px;">
+      <h2 class="rpt-section-title" style="margin-bottom:6px;">Help</h2>
+      <p style="color:var(--text-mid);font-size:.85rem;line-height:1.6;">
+        EduAI is a Socratic maths tutor: it guides you to the answer instead of handing it over.
+        Start from the <b style="color:var(--text-hi);">Dashboard</b> to take a diagnostic, then open
+        <b style="color:var(--text-hi);">Tutor Chat</b> for a subject. Track mastery in
+        <b style="color:var(--text-hi);">My Progress</b> and keep streaks alive with the
+        <b style="color:var(--text-hi);">Daily Challenge</b>.
+      </p>
+    </section>
+
+  </main>
+</div>
+
+<script src="js/bundle.js?v=10"></script>
+<script src="js/settings.js?v=1"></script>
+<script src="js/premium.js?v=2"></script>
+<script src="js/shell.js?v=1"></script>
+</body>
+</html>

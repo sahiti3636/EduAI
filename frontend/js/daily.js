@@ -77,7 +77,7 @@ async function loadStreak() {
     const { streak_days } = await Api.getDailyStreak(Store.studentId);
     if (streak_days > 0) {
       const badge = el("streak-badge");
-      badge.textContent = `🔥 ${streak_days} day streak`;
+      badge.innerHTML = `${PVIcons.get("flame", 14)} ${streak_days} day streak`;
       badge.style.display = "";
     }
   } catch (_) {}

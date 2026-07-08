@@ -303,7 +303,7 @@ function showAchievementToast(details) {
     setTimeout(() => {
       const toast = document.createElement("div");
       toast.className = "achievement-toast";
-      toast.innerHTML = `<span class="ach-toast-icon">${a.icon}</span><div><strong>${a.title}</strong><div class="ach-toast-desc">${a.desc}</div></div>`;
+      toast.innerHTML = `<span class="ach-toast-icon">${PVIcons.get(a.icon, 26)}</span><div><strong>${a.title}</strong><div class="ach-toast-desc">${a.desc}</div></div>`;
       document.body.appendChild(toast);
       setTimeout(() => toast.classList.add("show"), 50);
       setTimeout(() => { toast.classList.remove("show"); setTimeout(() => toast.remove(), 400); }, 4000);
@@ -356,8 +356,7 @@ function startPomodoro(bucket) {
     }
     const m = String(Math.floor(secsLeft / 60)).padStart(2, "0");
     const s = String(secsLeft % 60).padStart(2, "0");
-    const icon = phase === "work" ? "🍅" : "☕";
-    timerEl.textContent = `${icon} ${m}:${s}`;
+    timerEl.textContent = `${phase === "work" ? "Focus" : "Break"} ${m}:${s}`;
     secsLeft--;
   }
 
