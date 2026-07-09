@@ -47,6 +47,7 @@ const Api = {
 
   // ── Students ──────────────────────────────────────────────────
   createStudent: (label) => apiRequest("POST", "/students", { label }),
+  getStudentXp: (studentId) => apiRequest("GET", `/students/${studentId}/xp`),
   getStudentBuckets: (studentId) => apiRequest("GET", `/students/${studentId}/buckets`),
   getDiagnostic: (subtopic) => apiRequest("GET", `/diagnostic/${subtopic}`),
   submitDiagnostic: (subtopic, studentId, responses) =>

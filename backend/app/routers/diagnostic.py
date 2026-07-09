@@ -79,6 +79,12 @@ def submit_diagnostic(subtopic: str, req: SubmitDiagnosticRequest) -> SubmitDiag
             )
 
     update_schedule(req.student_id, subtopic, result.bucket)
+    
+    from app.db import award_xp
+    award_xp(req.student_id, "diagnostic_completion", 30)
+    bucket_xp = {"A": 100, "B": 50, "C": 20}.get(result.bucket, 0)
+    if bucket_xp > 0:
+        award_xp(req.student_id, f"bucket_achieved_{result.bucket}", bucket_xp)
 
     return SubmitDiagnosticResponse(
         subtopic=result.subtopic,

@@ -18,52 +18,18 @@ from app.db import get_conn, now
 
 router = APIRouter(tags=["leaderboard"])
 
-_BUCKET_VAL = {"A": 3, "B": 2, "C": 1}
-
-
-def _compute_score(student_id: str) -> int:
-    curriculum = get_curriculum()
-    with get_conn() as conn:
-        buckets = conn.execute(
-            "SELECT subtopic, bucket FROM buckets WHERE student_id=?", (student_id,)
-        ).fetchall()
-        sessions = conn.execute(
-            "SELECT started_at FROM sessions WHERE student_id=? ORDER BY started_at",
-            (student_id,),
-        ).fetchall()
-        daily_count = conn.execute(
-            "SELECT COUNT(*) as n FROM daily_challenge_completions WHERE student_id=?",
-            (student_id,),
-        ).fetchone()["n"]
-
-    bucket_score = sum(_BUCKET_VAL.get(r["bucket"], 0) * 10 for r in buckets)
-
-    session_dates = sorted({s["started_at"][:10] for s in sessions}, reverse=True)
-    streak = 0
-    if session_dates:
-        prev = date.today().isoformat()
-        for d in session_dates:
-            if d == prev or (
-                datetime.fromisoformat(prev).toordinal()
-                - datetime.fromisoformat(d).toordinal() == 1
-            ):
-                streak += 1
-                prev = d
-            else:
-                break
-
-    return bucket_score + streak * 2 + daily_count * 5
+# XP computation is now handled dynamically in app.db via `award_xp`.
 
 
 @router.get("/leaderboard")
 def get_leaderboard(student_id: str | None = None) -> dict:
-    """Return the top opted-in students ranked by score.
+    """Return the top opted-in students ranked by XP.
 
     Pass student_id to also include the requester's own rank.
     """
     with get_conn() as conn:
         opted_in = conn.execute(
-            "SELECT ls.student_id, s.label "
+            "SELECT ls.student_id, s.label, s.total_xp as score "
             "FROM leaderboard_settings ls "
             "JOIN students s ON ls.student_id = s.id "
             "WHERE ls.opted_in = 1",
@@ -71,12 +37,11 @@ def get_leaderboard(student_id: str | None = None) -> dict:
 
     entries = []
     for row in opted_in:
-        sid = row["student_id"]
-        try:
-            score = _compute_score(sid)
-        except Exception:
-            score = 0
-        entries.append({"student_id": sid, "label": row["label"], "score": score})
+        entries.append({
+            "student_id": row["student_id"],
+            "label": row["label"],
+            "score": row["score"]
+        })
 
     entries.sort(key=lambda e: e["score"], reverse=True)
     for i, e in enumerate(entries):
@@ -87,12 +52,13 @@ def get_leaderboard(student_id: str | None = None) -> dict:
         # Find own rank (even if not opted in)
         own_in_list = next((e for e in entries if e["student_id"] == student_id), None)
         if own_in_list:
-            own_entry = own_in_list
+            own_entry = own_in_list.copy()
+            own_entry["opted_in"] = True
         else:
-            try:
-                own_score = _compute_score(student_id)
-            except Exception:
-                own_score = 0
+            with get_conn() as conn:
+                s_row = conn.execute("SELECT total_xp FROM students WHERE id=?", (student_id,)).fetchone()
+            own_score = s_row["total_xp"] if s_row else 0
+            
             # Count how many opted-in have higher score
             rank = sum(1 for e in entries if e["score"] > own_score) + 1
             own_entry = {"student_id": student_id, "score": own_score, "rank": rank, "opted_in": False}
@@ -100,10 +66,31 @@ def get_leaderboard(student_id: str | None = None) -> dict:
         # Don't leak student_id of opted-in users to the requester
         for e in entries:
             e.pop("student_id", None)
+            
+        if own_entry:
+            own_entry.pop("student_id", None)
 
     return {
         "board": entries[:20],  # top 20
         "own": own_entry,
+    }
+
+@router.get("/students/{student_id}/xp")
+def get_student_xp(student_id: str) -> dict:
+    """Get the student's total XP and recent logs."""
+    with get_conn() as conn:
+        s_row = conn.execute("SELECT total_xp FROM students WHERE id=?", (student_id,)).fetchone()
+        if not s_row:
+            raise HTTPException(status_code=404, detail="Student not found.")
+        
+        logs = conn.execute(
+            "SELECT task_type, xp_amount, created_at FROM xp_logs WHERE student_id=? ORDER BY created_at DESC LIMIT 10",
+            (student_id,)
+        ).fetchall()
+        
+    return {
+        "total_xp": s_row["total_xp"],
+        "recent_logs": [dict(r) for r in logs]
     }
 
 

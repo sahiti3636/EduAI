@@ -26,6 +26,7 @@ CREATE TABLE IF NOT EXISTS students (
     username TEXT,
     password_hash TEXT,
     salt TEXT,
+    total_xp INTEGER NOT NULL DEFAULT 0,
     created_at TEXT NOT NULL
 );
 
@@ -228,6 +229,14 @@ CREATE TABLE IF NOT EXISTS achievements (
     unlocked_at TEXT NOT NULL,
     PRIMARY KEY (student_id, achievement_id)
 );
+
+CREATE TABLE IF NOT EXISTS xp_logs (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    student_id TEXT NOT NULL,
+    task_type TEXT NOT NULL,
+    xp_amount INTEGER NOT NULL,
+    created_at TEXT NOT NULL
+);
 """
 
 
@@ -254,9 +263,10 @@ def init_db() -> None:
             except sqlite3.OperationalError:
                 pass
 
-        for _col in ("username", "password_hash", "salt"):
+        for _col in ("username", "password_hash", "salt", "total_xp"):
             try:
-                conn.execute(f"ALTER TABLE students ADD COLUMN {_col} TEXT")
+                _def = "INTEGER NOT NULL DEFAULT 0" if _col == "total_xp" else "TEXT"
+                conn.execute(f"ALTER TABLE students ADD COLUMN {_col} {_def}")
             except sqlite3.OperationalError:
                 pass  # column already exists
         # Unique index on username — must come AFTER the column exists
@@ -297,3 +307,18 @@ def row_to_dict(row: sqlite3.Row | None) -> dict[str, Any] | None:
 
 def rows_to_list(rows: list[sqlite3.Row]) -> list[dict[str, Any]]:
     return [dict(r) for r in rows]
+
+
+def award_xp(student_id: str, task_type: str, xp_amount: int) -> None:
+    """Award XP to a student and log the transaction."""
+    if xp_amount <= 0:
+        return
+    with get_conn() as conn:
+        conn.execute(
+            "UPDATE students SET total_xp = total_xp + ? WHERE id = ?",
+            (xp_amount, student_id)
+        )
+        conn.execute(
+            "INSERT INTO xp_logs (student_id, task_type, xp_amount, created_at) VALUES (?, ?, ?, ?)",
+            (student_id, task_type, xp_amount, now())
+        )

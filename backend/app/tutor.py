@@ -263,13 +263,18 @@ def apply_rebucket(student_id: str, subtopic: str, new_bucket: str) -> None:
             "WHERE student_id=? AND subtopic=?",
             (new_bucket, now(), student_id, subtopic),
         )
+        
+    from app.db import award_xp
+    bucket_xp = {"A": 100, "B": 50, "C": 20}.get(new_bucket, 0)
+    if bucket_xp > 0:
+        award_xp(student_id, f"bucket_achieved_{new_bucket}", bucket_xp)
 
 
 def end_session(session_id: str) -> dict | None:
     """Mark session ended, generate notes + tag concepts. Returns notes dict or None."""
     with get_conn() as conn:
         session = conn.execute(
-            "SELECT student_id, subtopic FROM sessions WHERE id=?", (session_id,)
+            "SELECT student_id, subtopic, mode FROM sessions WHERE id=?", (session_id,)
         ).fetchone()
         conn.execute("UPDATE sessions SET ended_at=? WHERE id=?", (now(), session_id))
 
@@ -277,6 +282,11 @@ def end_session(session_id: str) -> dict | None:
     notes = generate_and_store(session_id)
 
     if session:
+        from app.db import award_xp
+        award_xp(session["student_id"], "tutoring_session", 40)
+        if session["mode"] == "feynman":
+            award_xp(session["student_id"], "feynman_bonus", 20)
+            
         try:
             from app.concept_tagger import tag_concepts_and_store
             tag_concepts_and_store(session_id, session["student_id"], session["subtopic"])

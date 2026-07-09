@@ -137,7 +137,10 @@ def submit_quiz(req: SubmitQuizRequest) -> SubmitQuizResponse:
                 len(results),
                 now(),
             ),
-        )
+        ),
+    
+    from app.db import award_xp
+    award_xp(req.student_id, "quiz_completion", 30)
 
     return SubmitQuizResponse(
         attempt_id=attempt_id,
@@ -277,7 +280,7 @@ def mark_deck_reviewed(deck_id: str, rating: str = "got_it") -> dict:
     """Update the spaced-repetition schedule. rating: 'got_it' | 'still_tricky'."""
     with get_conn() as conn:
         row = conn.execute(
-            "SELECT interval_days FROM flashcard_decks WHERE id=?", (deck_id,)
+            "SELECT interval_days, student_id FROM flashcard_decks WHERE id=?", (deck_id,)
         ).fetchone()
         if not row:
             raise HTTPException(status_code=404, detail="Deck not found.")
@@ -290,4 +293,8 @@ def mark_deck_reviewed(deck_id: str, rating: str = "got_it") -> dict:
             "UPDATE flashcard_decks SET interval_days=?, next_review=? WHERE id=?",
             (new_interval, next_review, deck_id),
         )
+        
+    from app.db import award_xp
+    award_xp(row["student_id"], "flashcard_review", 15)
+    
     return {"next_review": next_review, "interval_days": new_interval}

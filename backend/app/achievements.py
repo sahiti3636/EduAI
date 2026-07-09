@@ -36,6 +36,9 @@ def award_if_not_earned(student_id: str, achievement_id: str) -> bool:
             "INSERT OR IGNORE INTO achievements(student_id, achievement_id, unlocked_at) VALUES(?,?,?)",
             (student_id, achievement_id, now()),
         )
+        
+    from app.db import award_xp
+    award_xp(student_id, "achievement_unlocked", 50)
     return True
 
 

@@ -45,7 +45,7 @@ async function renderBoard() {
     // Own rank
     if (data.own) {
       el("own-rank").textContent = `#${data.own.rank}`;
-      el("own-score").textContent = `${data.own.score} pts`;
+      el("own-score").textContent = `${data.own.score} XP`;
       el("own-rank-card").style.display = "";
     }
 
@@ -64,7 +64,7 @@ async function renderBoard() {
         <div class="lb-row glass-card ${isMe ? "lb-row-me" : ""}">
           ${medal}
           <span class="lb-name">${entry.label}${isMe ? " (you)" : ""}</span>
-          <span class="lb-score">${entry.score} pts</span>
+          <span class="lb-score">${entry.score} XP</span>
         </div>`;
     }).join("");
   } catch (e) {

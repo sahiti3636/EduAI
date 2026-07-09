@@ -422,3 +422,6 @@ html[data-theme="dark"] .auth-card { background: #101a30; }
 #hero-3d { z-index: 0; }
 .landing-hero { position: relative; z-index: 2; }
 .landing-hero .hero-text, .landing-hero .auth-card { position: relative; z-index: 2; }
+
+/* Keep the 3-D hero scene subtle behind content */
+#hero-3d canvas { opacity: .72 !important; }

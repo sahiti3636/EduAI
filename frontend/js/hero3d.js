@@ -14,7 +14,7 @@
 
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(46, 1, 0.1, 100);
-  camera.position.set(0, 0.5, 8.4);
+  camera.position.set(0, 0.5, 10.6);
 
   const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
@@ -49,6 +49,7 @@
     const eraser = new THREE.Mesh(new THREE.CylinderGeometry(0.082, 0.082, 0.12, 12), eraserMat);
     eraser.position.y = -1.22; g.add(eraser);
 
+    g.scale.setScalar(0.58);   // smaller, subtler pencils
     return g;
   }
 
@@ -57,13 +58,13 @@
   swirl.position.x = CENTER_X;
   scene.add(swirl);
 
-  const N = 22;
+  const N = 16;
   const up = new THREE.Vector3(0, 1, 0);
   for (let i = 0; i < N; i++) {
     const t = i / N;
     const angle = t * Math.PI * 6.0;             // ~3 turns
-    const radius = 2.35 - t * 0.5 + Math.sin(t * 9) * 0.12;
-    const y = (t - 0.5) * 5.4;
+    const radius = 2.05 - t * 0.45 + Math.sin(t * 9) * 0.1;
+    const y = (t - 0.5) * 4.8;
     const p = buildPencil(bodyColors[i % bodyColors.length]);
     p.position.set(Math.cos(angle) * radius, y, Math.sin(angle) * radius);
 
@@ -249,7 +250,7 @@
     curY += (targetY - curY) * 0.045;
     camera.position.x = CENTER_X * 0.4 + curX * 0.9;
     camera.position.y = ease(0.5, 1.1, p) - curY * 0.6;
-    camera.position.z = ease(8.4, 6.0, p);
+    camera.position.z = ease(10.6, 8.4, p);
     camera.lookAt(CENTER_X, ease(0, 0.2, p), 0);
 
     renderer.render(scene, camera);

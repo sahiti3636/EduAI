@@ -210,6 +210,11 @@ def join_room(room_id: str, req: JoinRoomRequest) -> dict:
         check_and_award(room["host_student_id"])
     except Exception:
         pass
+        
+    from app.db import award_xp
+    award_xp(req.student_id, "pair_session", 60)
+    award_xp(room["host_student_id"], "pair_session", 60)
+    
     return dict(row)
 
 

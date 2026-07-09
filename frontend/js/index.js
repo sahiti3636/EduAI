@@ -180,6 +180,19 @@ async function checkDueReviews() {
   } catch (_) { /* non-critical */ }
 }
 
+// ── XP Banner ─────────────────────────────────────────────────
+async function fetchXP() {
+  if (!Store.studentId) return;
+  try {
+    const data = await Api.getStudentXp(Store.studentId);
+    const badge = document.getElementById("header-xp-badge");
+    if (badge) {
+      badge.textContent = `${data.total_xp} XP`;
+      badge.style.display = "inline-block";
+    }
+  } catch (_) { /* non-critical */ }
+}
+
 // ── Page state ────────────────────────────────────────────────
 function showLanding() {
   landingState.style.display  = "";
@@ -198,6 +211,7 @@ function showWelcome() {
   renderSubtopics();
   checkDueReviews();
   checkDailyChallenge();
+  fetchXP();
 }
 
 // ── Sign out ──────────────────────────────────────────────────

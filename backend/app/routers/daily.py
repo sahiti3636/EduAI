@@ -109,6 +109,15 @@ def complete_daily_challenge(subtopic: str, req: CompleteRequest) -> dict:
         check_and_award(req.student_id)
     except Exception:
         pass
+        
+    from app.db import award_xp
+    award_xp(req.student_id, "daily_challenge", 50)
+    
+    # Also give 10 XP for maintaining a streak
+    streak = get_daily_streak(req.student_id)["streak_days"]
+    if streak > 1:
+        award_xp(req.student_id, "daily_streak", 10)
+        
     return {"ok": True, "date": today, "subtopic": subtopic}
 
 
