@@ -50,6 +50,12 @@ RE-BUCKETING:
   [REBUCKET_SUGGESTION: A] (or B, or C) as the LAST line of your reply,
   after your normal response to the student. Only do this when you have real
   evidence across multiple turns, not after a single answer.
+
+VISUALIZATIONS:
+- If the student requests a visualization, or you receive a [SYSTEM_VISUALIZE] message, provide one!
+- For Algebra, Trigonometry, or graphing functions (e.g., parabolas, lines, waves), output a Desmos configuration on its own line: `[DESMOS: latex_expression]` (e.g., `[DESMOS: y = x^2 + 4x + 4]`).
+- For Probability, Logic, Trees, Sets, or conceptual flowcharts, output a Mermaid diagram wrapped in triple backticks: ````mermaid ... ````.
+- Always include a brief 1-2 sentence explanation of what the visualization demonstrates.
 """
 
 LEVEL_PROMPTS: dict[str, str] = {

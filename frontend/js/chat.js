@@ -374,9 +374,54 @@ function stopPomodoro() {
 function appendMessage(role, text) {
   const div = document.createElement("div");
   div.className   = `msg ${role}`;
-  div.innerHTML   = safeMathHTML(text);
+
+  let processed = text;
+  const desmosMatches = [];
+  processed = processed.replace(/\[DESMOS:\s*(.*?)\s*\]/g, (m, expr) => {
+    const id = "desmos-" + Math.random().toString(36).substr(2, 9);
+    desmosMatches.push({ id, expr });
+    return `__DESMOS_${id}__`;
+  });
+
+  const mermaidMatches = [];
+  processed = processed.replace(/```mermaid\n([\s\S]*?)```/g, (m, code) => {
+    const id = "mermaid-" + Math.random().toString(36).substr(2, 9);
+    mermaidMatches.push({ id, code });
+    return `__MERMAID_${id}__`;
+  });
+
+  processed = safeMathHTML(processed);
+
+  desmosMatches.forEach(match => {
+    processed = processed.replace(`__DESMOS_${match.id}__`, `<div id="${match.id}" style="width:100%; height:300px; margin: 10px 0; border-radius: 8px; overflow: hidden; border: 1px solid var(--glass-border);"></div>`);
+  });
+
+  mermaidMatches.forEach(match => {
+    processed = processed.replace(`__MERMAID_${match.id}__`, `<div id="${match.id}" class="mermaid" style="background: var(--surface-1); padding: 10px; border-radius: 8px; margin: 10px 0; overflow-x: auto; text-align: center;">${match.code}</div>`);
+  });
+
+  div.innerHTML = processed;
   chatWindow.appendChild(div);
   renderMath(div);
+
+  // Initialize Desmos
+  if (typeof Desmos !== 'undefined') {
+      desmosMatches.forEach(match => {
+          const elt = document.getElementById(match.id);
+          if (elt) {
+              const calc = Desmos.GraphingCalculator(elt, { expressions: false, settingsMenu: false, zoomButtons: true });
+              calc.setExpression({ id: 'graph1', latex: match.expr });
+          }
+      });
+  }
+
+  // Initialize Mermaid
+  if (typeof mermaid !== 'undefined' && mermaidMatches.length > 0) {
+      const theme = document.documentElement.getAttribute('data-theme') === 'light' ? 'default' : 'dark';
+      mermaid.initialize({ startOnLoad: false, theme: theme });
+      mermaid.run({ nodes: mermaidMatches.map(m => document.getElementById(m.id)).filter(Boolean) });
+  }
+
   chatWindow.scrollTop = chatWindow.scrollHeight;
 }
 
@@ -407,6 +452,30 @@ async function send() {
 document.getElementById("send-btn").addEventListener("click", send);
 document.getElementById("chat-input").addEventListener("keydown", e => {
   if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); send(); }
+});
+
+document.getElementById("visualize-btn").addEventListener("click", async () => {
+  if (!sessionId) return;
+  const btn = document.getElementById("visualize-btn");
+  btn.disabled = true;
+  chatError.textContent = "";
+  
+  // Show a temporary message to the user
+  appendMessage("student", "Please show me a visual explanation of this step.");
+
+  try {
+    const turn = await Api.sendMessage(sessionId, "[SYSTEM_VISUALIZE]");
+    appendMessage("tutor", turn.reply);
+    if (turn.rebucket_suggested) {
+      const badge = document.getElementById("bucket-badge");
+      badge.textContent = `Level ${turn.rebucket_suggested} (updated)`;
+      badge.className   = `bucket-badge bucket-${turn.rebucket_suggested}`;
+    }
+  } catch (e) {
+    chatError.textContent = e.message;
+  } finally {
+    btn.disabled = false;
+  }
 });
 
 // ── Feedback ratings ──────────────────────────────────────────
