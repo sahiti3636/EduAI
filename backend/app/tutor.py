@@ -204,6 +204,7 @@ def start_session(
         temperature=settings.get("tutor_temperature", 0.6),
     )
     display_text, rebucket = _extract_rebucket_suggestion(raw_reply)
+    _store_message(session_id, "student", "(session started)")
     _store_message(session_id, "tutor", display_text, leak=_looks_like_possible_leak(display_text))
 
     return TutorTurn(
