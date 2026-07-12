@@ -195,11 +195,11 @@ function renderQuestion(idx) {
       try {
         const { text } = await Api.extractFromImage(file);
         const existing = ta.value.trim();
-        const formattedText = ensureMathDelimiters(text);
+        const formattedText = text; // ensureMathDelimiters removed
         ta.value = existing ? existing + "\n" + formattedText : formattedText;
-        if (_hasMathDelimiters(ta.value)) {
-          showRenderedMath(ta);
-        }
+        // if (_hasMathDelimiters(ta.value)) {
+        //   showRenderedMath(ta);
+        // }
         status.textContent = "Text extracted — edit if needed.";
         status.className = "ocr-status ocr-ok";
       } catch (e) {

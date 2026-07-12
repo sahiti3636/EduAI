@@ -81,7 +81,7 @@ function renderQuestion(idx) {
     optionsEl.style.display = "none";
     shortEl.style.display   = "";
     shortInput.value        = answers[q.id] || "";
-    hideRenderedMath(shortInput);
+    // hideRenderedMath(shortInput);
     // Save on input
     shortInput.oninput = () => { answers[q.id] = shortInput.value; };
   }
@@ -374,11 +374,11 @@ document.getElementById("quiz-kb-btn").addEventListener("click", () => {
       const { text } = await Api.extractFromImage(file);
       // Append to existing answer so student doesn't lose typed work
       const existing = shortInput.value.trim();
-      const formattedText = ensureMathDelimiters(text);
+      const formattedText = text; // ensureMathDelimiters removed
       shortInput.value = existing ? existing + "\n" + formattedText : formattedText;
-      if (_hasMathDelimiters(shortInput.value)) {
-        showRenderedMath(shortInput);
-      }
+      // if (_hasMathDelimiters(shortInput.value)) {
+      //   showRenderedMath(shortInput);
+      // }
       // Sync to answers map
       const qId = questions[currentIdx]?.id;
       if (qId) answers[qId] = shortInput.value;

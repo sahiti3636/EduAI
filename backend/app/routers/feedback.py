@@ -15,7 +15,7 @@ class SessionFeedbackIn(BaseModel):
     frustration_score: int | None = None  # 1-5
 
 
-@router.post("/sessions/{session_id}/feedback", status_code=204)
+@router.post("/sessions/{session_id}/feedback")
 def submit_feedback(session_id: str, req: SessionFeedbackIn) -> None:
     with get_conn() as conn:
         conn.execute(

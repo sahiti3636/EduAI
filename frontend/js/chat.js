@@ -432,8 +432,8 @@ async function send() {
 
   appendMessage("student", text);
   input.value = "";
-  // Hide rendered math if active
-  hideRenderedMath(input);
+  // Hide rendered math if active (function removed)
+  // hideRenderedMath(input);
   chatError.textContent = "";
 
   try {
@@ -609,11 +609,11 @@ document.getElementById("custom-kb-btn").addEventListener("click", () => {
     try {
       const { text } = await Api.extractFromImage(file);
       const existing = chatInput.value.trim();
-      const formattedText = ensureMathDelimiters(text);
+      const formattedText = text; // ensureMathDelimiters removed
       chatInput.value = existing ? existing + "\n" + formattedText : formattedText;
-      if (_hasMathDelimiters(chatInput.value)) {
-        showRenderedMath(chatInput);
-      }
+      // if (_hasMathDelimiters(chatInput.value)) {
+      //   showRenderedMath(chatInput);
+      // }
       status.textContent = "Text extracted — edit if needed.";
       status.className   = "ocr-status ocr-ok";
     } catch (e) {
@@ -649,11 +649,11 @@ document.getElementById("custom-kb-btn").addEventListener("click", () => {
 
     try {
       const { text } = await Api.extractFromImage(file);
-      const formattedText = ensureMathDelimiters(text);
+      const formattedText = text; // ensureMathDelimiters removed
       textarea.value = formattedText;
-      if (_hasMathDelimiters(textarea.value)) {
-        showRenderedMath(textarea);
-      }
+      // if (_hasMathDelimiters(textarea.value)) {
+      //   showRenderedMath(textarea);
+      // }
       status.textContent  = "Text extracted — edit if needed.";
       status.className    = "ocr-status ocr-ok";
     } catch (e) {

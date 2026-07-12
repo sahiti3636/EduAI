@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: eduai-backend
+    env: docker
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /health
+    # NOTE: Render's Free tier does NOT support persistent disks!
+    # If you are on the free tier, remove the "disk" section below.
+    # Without a disk, SQLite data will be wiped on every deployment or server restart.
+    disk:
+      name: data
+      mountPath: /data
+      sizeGB: 1
+    envVars:
+      - key: DB_PATH
+        value: /data/eduai.db
+      - key: GEMINI_API_KEY
+        sync: false
