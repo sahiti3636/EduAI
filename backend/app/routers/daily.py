@@ -59,8 +59,8 @@ def _get_or_create_problem(subtopic: str, today: str) -> str:
     ts = now()
     with get_conn() as conn:
         conn.execute(
-            "INSERT OR IGNORE INTO daily_challenges (date, subtopic, problem_text, created_at) "
-            "VALUES (?, ?, ?, ?)",
+            "INSERT INTO daily_challenges (date, subtopic, problem_text, created_at) "
+            "VALUES (?, ?, ?, ?) ON CONFLICT DO NOTHING",
             (today, subtopic, problem_text, ts),
         )
         # Re-fetch in case another process beat us
@@ -100,8 +100,9 @@ def complete_daily_challenge(subtopic: str, req: CompleteRequest) -> dict:
     today = date.today().isoformat()
     with get_conn() as conn:
         conn.execute(
-            "INSERT OR IGNORE INTO daily_challenge_completions "
-            "(student_id, date, subtopic, session_id, completed_at) VALUES (?, ?, ?, ?, ?)",
+            "INSERT INTO daily_challenge_completions "
+            "(student_id, date, subtopic, session_id, completed_at) VALUES (?, ?, ?, ?, ?) "
+            "ON CONFLICT DO NOTHING",
             (req.student_id, today, subtopic, req.session_id, now()),
         )
     try:

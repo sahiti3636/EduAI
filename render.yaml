@@ -10,11 +10,12 @@ services:
     healthCheckPath: /health
     autoDeploy: true
     envVars:
-      # SQLite path. On the FREE tier there is no persistent disk, so this file
-      # lives on the container's ephemeral filesystem: data resets on each deploy
-      # and after the service spins down from inactivity. Fine for a demo/pilot.
-      - key: DB_PATH
-        value: /app/backend/data/eduai.db
+      # PERSISTENT storage via a hosted Postgres (Neon/Supabase/Render Postgres).
+      # When DATABASE_URL is set, the app uses Postgres and data survives restarts,
+      # deploys and free-tier spin-downs. Paste your Neon connection string here in
+      # the Render dashboard (include ?sslmode=require).
+      - key: DATABASE_URL
+        sync: false
       # Secrets — set these in the Render dashboard (not committed to git):
       - key: GEMINI_API_KEY
         sync: false
@@ -22,14 +23,6 @@ services:
         sync: false
       - key: TEACHER_PASSWORD
         sync: false
-
-# ── Want data to PERSIST across restarts? ──────────────────────────────────────
-# Free tier can't. Either upgrade this service to a paid plan and add a disk:
-#
-#     disk:
-#       name: data
-#       mountPath: /data
-#       sizeGB: 1
-#
-# ...then change DB_PATH above to /data/eduai.db. Or move off SQLite to a hosted
-# Postgres (Render Postgres / Neon / Supabase) — that's a backend code change.
+      # Fallback SQLite path (only used if DATABASE_URL is NOT set — ephemeral on free tier).
+      - key: DB_PATH
+        value: /app/backend/data/eduai.db

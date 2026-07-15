@@ -33,7 +33,8 @@ def award_if_not_earned(student_id: str, achievement_id: str) -> bool:
         ).fetchone():
             return False
         conn.execute(
-            "INSERT OR IGNORE INTO achievements(student_id, achievement_id, unlocked_at) VALUES(?,?,?)",
+            "INSERT INTO achievements(student_id, achievement_id, unlocked_at) VALUES(?,?,?) "
+            "ON CONFLICT DO NOTHING",
             (student_id, achievement_id, now()),
         )
         

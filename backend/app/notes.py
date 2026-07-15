@@ -77,9 +77,13 @@ def generate_and_store(session_id: str, *, llm: LLMClient | None = None) -> dict
 
     with get_conn() as conn:
         conn.execute(
-            "INSERT OR REPLACE INTO session_notes "
+            "INSERT INTO session_notes "
             "(id, session_id, student_breakthrough, struggled_with, topic_covered, created_at) "
-            "VALUES (?, ?, ?, ?, ?, ?)",
+            "VALUES (?, ?, ?, ?, ?, ?) "
+            "ON CONFLICT(session_id) DO UPDATE SET "
+            "  student_breakthrough=excluded.student_breakthrough, "
+            "  struggled_with=excluded.struggled_with, "
+            "  topic_covered=excluded.topic_covered",
             (
                 new_id(),
                 session_id,
