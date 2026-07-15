@@ -1,18 +1,35 @@
+# Render Blueprint for the EduAI backend (FastAPI, Docker).
+# Create the service from this file: Render Dashboard → New → Blueprint → pick this repo.
+# You will be prompted to fill the `sync: false` secrets after it detects the blueprint.
 services:
   - type: web
     name: eduai-backend
-    env: docker
+    runtime: docker
     dockerfilePath: ./Dockerfile
+    plan: free
     healthCheckPath: /health
-    # NOTE: Render's Free tier does NOT support persistent disks!
-    # If you are on the free tier, remove the "disk" section below.
-    # Without a disk, SQLite data will be wiped on every deployment or server restart.
-    disk:
-      name: data
-      mountPath: /data
-      sizeGB: 1
+    autoDeploy: true
     envVars:
+      # SQLite path. On the FREE tier there is no persistent disk, so this file
+      # lives on the container's ephemeral filesystem: data resets on each deploy
+      # and after the service spins down from inactivity. Fine for a demo/pilot.
       - key: DB_PATH
-        value: /data/eduai.db
+        value: /app/backend/data/eduai.db
+      # Secrets — set these in the Render dashboard (not committed to git):
       - key: GEMINI_API_KEY
         sync: false
+      - key: TEACHER_USERNAME
+        sync: false
+      - key: TEACHER_PASSWORD
+        sync: false
+
+# ── Want data to PERSIST across restarts? ──────────────────────────────────────
+# Free tier can't. Either upgrade this service to a paid plan and add a disk:
+#
+#     disk:
+#       name: data
+#       mountPath: /data
+#       sizeGB: 1
+#
+# ...then change DB_PATH above to /data/eduai.db. Or move off SQLite to a hosted
+# Postgres (Render Postgres / Neon / Supabase) — that's a backend code change.
