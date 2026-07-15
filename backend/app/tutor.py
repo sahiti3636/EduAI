@@ -75,7 +75,14 @@ def _extract_rebucket_suggestion(text: str) -> tuple[str, str | None]:
     return cleaned, suggested
 
 
+# The topic-free "general" chat needs no diagnostic — it always runs at level B.
+GENERAL_SUBTOPIC = "general"
+GENERAL_LABEL = "General Maths"
+
+
 def _current_bucket(student_id: str, subtopic: str) -> str:
+    if subtopic == GENERAL_SUBTOPIC:
+        return "B"
     with get_conn() as conn:
         row = conn.execute(
             "SELECT bucket FROM buckets WHERE student_id=? AND subtopic=?",
@@ -148,12 +155,13 @@ def start_session(
     llm: LLMClient | None = None,
 ) -> TutorTurn:
     llm = llm or get_llm_client()
+    is_general = subtopic == GENERAL_SUBTOPIC
     bucket = _current_bucket(student_id, subtopic)
-    subtopic_label = get_subtopic(subtopic)["label"]
+    subtopic_label = GENERAL_LABEL if is_general else get_subtopic(subtopic)["label"]
 
     # Resolve sub-subtopic label if provided
     sub_subtopic_label: str | None = None
-    if sub_subtopic_id:
+    if sub_subtopic_id and not is_general:
         try:
             sub_subtopic_label = get_sub_subtopic(subtopic, sub_subtopic_id)["label"]
         except KeyError:
@@ -162,11 +170,12 @@ def start_session(
     # Decide whether to embed a problem in the prompt.
     # When a sub-subtopic is selected without a custom problem, we let the tutor
     # give an overview first and pick problems organically in conversation.
+    # General chat never injects a default problem — the student brings the topic.
     has_custom_problem = bool(problem_statement)
     problem_for_prompt: str | None = None
     if has_custom_problem:
         problem_for_prompt = problem_statement
-    elif not sub_subtopic_id:
+    elif not sub_subtopic_id and not is_general:
         # Old default behaviour: inject a level-matched practice problem
         problem_for_prompt = pick_default_problem(subtopic, bucket)
 
@@ -188,6 +197,7 @@ def start_session(
             subtopic_label,
             sub_subtopic_label=sub_subtopic_label,
             has_custom_problem=has_custom_problem,
+            general=is_general,
         )
         # Inject recurring error hint if applicable
         hint = _get_error_pattern_hint(student_id, subtopic)
@@ -236,9 +246,10 @@ def send_message(
     pressure = detect_pressure(student_text)
     _store_message(session_id, "student", student_text, pressure=pressure)
 
+    is_general = subtopic == GENERAL_SUBTOPIC
     bucket = _current_bucket(student_id, subtopic)  # may have changed via re-bucket since session start
-    subtopic_label = get_subtopic(subtopic)["label"]
-    system_prompt = build_system_prompt(bucket, subtopic_label)
+    subtopic_label = GENERAL_LABEL if is_general else get_subtopic(subtopic)["label"]
+    system_prompt = build_system_prompt(bucket, subtopic_label, general=is_general)
     settings = get_settings()["llm"]
 
     history = _session_history(session_id)
@@ -251,6 +262,8 @@ def send_message(
     leak = _looks_like_possible_leak(display_text)
     _store_message(session_id, "tutor", display_text, leak=leak)
 
+    if is_general:
+        rebucket = None  # general chat is pinned at level B — never re-bucket
     if rebucket:
         apply_rebucket(student_id, subtopic, rebucket)
 

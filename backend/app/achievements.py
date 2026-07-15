@@ -101,7 +101,8 @@ def check_and_award(student_id: str) -> list[str]:
 
         # All three subtopics tutored
         distinct_topics = conn.execute(
-            "SELECT COUNT(DISTINCT subtopic) FROM sessions WHERE student_id=? AND ended_at IS NOT NULL",
+            "SELECT COUNT(DISTINCT subtopic) FROM sessions "
+            "WHERE student_id=? AND ended_at IS NOT NULL AND subtopic != 'general'",
             (student_id,),
         ).fetchone()[0]
         if distinct_topics >= 3 and award_if_not_earned(student_id, "all_subtopics"):

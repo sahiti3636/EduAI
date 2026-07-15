@@ -1,6 +1,10 @@
 // ── State ─────────────────────────────────────────────────────
 const params   = new URLSearchParams(window.location.search);
 const subtopic = params.get("subtopic");
+// No subject in the URL → open "general" chat: no picker, no diagnostic
+// gate, tutored at a fixed level-B guidance depth.
+const isGeneral    = !subtopic;
+const apiSubtopic  = subtopic || "general";
 let sessionId  = null;
 let selectedChapterId    = null;
 let selectedChapterLabel = null;
@@ -121,11 +125,13 @@ document.getElementById("custom-start-btn").addEventListener("click", async () =
 // ── Core: start a tutor session ───────────────────────────────
 async function beginSession({ subSubtopicId = null, problemStatement = null, chapterLabel = "" } = {}) {
   pickerError.textContent = "";
-  const subtopicLabel = (SUBTOPICS.find(s => s.id === subtopic) || {}).label || subtopic;
+  const subtopicLabel = isGeneral
+    ? "Tutor Chat"
+    : (SUBTOPICS.find(s => s.id === subtopic) || {}).label || subtopic;
   const mode = feynmanMode ? "feynman" : "socratic";
 
   try {
-    const turn = await Api.startSession(Store.studentId, subtopic, { subSubtopicId, problemStatement, mode });
+    const turn = await Api.startSession(Store.studentId, apiSubtopic, { subSubtopicId, problemStatement, mode });
     sessionId = turn.session_id;
 
     // Switch screens
@@ -173,8 +179,12 @@ async function beginSession({ subSubtopicId = null, problemStatement = null, cha
     // Start adaptive Pomodoro timer
     startPomodoro(turn.bucket_used);
   } catch (e) {
-    pickerError.textContent =
-      e.message + " — make sure you've completed the diagnostic for this subject first.";
+    if (isGeneral) {
+      chatError.textContent = "Could not start the chat: " + e.message;
+    } else {
+      pickerError.textContent =
+        e.message + " — make sure you've completed the diagnostic for this subject first.";
+    }
   }
 }
 
@@ -676,16 +686,29 @@ document.getElementById("custom-kb-btn").addEventListener("click", () => {
 })();
 
 // ── Boot ──────────────────────────────────────────────────────
-loadPicker().then(() => {
-  // Auto-start when arriving from daily.html with a pre-set problem
-  const urlProblem = params.get("problem");
-  const isDaily    = params.get("daily") === "1";
-  if (urlProblem && isDaily) {
-    beginSession({ problemStatement: urlProblem, chapterLabel: "Daily Challenge" }).then(() => {
-      // Mark challenge as completed once the session starts
-      if (Store.studentId && subtopic) {
-        Api.completeDailyChallenge(subtopic, Store.studentId, sessionId).catch(() => {});
-      }
-    });
-  }
-});
+if (isGeneral) {
+  // Open chat directly — no subject, no chapter picker, no diagnostic gate.
+  pickerScreen.style.display = "none";
+  const backLink = document.getElementById("back-to-picker");
+  if (backLink) backLink.style.display = "none";
+  // Show the chat shell right away so the page isn't blank while the
+  // tutor's opening message is generated (can take a few seconds).
+  chatScreen.style.display = "flex";
+  document.getElementById("chat-title").textContent = "Tutor Chat";
+  document.getElementById("chat-mode-note").textContent = "Connecting you to your tutor…";
+  beginSession({ chapterLabel: "" });
+} else {
+  loadPicker().then(() => {
+    // Auto-start when arriving from daily.html with a pre-set problem
+    const urlProblem = params.get("problem");
+    const isDaily    = params.get("daily") === "1";
+    if (urlProblem && isDaily) {
+      beginSession({ problemStatement: urlProblem, chapterLabel: "Daily Challenge" }).then(() => {
+        // Mark challenge as completed once the session starts
+        if (Store.studentId && subtopic) {
+          Api.completeDailyChallenge(subtopic, Store.studentId, sessionId).catch(() => {});
+        }
+      });
+    }
+  });
+}

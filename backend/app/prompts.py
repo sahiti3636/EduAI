@@ -144,6 +144,15 @@ _CUSTOM_PROBLEM_OPENING = (
     "approach — do NOT simply restate the problem back to them."
 )
 
+_GENERAL_OPENING = (
+    "IMPORTANT — SESSION OPENING (follow this exactly):\n"
+    "This is an open tutoring chat: no topic has been chosen yet. Greet the student "
+    "warmly in one sentence, then ask ONE question: what maths topic, homework "
+    "problem, or doubt they'd like to work on today. Do NOT pose a practice problem "
+    "or start teaching until they tell you. Once they bring something up, tutor them "
+    "on it with your level-appropriate Socratic approach."
+)
+
 
 FEYNMAN_PROMPT = """\
 You are playing the role of a CURIOUS, CONFUSED STUDENT who wants to understand a
@@ -183,18 +192,24 @@ def build_system_prompt(
     subtopic_label: str,
     sub_subtopic_label: str | None = None,
     has_custom_problem: bool = False,
+    general: bool = False,
 ) -> str:
     if bucket not in LEVEL_PROMPTS:
         raise ValueError(f"Unknown bucket: {bucket!r}")
 
-    topic_line = f"CURRENT TOPIC: {subtopic_label}"
-    if sub_subtopic_label:
-        topic_line += f" — {sub_subtopic_label}"
+    if general:
+        topic_line = "CURRENT TOPIC: whatever maths topic the student brings up (open session)"
+    else:
+        topic_line = f"CURRENT TOPIC: {subtopic_label}"
+        if sub_subtopic_label:
+            topic_line += f" — {sub_subtopic_label}"
 
-    if sub_subtopic_label and not has_custom_problem:
-        opening = _OVERVIEW_OPENING.format(topic=sub_subtopic_label)
-    elif has_custom_problem:
+    if has_custom_problem:
         opening = _CUSTOM_PROBLEM_OPENING
+    elif general:
+        opening = _GENERAL_OPENING
+    elif sub_subtopic_label:
+        opening = _OVERVIEW_OPENING.format(topic=sub_subtopic_label)
     else:
         opening = f"SESSION OPENING INSTRUCTION: {_OPENING_INSTRUCTION[bucket]}"
 
