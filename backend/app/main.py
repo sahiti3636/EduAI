@@ -60,7 +60,10 @@ def on_startup() -> None:
 
 @app.get("/health")
 def health() -> dict:
-    return {"status": "ok"}
+    # `db` reveals which backend the RUNNING instance is using — "postgres" means
+    # DATABASE_URL took effect; "sqlite" means it did not (ephemeral, resets).
+    from app.db import IS_PG
+    return {"status": "ok", "db": "postgres" if IS_PG else "sqlite"}
 
 
 app.include_router(auth.router)
