@@ -10,4 +10,4 @@
 // This one value is used for all API calls AND the Study Pair WebSocket
 // (which becomes wss://…). CORS on the backend already allows any origin.
 // ─────────────────────────────────────────────────────────────────────────────
-window.MINDFORGE_API_BASE = "https://eduai-backend-4ad2.onrender.com";
+window.MINDFORGE_API_BASE = "https://mindforge-backend-37xk.onrender.com";
