@@ -132,9 +132,9 @@ function render(data, dueDecks, errorData) {
 }
 
 function storeQuizCtx(subtopic, chapterId, chapterLabel) {
-  sessionStorage.setItem("eduai_quiz_subtopic", subtopic);
-  sessionStorage.setItem("eduai_quiz_chapter_id", chapterId);
-  sessionStorage.setItem("eduai_quiz_chapter_label", chapterLabel);
+  sessionStorage.setItem("mindforge_quiz_subtopic", subtopic);
+  sessionStorage.setItem("mindforge_quiz_chapter_id", chapterId);
+  sessionStorage.setItem("mindforge_quiz_chapter_label", chapterLabel);
 }
 
 load();

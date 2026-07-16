@@ -21,7 +21,7 @@ from app.routers import achievements, auth, bucket, daily, diagnostic, feedback,
 _FRONTEND_DIR = pathlib.Path(__file__).parent.parent.parent / "frontend"
 
 app = FastAPI(
-    title="EduAI — Adaptive Socratic Math Tutor",
+    title="MindForge — Adaptive Socratic Math Tutor",
     description="Diagnostic -> Rater -> Bucket -> Tutor pipeline (CLAUDE.md).",
     version="0.1.0",
 )

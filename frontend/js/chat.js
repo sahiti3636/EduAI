@@ -165,9 +165,9 @@ async function beginSession({ subSubtopicId = null, problemStatement = null, cha
 
     // If this is a chapter session, store info and show the action buttons
     if (subSubtopicId) {
-      sessionStorage.setItem("eduai_quiz_subtopic", subtopic);
-      sessionStorage.setItem("eduai_quiz_chapter_id", subSubtopicId);
-      sessionStorage.setItem("eduai_quiz_chapter_label", chapterLabel || "");
+      sessionStorage.setItem("mindforge_quiz_subtopic", subtopic);
+      sessionStorage.setItem("mindforge_quiz_chapter_id", subSubtopicId);
+      sessionStorage.setItem("mindforge_quiz_chapter_label", chapterLabel || "");
       document.getElementById("quiz-action").style.display = "block";
       // Hide quiz link in Feynman mode (no quiz from explain sessions)
       document.getElementById("take-quiz-link").style.display =
@@ -569,7 +569,7 @@ document.getElementById("download-transcript-btn").addEventListener("click", () 
   const date          = new Date().toLocaleDateString("en-IN", { dateStyle: "long" });
 
   let lines = [
-    `EduAI — Tutoring Transcript`,
+    `MindForge — Tutoring Transcript`,
     `Subject: ${subtopicLabel}${chapterLabel ? " — " + chapterLabel : ""}`,
     `Date: ${date}`,
     `${"─".repeat(50)}`,
@@ -587,7 +587,7 @@ document.getElementById("download-transcript-btn").addEventListener("click", () 
   const url  = URL.createObjectURL(blob);
   const a    = document.createElement("a");
   a.href     = url;
-  a.download = `eduai-transcript-${subtopic}-${Date.now()}.txt`;
+  a.download = `mindforge-transcript-${subtopic}-${Date.now()}.txt`;
   a.click();
   URL.revokeObjectURL(url);
 });

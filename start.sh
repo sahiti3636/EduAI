@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Start the EduAI backend (which also serves the frontend).
+# Start the MindForge backend (which also serves the frontend).
 # Usage: ./start.sh [port]   (default port: 8001)
 
 set -e

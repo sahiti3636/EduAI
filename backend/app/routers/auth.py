@@ -28,7 +28,7 @@ from app.schemas import (
 router = APIRouter(prefix="/auth", tags=["auth"])
 
 _PBKDF2_ITERATIONS = 260_000  # NIST SP 800-132 recommendation for PBKDF2-SHA256
-_HMAC_MSG = b"eduai_teacher_v1"
+_HMAC_MSG = b"mindforge_teacher_v1"
 
 
 # ── Password helpers ──────────────────────────────────────────────────────────

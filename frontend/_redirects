@@ -3,20 +3,20 @@
 # Everything else (API routes) is proxied to Railway.
 #
 # BEFORE DEPLOYING: replace YOUR_RAILWAY_URL with your Railway service URL,
-# e.g. https://eduai-production.up.railway.app
+# e.g. https://mindforge-production.up.railway.app
 #
 # The trailing /* and :splat forward the full path + query string.
 
-/auth/*        https://eduai-production-8dcc.up.railway.app/auth/:splat        200
-/students/*    https://eduai-production-8dcc.up.railway.app/students/:splat    200
-/diagnostic/*  https://eduai-production-8dcc.up.railway.app/diagnostic/:splat  200
-/tutor/*       https://eduai-production-8dcc.up.railway.app/tutor/:splat       200
-/metrics/*     https://eduai-production-8dcc.up.railway.app/metrics/:splat     200
-/quiz/*        https://eduai-production-8dcc.up.railway.app/quiz/:splat        200
-/teacher/*     https://eduai-production-8dcc.up.railway.app/teacher/:splat     200
-/ocr/*         https://eduai-production-8dcc.up.railway.app/ocr/:splat         200
-/bucket/*           https://eduai-production-8dcc.up.railway.app/bucket/:splat           200
-/daily-challenge/*  https://eduai-production-8dcc.up.railway.app/daily-challenge/:splat  200
-/leaderboard        https://eduai-production-8dcc.up.railway.app/leaderboard              200
-/pair/*             https://eduai-production-8dcc.up.railway.app/pair/:splat             200
-/health             https://eduai-production-8dcc.up.railway.app/health                  200
+/auth/*        https://mindforge-production-8dcc.up.railway.app/auth/:splat        200
+/students/*    https://mindforge-production-8dcc.up.railway.app/students/:splat    200
+/diagnostic/*  https://mindforge-production-8dcc.up.railway.app/diagnostic/:splat  200
+/tutor/*       https://mindforge-production-8dcc.up.railway.app/tutor/:splat       200
+/metrics/*     https://mindforge-production-8dcc.up.railway.app/metrics/:splat     200
+/quiz/*        https://mindforge-production-8dcc.up.railway.app/quiz/:splat        200
+/teacher/*     https://mindforge-production-8dcc.up.railway.app/teacher/:splat     200
+/ocr/*         https://mindforge-production-8dcc.up.railway.app/ocr/:splat         200
+/bucket/*           https://mindforge-production-8dcc.up.railway.app/bucket/:splat           200
+/daily-challenge/*  https://mindforge-production-8dcc.up.railway.app/daily-challenge/:splat  200
+/leaderboard        https://mindforge-production-8dcc.up.railway.app/leaderboard              200
+/pair/*             https://mindforge-production-8dcc.up.railway.app/pair/:splat             200
+/health             https://mindforge-production-8dcc.up.railway.app/health                  200

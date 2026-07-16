@@ -11,7 +11,7 @@ COPY . .
 
 # SQLite lives on a mounted volume in prod; /data is the mount point.
 # Override with DB_PATH env var — Railway sets this via the volume config.
-ENV DB_PATH=/data/eduai.db
+ENV DB_PATH=/data/mindforge.db
 
 # Set working directory to the backend package so uvicorn can find app.main
 # without needing a cd in the start command (avoids shell quoting issues with $PORT).

@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════════════════
-// EduAI — App shell
+// MindForge — App shell
 // Injects the persistent left sidebar, the light/dark theme toggle, and the
 // mobile drawer on every page. Pure enhancement: no feature logic lives here.
 // Theme is applied pre-paint by an inline <head> snippet; this manages toggling.
@@ -50,7 +50,7 @@
   const activeKey = NAV.some(n => n.key === PAGE) ? PAGE : (ALIAS[PAGE] || null);
 
   // ── Theme management ──────────────────────────────────────────────────────
-  const THEME_KEY = "eduai_theme";
+  const THEME_KEY = "mindforge_theme";
   function currentTheme() {
     return document.documentElement.getAttribute("data-theme") || "dark";
   }
@@ -83,7 +83,7 @@
 
   // ── Sidebar ───────────────────────────────────────────────────────────────
   function studentLabel() {
-    try { return localStorage.getItem("eduai_student_label") || ""; } catch (e) { return ""; }
+    try { return localStorage.getItem("mindforge_student_label") || ""; } catch (e) { return ""; }
   }
   function buildSidebar() {
     const label = studentLabel();
@@ -93,7 +93,7 @@
     aside.innerHTML =
       `<a class="sb-brand" href="index.html">
          <span class="sb-logo">${ICON.dashboard}</span>
-         <span class="sb-brand-text"><b>EduAI</b><small>Expert Companion</small></span>
+         <span class="sb-brand-text"><b>MindForge</b><small>Expert Companion</small></span>
        </a>
        <nav class="sb-nav">
          ${NAV.map(n => `<a class="sb-link${n.key === activeKey ? " active" : ""}" href="${n.href}" data-page="${n.key}">${ICON[n.icon]}<span>${n.label}</span></a>`).join("")}

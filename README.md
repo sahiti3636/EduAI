@@ -1,4 +1,4 @@
-# EduAI — Adaptive Socratic Math Tutor
+# MindForge — Adaptive Socratic Math Tutor
 
 Implementation of the project brief in `CLAUDE.md`: a diagnostic that
 measures *approach* (not correctness) → an LLM rater that buckets each
@@ -71,7 +71,7 @@ python3 -m http.server 5500
 ```
 
 Then open http://localhost:5500. If your backend isn't on
-`http://localhost:8000`, set `window.EDUAI_API_BASE` at the top of
+`http://localhost:8000`, set `window.MINDFORGE_API_BASE` at the top of
 `frontend/js/api.js` (or before it loads) to point elsewhere.
 
 ## Run tests

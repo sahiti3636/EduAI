@@ -1,9 +1,9 @@
 // ── State ─────────────────────────────────────────────────────
 if (!Store.studentId) window.location.href = "index.html";
 
-const subtopic      = sessionStorage.getItem("eduai_quiz_subtopic");
-const chapterId     = sessionStorage.getItem("eduai_quiz_chapter_id");
-const chapterLabel  = sessionStorage.getItem("eduai_quiz_chapter_label") || "Chapter Quiz";
+const subtopic      = sessionStorage.getItem("mindforge_quiz_subtopic");
+const chapterId     = sessionStorage.getItem("mindforge_quiz_chapter_id");
+const chapterLabel  = sessionStorage.getItem("mindforge_quiz_chapter_label") || "Chapter Quiz";
 
 if (!subtopic || !chapterId) window.location.href = "index.html";
 

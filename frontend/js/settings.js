@@ -1,9 +1,9 @@
 // ── Settings page ─────────────────────────────────────────────
 (function () {
   "use strict";
-  const THEME_KEY = "eduai_theme";
+  const THEME_KEY = "mindforge_theme";
 
-  const label = (localStorage.getItem("eduai_student_label") || "").trim();
+  const label = (localStorage.getItem("mindforge_student_label") || "").trim();
   const hdr = document.getElementById("header-label");
   if (hdr) hdr.textContent = label;
   const acct = document.getElementById("acct-label");
@@ -41,8 +41,8 @@
   // Sign out
   const out = document.getElementById("signout-btn");
   if (out) out.addEventListener("click", () => {
-    localStorage.removeItem("eduai_student_id");
-    localStorage.removeItem("eduai_student_label");
+    localStorage.removeItem("mindforge_student_id");
+    localStorage.removeItem("mindforge_student_label");
     window.location.href = "index.html";
   });
 })();

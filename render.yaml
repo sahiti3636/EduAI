@@ -1,9 +1,9 @@
-# Render Blueprint for the EduAI backend (FastAPI, Docker).
+# Render Blueprint for the MindForge backend (FastAPI, Docker).
 # Create the service from this file: Render Dashboard → New → Blueprint → pick this repo.
 # You will be prompted to fill the `sync: false` secrets after it detects the blueprint.
 services:
   - type: web
-    name: eduai-backend
+    name: mindforge-backend
     runtime: docker
     dockerfilePath: ./Dockerfile
     plan: free
@@ -25,4 +25,4 @@ services:
         sync: false
       # Fallback SQLite path (only used if DATABASE_URL is NOT set — ephemeral on free tier).
       - key: DB_PATH
-        value: /app/backend/data/eduai.db
+        value: /app/backend/data/mindforge.db

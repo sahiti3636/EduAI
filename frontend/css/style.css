@@ -1,5 +1,5 @@
 /* ─────────────────────────────────────────────────────────────────────────────
-   EduAI — Design system
+   MindForge — Design system
    Dark mesh-gradient aesthetic: black + cyan (#06b6d4) + orange (#f97316)
    Glass cards, gradient text, pill buttons — same palette as the hero reference.
 ───────────────────────────────────────────────────────────────────────────── */
@@ -2035,3 +2035,6 @@ body.math-kb-open {
   --green:   #00e676;
   --crimson: #ff5252;
 }
+
+/* Logo Image */
+.logo-img { height: 32px; width: auto; border-radius: 8px; box-shadow: 0 0 15px rgba(124, 58, 237, 0.4); margin-right: 4px; }

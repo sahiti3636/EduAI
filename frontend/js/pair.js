@@ -4,7 +4,7 @@ function el(id) { return document.getElementById(id); }
 
 // Compute WebSocket base URL from API_BASE
 const WS_BASE = (() => {
-  const b = window.EDUAI_API_BASE || "";
+  const b = window.MINDFORGE_API_BASE || "";
   if (b) return b.replace(/^http/, "ws");
   return `${location.protocol === "https:" ? "wss" : "ws"}://${location.host}`;
 })();

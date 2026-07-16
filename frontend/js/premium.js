@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════════════════
-// EduAI — PREMIUM interaction engine
+// MindForge — PREMIUM interaction engine
 // Loaded after each page's own script. Pure enhancement layer:
 // 3-D tilt, scroll reveal, cursor aurora, confetti, Pomodoro ring widget,
 // achievement / quiz / session-end celebrations. No feature logic lives here.

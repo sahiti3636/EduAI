@@ -1,5 +1,5 @@
 /**
- * MathKeyboard — shared math symbol keyboard for EduAI.
+ * MathKeyboard — shared math symbol keyboard for MindForge.
  *
  * Usage:
  *   mathKb.attach(textareaEl)   // open/re-target the keyboard

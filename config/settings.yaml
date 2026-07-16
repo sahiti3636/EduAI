@@ -9,7 +9,7 @@ llm:
   tutor_temperature: 0.6      # a bit more natural for conversation
 
 database:
-  path: "backend/data/eduai.db"
+  path: "backend/data/mindforge.db"
 
 # Fallback heuristic used ONLY if the rater's own bucket field is missing/unparseable.
 # The rater LLM is asked to assign the bucket directly per CLAUDE.md §8.2; this is a

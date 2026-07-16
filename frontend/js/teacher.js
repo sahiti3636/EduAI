@@ -3,7 +3,7 @@ const overlay   = document.getElementById("teacher-auth-overlay");
 const loginBtn  = document.getElementById("teacher-login-btn");
 const authError = document.getElementById("teacher-auth-error");
 
-function getToken() { return sessionStorage.getItem("eduai_teacher_token"); }
+function getToken() { return sessionStorage.getItem("mindforge_teacher_token"); }
 
 async function doTeacherLogin() {
   const username = document.getElementById("teacher-username").value.trim();
@@ -16,7 +16,7 @@ async function doTeacherLogin() {
   }
   try {
     const { token } = await Api.teacherLogin(username, password);
-    sessionStorage.setItem("eduai_teacher_token", token);
+    sessionStorage.setItem("mindforge_teacher_token", token);
     overlay.style.display = "none";
     load();
   } catch (e) {
@@ -59,7 +59,7 @@ async function load() {
   } catch (e) {
     // Token may have expired or server restarted — show login again
     if (e.message.includes("401")) {
-      sessionStorage.removeItem("eduai_teacher_token");
+      sessionStorage.removeItem("mindforge_teacher_token");
       overlay.style.display = "flex";
       return;
     }

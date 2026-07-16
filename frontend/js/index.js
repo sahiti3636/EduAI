@@ -216,8 +216,8 @@ function showWelcome() {
 
 // ── Sign out ──────────────────────────────────────────────────
 document.getElementById("switch-student-btn").addEventListener("click", () => {
-  localStorage.removeItem("eduai_student_id");
-  localStorage.removeItem("eduai_student_label");
+  localStorage.removeItem("mindforge_student_id");
+  localStorage.removeItem("mindforge_student_label");
   showLanding();
 });
 

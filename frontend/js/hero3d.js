@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════════════════
-// EduAI — WebGL 3-D hero  (index.html landing only)
+// MindForge — WebGL 3-D hero  (index.html landing only)
 // An education scene: a swirling vortex of pencils orbiting a chalk-scribbled
 // blackboard, with floating books & chalk. Driven by SCROLL (assemble as you
 // scroll), plus continuous time animation and pointer parallax.

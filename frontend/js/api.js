@@ -1,9 +1,9 @@
-// Tiny fetch wrapper for the EduAI backend API.
+// Tiny fetch wrapper for the MindForge backend API.
 // Change API_BASE if the backend runs on a different host/port.
 // Empty string = relative to current origin.
-// Override with window.EDUAI_API_BASE = "http://..." before this script loads
+// Override with window.MINDFORGE_API_BASE = "http://..." before this script loads
 // if you ever need to point at a different host.
-const API_BASE = window.EDUAI_API_BASE || "";
+const API_BASE = window.MINDFORGE_API_BASE || "";
 
 async function apiRequest(method, path, body, extraHeaders = {}) {
   const res = await fetch(`${API_BASE}${path}`, {
@@ -26,7 +26,7 @@ async function apiRequest(method, path, body, extraHeaders = {}) {
 }
 
 function _teacherHeaders() {
-  const token = sessionStorage.getItem("eduai_teacher_token");
+  const token = sessionStorage.getItem("mindforge_teacher_token");
   return token ? { "X-Teacher-Token": token } : {};
 }
 
@@ -176,16 +176,16 @@ const SUBTOPICS = [
 // Simple session storage helpers (no backend auth for the pilot).
 const Store = {
   get studentId() {
-    return localStorage.getItem("eduai_student_id");
+    return localStorage.getItem("mindforge_student_id");
   },
   set studentId(v) {
-    localStorage.setItem("eduai_student_id", v);
+    localStorage.setItem("mindforge_student_id", v);
   },
   get studentLabel() {
-    return localStorage.getItem("eduai_student_label");
+    return localStorage.getItem("mindforge_student_label");
   },
   set studentLabel(v) {
-    localStorage.setItem("eduai_student_label", v);
+    localStorage.setItem("mindforge_student_label", v);
   },
 };
 
