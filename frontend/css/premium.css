@@ -208,7 +208,7 @@ body::after {
 .hero-title .t-italic {
   font-family: var(--font-serif);
   font-style: italic; font-weight: 400;
-  color: rgba(255,255,255,.92);
+  color: var(--text-hi);
 }
 .hero-badge .badge-pill {
   border: 1px solid transparent;
