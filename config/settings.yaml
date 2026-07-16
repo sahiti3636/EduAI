@@ -3,7 +3,7 @@
 
 llm:
   provider: "gemini"
-  model: "gemini-1.5-flash"   # Flash tier per CLAUDE.md §4 — change here to swap models
+  model: "gemini-flash-latest"   # Flash tier per CLAUDE.md §4 — change here to swap models
   api_key_env_var: "GEMINI_API_KEY"
   rater_temperature: 0.2      # low temp: rater should be consistent/strict
   tutor_temperature: 0.6      # a bit more natural for conversation

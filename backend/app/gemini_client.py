@@ -14,6 +14,7 @@ config/settings.yaml, default GEMINI_API_KEY) — never hardcoded, per CLAUDE.md
 from __future__ import annotations
 
 import os
+import time
 from dataclasses import dataclass, field
 from typing import Protocol
 
@@ -102,12 +103,20 @@ class GeminiClient:
         if json_mode:
             config_kwargs["response_mime_type"] = "application/json"
 
-        response = client.models.generate_content(
-            model=self.model,
-            contents=contents,
-            config=types.GenerateContentConfig(**config_kwargs),
-        )
-        return response.text or ""
+        max_retries = 3
+        for attempt in range(max_retries):
+            try:
+                response = client.models.generate_content(
+                    model=self.model,
+                    contents=contents,
+                    config=types.GenerateContentConfig(**config_kwargs),
+                )
+                return response.text or ""
+            except Exception as e:
+                if "429" in str(e) and attempt < max_retries - 1:
+                    time.sleep(2 ** attempt)
+                    continue
+                raise
 
     def generate_with_image(
         self,
@@ -127,12 +136,20 @@ class GeminiClient:
                 ],
             )
         ]
-        response = client.models.generate_content(
-            model=self.model,
-            contents=contents,
-            config=types.GenerateContentConfig(temperature=0.1),
-        )
-        return response.text or ""
+        max_retries = 3
+        for attempt in range(max_retries):
+            try:
+                response = client.models.generate_content(
+                    model=self.model,
+                    contents=contents,
+                    config=types.GenerateContentConfig(temperature=0.1),
+                )
+                return response.text or ""
+            except Exception as e:
+                if "429" in str(e) and attempt < max_retries - 1:
+                    time.sleep(2 ** attempt)
+                    continue
+                raise
 
 
 _client_singleton: LLMClient | None = None
