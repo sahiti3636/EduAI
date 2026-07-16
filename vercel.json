@@ -20,17 +20,17 @@
     }
   ],
   "rewrites": [
-    { "source": "/auth/(.*)", "destination": "https://eduai-backend-4ad2.onrender.com/auth/$1" },
-    { "source": "/students/(.*)", "destination": "https://eduai-backend-4ad2.onrender.com/students/$1" },
-    { "source": "/diagnostic/(.*)", "destination": "https://eduai-backend-4ad2.onrender.com/diagnostic/$1" },
-    { "source": "/tutor/(.*)", "destination": "https://eduai-backend-4ad2.onrender.com/tutor/$1" },
-    { "source": "/metrics/(.*)", "destination": "https://eduai-backend-4ad2.onrender.com/metrics/$1" },
-    { "source": "/quiz/(.*)", "destination": "https://eduai-backend-4ad2.onrender.com/quiz/$1" },
-    { "source": "/teacher/(.*)", "destination": "https://eduai-backend-4ad2.onrender.com/teacher/$1" },
-    { "source": "/ocr/(.*)", "destination": "https://eduai-backend-4ad2.onrender.com/ocr/$1" },
-    { "source": "/bucket/(.*)", "destination": "https://eduai-backend-4ad2.onrender.com/bucket/$1" },
-    { "source": "/daily-challenge/(.*)", "destination": "https://eduai-backend-4ad2.onrender.com/daily-challenge/$1" },
-    { "source": "/leaderboard", "destination": "https://eduai-backend-4ad2.onrender.com/leaderboard" },
-    { "source": "/pair/(.*)", "destination": "https://eduai-backend-4ad2.onrender.com/pair/$1" }
+    { "source": "/auth/(.*)", "destination": "https://mindforge-backend-37xk.onrender.com/auth/$1" },
+    { "source": "/students/(.*)", "destination": "https://mindforge-backend-37xk.onrender.com/students/$1" },
+    { "source": "/diagnostic/(.*)", "destination": "https://mindforge-backend-37xk.onrender.com/diagnostic/$1" },
+    { "source": "/tutor/(.*)", "destination": "https://mindforge-backend-37xk.onrender.com/tutor/$1" },
+    { "source": "/metrics/(.*)", "destination": "https://mindforge-backend-37xk.onrender.com/metrics/$1" },
+    { "source": "/quiz/(.*)", "destination": "https://mindforge-backend-37xk.onrender.com/quiz/$1" },
+    { "source": "/teacher/(.*)", "destination": "https://mindforge-backend-37xk.onrender.com/teacher/$1" },
+    { "source": "/ocr/(.*)", "destination": "https://mindforge-backend-37xk.onrender.com/ocr/$1" },
+    { "source": "/bucket/(.*)", "destination": "https://mindforge-backend-37xk.onrender.com/bucket/$1" },
+    { "source": "/daily-challenge/(.*)", "destination": "https://mindforge-backend-37xk.onrender.com/daily-challenge/$1" },
+    { "source": "/leaderboard", "destination": "https://mindforge-backend-37xk.onrender.com/leaderboard" },
+    { "source": "/pair/(.*)", "destination": "https://mindforge-backend-37xk.onrender.com/pair/$1" }
   ]
 }
