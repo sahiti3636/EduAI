@@ -41,6 +41,14 @@ class LLMClient(Protocol):
         """
         ...
 
+    def embed(self, text: str) -> list[float]:
+        """Embed a piece of text into a vector."""
+        ...
+
+    def embed_batch(self, texts: list[str]) -> list[list[float]]:
+        """Embed a batch of strings into vectors."""
+        ...
+
     def generate_with_image(
         self,
         prompt: str,
@@ -145,6 +153,26 @@ class GeminiClient:
                     config=types.GenerateContentConfig(temperature=0.1),
                 )
                 return response.text or ""
+            except Exception as e:
+                if "429" in str(e) and attempt < max_retries - 1:
+                    time.sleep(2 ** attempt)
+                    continue
+                raise
+
+    def embed(self, text: str) -> list[float]:
+        return self.embed_batch([text])[0]
+
+    def embed_batch(self, texts: list[str]) -> list[list[float]]:
+        client = self._ensure_client()
+        import time
+        max_retries = 3
+        for attempt in range(max_retries):
+            try:
+                response = client.models.embed_content(
+                    model="gemini-embedding-2",
+                    contents=texts,
+                )
+                return [emb.values for emb in response.embeddings]
             except Exception as e:
                 if "429" in str(e) and attempt < max_retries - 1:
                     time.sleep(2 ** attempt)

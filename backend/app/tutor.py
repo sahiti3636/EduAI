@@ -15,6 +15,7 @@ from app.config import get_items, get_settings, get_sub_subtopic, get_sub_subtop
 from app.db import get_conn, new_id, now
 from app.gemini_client import LLMClient, get_llm_client
 from app.prompts import build_feynman_prompt, build_system_prompt
+from app.rag import search as rag_search
 
 REBUCKET_TAG_RE = re.compile(r"\[REBUCKET_SUGGESTION:\s*([ABC])\]\s*$", re.MULTILINE)
 
@@ -250,6 +251,12 @@ def send_message(
     bucket = _current_bucket(student_id, subtopic)  # may have changed via re-bucket since session start
     subtopic_label = GENERAL_LABEL if is_general else get_subtopic(subtopic)["label"]
     system_prompt = build_system_prompt(bucket, subtopic_label, general=is_general)
+    
+    # RAG Injection: Retrieve textbook context based on student message
+    textbook_context = rag_search(student_text)
+    if textbook_context:
+        system_prompt += f"\n\nREFERENCE TEXTBOOK MATERIAL:\n{textbook_context}\n\nNOTE: Only explain concepts and frame questions based on the methods shown in the reference above."
+
     settings = get_settings()["llm"]
 
     history = _session_history(session_id)
