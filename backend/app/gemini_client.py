@@ -92,18 +92,32 @@ class GeminiClient:
         temperature: float = 0.5,
         json_mode: bool = False,
     ) -> str:
-        # --- DEMO MODE CACHE ---
-        # If DEMO_MODE=true, it saves and replays exact responses to avoid 429s during recordings
+        # --- DEMO MODE CACHE & MOCKS ---
+        # If DEMO_MODE=true, it avoids 429s entirely by returning pre-baked data
         if os.environ.get("DEMO_MODE") == "true":
-            import json, hashlib
-            cache_file = "backend/data/demo_cache.json"
-            cache_key = hashlib.md5(f"{system_prompt}{history}{temperature}{json_mode}".encode()).hexdigest()
+            import json, os
+            last_msg = history[-1]["text"].strip() if history else "start"
             
+            # 1. Mock Session Notes (notes.py)
+            if "You are analysing a maths tutoring session transcript" in last_msg:
+                return '{"student_breakthrough": "You successfully applied the Pythagoras theorem to find the sides of the triangle.", "struggled_with": "Setting up the algebraic equations initially.", "topic_covered": "Quadratic Equations and Geometry"}'
+                
+            # 2. Mock Rater Validation (rater.py)
+            if "You are an expert pedagogical evaluator" in system_prompt:
+                return '{"score": 5, "reasoning": "The tutor perfectly utilized the Socratic method, guiding the student to discover the answer themselves without giving it away."}'
+                
+            # 3. Mock Concept Tagger (concept_tagger.py)
+            if "Extract the mathematical concepts" in system_prompt:
+                return '["Pythagoras Theorem", "Quadratic Equations", "Polynomials"]'
+
+            # 4. Standard Chat Cache (demo_cache.json)
+            cache_file = "backend/data/demo_cache.json"
+            cache_key = last_msg
             if os.path.exists(cache_file):
                 with open(cache_file, "r") as f:
                     cache = json.load(f)
                 if cache_key in cache:
-                    print("[DEMO MODE] Replaying cached response instantly!")
+                    print(f"[DEMO MODE] Replaying cached chat response for: '{cache_key}'")
                     return cache[cache_key]
 
         from google.genai import types
