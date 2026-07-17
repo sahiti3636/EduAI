@@ -58,6 +58,10 @@ def _load_and_embed_all():
 
 def search(query: str, top_k: int = 1) -> str | None:
     """Returns the most semantically relevant textbook chunk for a query."""
+    import os
+    if os.environ.get("DEMO_MODE") == "true":
+        return "[Source: jemh104.pdf (Page 6)]\nQUADRA TIC EQUA TIONS 43 Note that we have found the roots of  2 x2 – 5 x + 3 = 0 by factorising 2x2 – 5 x + 3 into two linear factors and equating each factor to zero . Example 4 : Find the roots of the quadratic equation 6 x2 – x – 2 = 0. Solution : We have 6x2 – x – 2 = 6 x2 + 3x – 4x – 2 =3 x (2x + 1) – 2 (2 x + 1) =( 3x – 2)(2x + 1)"
+
     if _embeddings is None:
         try:
             _load_and_embed_all()
