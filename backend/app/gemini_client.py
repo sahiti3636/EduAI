@@ -95,7 +95,7 @@ class GeminiClient:
         # --- DEMO MODE CACHE & MOCKS ---
         # If DEMO_MODE=true, it avoids 429s entirely by returning pre-baked data
         if os.environ.get("DEMO_MODE") == "true":
-            import json, os
+            import json
             last_msg = history[-1]["text"].strip() if history else "start"
             
             # 1. Mock Session Notes (notes.py)
