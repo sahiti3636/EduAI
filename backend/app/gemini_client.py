@@ -109,8 +109,12 @@ class GeminiClient:
             # 3. Mock Concept Tagger (concept_tagger.py)
             if "Extract the mathematical concepts" in system_prompt:
                 return '["Pythagoras Theorem", "Quadratic Equations", "Polynomials"]'
+                
+            # 4. Mock Session Start (tutor.py initial greeting)
+            if last_msg == "(session started)":
+                return "Welcome to the session! I'm your AI tutor. Are you ready to dive into some math today?"
 
-            # 4. Standard Chat Cache (demo_cache.json)
+            # 5. Standard Chat Cache (demo_cache.json)
             cache_file = "backend/data/demo_cache.json"
             cache_key = last_msg
             if os.path.exists(cache_file):
