@@ -37,13 +37,15 @@ def _load_and_embed_all():
     llm = get_llm_client()
     vectors = []
     
-    # Batch embeddings to avoid 429 rate limits (15 RPM free tier)
-    batch_size = 50
+    # Batch embeddings to avoid TPM/RPM free tier limits
+    batch_size = 10
+    import time
     for i in range(0, len(_chunks), batch_size):
         batch = _chunks[i:i + batch_size]
         texts = [c["text"] for c in batch]
         batch_vecs = llm.embed_batch(texts)
         vectors.extend(batch_vecs)
+        time.sleep(2) # Avoid TPM limit bursts
 
     _embeddings = np.array(vectors)
 

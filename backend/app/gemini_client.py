@@ -92,6 +92,20 @@ class GeminiClient:
         temperature: float = 0.5,
         json_mode: bool = False,
     ) -> str:
+        # --- DEMO MODE CACHE ---
+        # If DEMO_MODE=true, it saves and replays exact responses to avoid 429s during recordings
+        if os.environ.get("DEMO_MODE") == "true":
+            import json, hashlib
+            cache_file = "backend/data/demo_cache.json"
+            cache_key = hashlib.md5(f"{system_prompt}{history}{temperature}{json_mode}".encode()).hexdigest()
+            
+            if os.path.exists(cache_file):
+                with open(cache_file, "r") as f:
+                    cache = json.load(f)
+                if cache_key in cache:
+                    print("[DEMO MODE] Replaying cached response instantly!")
+                    return cache[cache_key]
+
         from google.genai import types
 
         client = self._ensure_client()
@@ -119,10 +133,23 @@ class GeminiClient:
                     contents=contents,
                     config=types.GenerateContentConfig(**config_kwargs),
                 )
-                return response.text or ""
+                result_text = response.text or ""
+                
+                # --- SAVE TO DEMO CACHE ---
+                if os.environ.get("DEMO_MODE") == "true":
+                    cache = {}
+                    if os.path.exists(cache_file):
+                        with open(cache_file, "r") as f:
+                            cache = json.load(f)
+                    cache[cache_key] = result_text
+                    os.makedirs(os.path.dirname(cache_file), exist_ok=True)
+                    with open(cache_file, "w") as f:
+                        json.dump(cache, f)
+                        
+                return result_text
             except Exception as e:
                 if "429" in str(e) and attempt < max_retries - 1:
-                    time.sleep(2 ** attempt)
+                    time.sleep(15) # Wait 15s to let the 15 RPM limit cool down
                     continue
                 raise
 
@@ -169,13 +196,13 @@ class GeminiClient:
         for attempt in range(max_retries):
             try:
                 response = client.models.embed_content(
-                    model="gemini-embedding-2",
+                    model="gemini-embedding-001",
                     contents=texts,
                 )
                 return [emb.values for emb in response.embeddings]
             except Exception as e:
                 if "429" in str(e) and attempt < max_retries - 1:
-                    time.sleep(2 ** attempt)
+                    time.sleep(20) # Gemini API often requires ~19s cooldown
                     continue
                 raise
 
